@@ -1,0 +1,68 @@
+﻿<div class="page-header">
+    <div class="page-header-top">
+        <div class="container">
+            <div class="row">
+                <ul class="nav navbar-nav">
+                    <li style="float:left">
+                        <a href="javascript:;" class="menu-toggler"></a>
+                    </li>
+                    <li style="max-width:500px; padding: 16px;float:left">
+                        <a ui-sref="home">
+                            <img src="../assets/layouts/layout3/img/logo-default.jpg" alt="logo" class="logo-default">
+                        </a>
+                    </li>
+                    <li class="dropdown dropdown-user dropdown-dark visible-xs" style="float:left;padding-top: 16px;">
+                        <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                            <i class="fa fa-2x fa-sign-in right"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-default">
+                            <li>
+                                <a ui-sref="home.login">
+                                    <i class="fa fa-sign-in right" ng-click="open"></i>Giriş Yap
+                                </a>
+                            </li>
+                            <li>
+                                <a ui-sref="home.map"><i class="fa fa-registered"></i>Kayıt Ol</a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+                <div class="top-menu">
+                    <ul class="nav navbar-nav pull-right-md">
+                        <li style="max-width:500px; padding: 10px;">
+                            <div class="input-group">
+                                <input type="text" id="typeahead_example_1" name="typeahead_example_1" class="form-control" placeholder="Turistik Mekan, cafe,doğal güzellik ara" />
+                                <a href="#" class="dropdown-toggle input-group-addon right" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                                    <i class="fa fa-cog" ng-click="open"></i>                                   
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-list">
+                                    <li style="padding: 10px;">
+                                        <a ui-sref="home.login" class="green-dark black-white bold">
+                                            <i class="fa fa-search left"></i>Gelişmiş Arama
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                           
+                        </li>
+
+                        <li style="float:left;" class="hidden-xs">
+                            <a ui-sref="home.login">
+                                <i class="fa fa-sign-in right" ng-click="open"></i>Giriş Yap
+                            </a>
+                        </li>
+                        <li style="float:left" class="hidden-xs">
+                            <a ui-sref="home.map"><i class="fa fa-registered"></i>Kayıt Ol</a>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+    <menu></menu>
+
+</div>
