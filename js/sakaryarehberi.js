@@ -1,4 +1,4 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router",
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router","firebase",
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize"])

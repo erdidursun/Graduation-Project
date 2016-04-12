@@ -5,7 +5,7 @@ sakaryarehberi
 
 .controller("HeaderCtrl", function ($scope,$uibModal) {
     var isLogged = false;
- 
+
     $scope.open = function (size) {
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
@@ -30,7 +30,19 @@ sakaryarehberi
     };
 })
 
-.controller("LoginCtrl", function ($scope) {
+.controller("LoginCtrl", function ($scope, SocialLogin) {
+    // login with Facebook
+
+    $scope.login = function (provider)
+    {
+        SocialLogin.$authWithOAuthPopup(provider).then(function (authData) {
+            console.log(authData);
+        }).catch(function (error) {
+            console.log("Authentication failed:", error);
+        });
+    };
+
+   
 })
 .controller("MenuCtrl", function ($scope) {
 
