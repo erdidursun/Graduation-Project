@@ -22,7 +22,7 @@
                                 </a>
                             </li>
                             <li ng-show="isLogged!==true">
-                                <a ui-sref="home.map"><i class="fa fa-registered"></i>Kayıt Ol</a>
+                                <a ui-sref="home.register"><i class="fa fa-registered"></i>Kayıt Ol</a>
                             </li>
                             <li ng-show="isLogged===true">                     
                                 <a ng-click="logout()">
@@ -58,12 +58,12 @@
                             </a>
                         </li>
                         <li style="float:left" class="hidden-xs" ng-show="isLogged!==true">
-                            <a ui-sref="home.map"><i class="fa fa-registered"></i>Kayıt Ol</a>
+                            <a ui-sref="home.register"><i class="fa fa-registered"></i>Kayıt Ol</a>
                         </li>
                         <li class="dropdown dropdown-user dropdown-dark" ng-show="isLogged===true" class="hidden-xs">
                             <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
                                 <img alt="" class="img-circle" ng-src="{{profileImg}}">
-                                <span class="username username-hide-mobile">{{nick}}</span>
+                                <span class="username">{{nick}}</span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-default">
                                 <li>

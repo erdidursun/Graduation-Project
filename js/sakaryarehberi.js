@@ -52,7 +52,7 @@
       .state('home.register', {
           url: "register",
           templateUrl: 'views/partials/register.html',
-          controller: 'LoginCtrl',
+          controller: 'RegisterCtrl',
           resolve: {
               deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                   return $ocLazyLoad.load({

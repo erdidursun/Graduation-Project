@@ -57,6 +57,15 @@ sakaryarehberi
 
    
 })
+    .controller("RegisterCtrl", function ($scope, $state) {
+
+
+        $scope.back = function () {
+            $state.go("^");
+        }
+
+
+    })
 .controller("MenuCtrl", function ($scope) {
 
 })
