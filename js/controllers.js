@@ -8,7 +8,6 @@ sakaryarehberi
     $scope.isLogged = userInfo?userInfo.isAuthanthanced:false;
     $scope.profileImg = userInfo && userInfo.data ? userInfo.data.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
     $scope.nick = userInfo && userInfo.data ? userInfo.data.displayName:"";
-    console.log(userInfo);
     $scope.logout = function (provider) {
         AuthService.logout();
         $state.go("home", {},{reload:true});
@@ -57,7 +56,7 @@ sakaryarehberi
 
    
 })
-    .controller("RegisterCtrl", function ($scope, $state) {
+.controller("RegisterCtrl", function ($scope, $state) {
 
 
         $scope.back = function () {
