@@ -30,18 +30,27 @@
         }
     }
 }])
-.service('Session', function (FirebaseSession, $ls) {
-    this.create = function (sessionId, userId) {
-        this.id = sessionId;
-        this.userId = userId;
-    };
-    this.destroy = function () {
-        this.id = null;
-        this.userId = null;
-    };
-    this.Data = $ls.getObject(FirebaseSession.Data);
+.service('User', function (FirebaseSession, $ls, $timeout) {
+    var data = {};
+    var User = {};    
+    User.Info = function () {
+        data = $ls.getObject(FirebaseSession.Data);
+        if (data)
+            return {
+                data: data["" + data.provider + ""],
+                isAuthanthanced: data ? true : false
+            };
+        else
+            return {};
+    }
+  
+    return User;
+
+
+
+
 })
-.factory('AuthService', function ($rootScope, AUTH_EVENTS, $http, $ls, $firebaseAuth, Session) {
+.factory('AuthService', function ($rootScope, AUTH_EVENTS, $http, $ls, $firebaseAuth) {
 
     var authService = {};
 
@@ -64,9 +73,7 @@
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
         });
     }
-    authService.isAuthenticated = function () {
-        return !!Session.Data && !!Session.Data.uid;
-    };
+
 
     return authService;
 })

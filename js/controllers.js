@@ -3,9 +3,16 @@ sakaryarehberi
 .controller("MainCtrl", function ($scope) {
 })
 
-.controller("HeaderCtrl", function ($scope,$uibModal) {
-    var isLogged = false;
-
+.controller("HeaderCtrl", function ($scope, $state, $uibModal, AUTH_EVENTS, User, AuthService) {
+    var userInfo = User.Info();
+    $scope.isLogged = userInfo?userInfo.isAuthanthanced:false;
+    $scope.profileImg = userInfo && userInfo.data ? userInfo.data.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+    $scope.nick = userInfo && userInfo.data ? userInfo.data.displayName:"";
+    console.log(userInfo);
+    $scope.logout = function (provider) {
+        AuthService.logout();
+        $state.go("home", {},{reload:true});
+    };
     $scope.open = function (size) {
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
@@ -30,11 +37,12 @@ sakaryarehberi
     };
 })
 
-.controller("LoginCtrl", function ($scope, AuthService, AUTH_EVENTS) {
+.controller("LoginCtrl", function ($scope,$state, AuthService,$modalInstance, AUTH_EVENTS, User, $uibModal) {
 
 
     $scope.$on(AUTH_EVENTS.loginSuccess, function (data) {
-        console.log(AuthService.isAuthenticated());
+        $modalInstance.close();
+        $state.go("home", {}, { reload: true });
 
 
     });
