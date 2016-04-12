@@ -32,5 +32,7 @@
           })
     $urlRouterProvider.otherwise("/");
 })
-
+.run(function ($rootScope, AUTH_EVENTS, AuthService) {
+   
+})
 ;

@@ -30,16 +30,21 @@ sakaryarehberi
     };
 })
 
-.controller("LoginCtrl", function ($scope, SocialLogin) {
-    // login with Facebook
+.controller("LoginCtrl", function ($scope, AuthService, AUTH_EVENTS) {
 
+
+    $scope.$on(AUTH_EVENTS.loginSuccess, function (data) {
+        console.log(AuthService.isAuthenticated());
+
+
+    });
+    $scope.$on(AUTH_EVENTS.loginFailed, function (error) {
+        console.log(error);
+
+    });
     $scope.login = function (provider)
     {
-        SocialLogin.$authWithOAuthPopup(provider).then(function (authData) {
-            console.log(authData);
-        }).catch(function (error) {
-            console.log("Authentication failed:", error);
-        });
+        AuthService.socialLogin(provider);
     };
 
    
