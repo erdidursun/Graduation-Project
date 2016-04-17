@@ -1,0 +1,21 @@
+<ion-view view-title="Sign-In">
+    <ion-content>
+        <div class="list">
+            <label class="item item-input">
+                <span class="input-label">Username</span>
+                <input type="text" ng-model="user.username">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Password</span>
+                <input type="password" ng-model="user.password">
+            </label>
+        </div>
+        <div style="text-align:center">
+            <button class="button button-calm icon ion-social-twitter button-round" ng-click="login('twitter')"></button>
+            <button class="button button-positive icon ion-social-facebook button-round" ng-click="login('facebook')"></button>
+            <button class="button button-calm  ion-social-google button-round" ng-click="login('google')"></button>
+            <button class="button   button-round" ng-click="logOut()">Çıkış</button>
+
+        </div>
+    </ion-content>
+</ion-view>
