@@ -4,34 +4,20 @@
         <div class="row">
             <div class="col-md-12 col-lg-offset-1 col-lg-5">
                 <div class="hor-menu ">
-                    <ul class="nav nav-justified">
-                        <li style="padding: 10px;">
-                            <div class="input-group">
-                                <ui-select ng-model="multipleDemo.selectedPeople"
-                                           theme="bootstrap"
-                                           ng-class="{open: $select.open}"
-                                           ng-disabled="disabled" style="min-width: 300px;" >
-                                    <ui-select-match placeholder="Bölge">{{$select.selected.name}}</ui-select-match>
-                                    <ui-select-choices repeat="person in people| propsFilter: {name: $select.search, age: $select.search}">
-                                        <div ng-bind-html="person.name | highlight: $select.search"></div>
-                                        <small>
-                                            email: {{person.email}}
-                                            age: <span ng-bind-html="''+person.age | highlight: $select.search"></span>
-                                        </small>
-                                    </ui-select-choices>
-                                </ui-select>
-                                <span class="input-group-btn">
-                                    <button ng-click="person.selected = undefined" class="btn btn-default">
-                                        <span class="fa fa-search"></span>
-                                    </button>
-                                </span>
-                            </div>
-
+                    <ul class="nav navbar-nav">    
+                        <li ng-show="isLogged!==true">
+                            <a ui-sref="home.login">
+                               Anasayfa
+                            </a>
+                        </li>                 
+                        <li ng-show="isLogged!==true" class="hidden-md hidden-lg">
+                            <a ui-sref="home.login">
+                                <i class="fa fa-sign-in right"></i>Giriş Yap
+                            </a>
                         </li>
-                        <li style="padding: 10px;">
-                            <button class="btn btn-circle blue-chambrayt">Ara</button>
-                        </li>
-
+                        <li ng-show="isLogged!==true" class="hidden-md hidden-lg">
+                            <a ui-sref="home.register"><i class="fa fa-registered"></i>Kayıt Ol</a>
+                        </li>                    
                     </ul>
                 </div>
             </div>

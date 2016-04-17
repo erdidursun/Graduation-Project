@@ -1,10 +1,6 @@
-﻿<div class="row">
-    <div class="col-md-6 col-lg-4 col-lg-8 hidden-xs">
-        <!--<img src="../../assets/global/img/acarlar.jpg" class="img-responsive" />-->
-        <slider></slider>
-    </div>
-    <div class="col-md-6 col-xs-12 col-lg-4 ">
-        <form class="login-form" action="index.html" method="post">
+﻿<div class="row">  
+    <div class="col-md-6 col-xs-12 col-lg-4 col-md-offset-4 margin-top-40 ">
+        <div class="login-form">
             <h3 class="form-title font-green">Sign In</h3>
             <div class="alert alert-danger display-hide">
                 <button class="close" data-close="alert"></button>
@@ -17,7 +13,7 @@
                     <span class="input-group-addon">
                         <i class="fa fa-user"></i>
                     </span>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" />
+                    <input class="form-control form-control-solid placeholder-no-fix" type="text" autocomplete="off" placeholder="Username" name="username" ng-model="mail" />
                 </div>
             </div>
             <div class="form-group">
@@ -26,38 +22,38 @@
                     <span class="input-group-addon">
                         <i class="fa fa-lock"></i>
                     </span>
-                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" />
+                    <input class="form-control form-control-solid placeholder-no-fix" type="password" autocomplete="off" placeholder="Password" name="password" ng-model="pass" />
                 </div>
             </div>
             <div class="form-actions">
                 <label class="rememberme check" style="margin-left:40px">
                     <input type="checkbox" name="remember" value="1" />Remember
                 </label>
-                <button type="submit" class="btn green uppercase pull-right">Login</button>
+                <button type="button" class="btn green uppercase pull-right" ng-click="login()">Login</button>
             </div>
             <br />
             <div class="login-options">
                 <h4 style="margin-left:20px">Or login with</h4>
                 <ul class="social-icons pull-right">
-                    <li >
-                        <a class="social-icon-color facebook" data-original-title="facebook" ng-click="login('facebook')"></a>
+                    <li>
+                        <a class="social-icon-color facebook" data-original-title="facebook" ng-click="socialLogin('facebook')"></a>
                     </li>
                     <li>
-                        <a class="social-icon-color twitter" data-original-title="Twitter" ng-click="login('twitter')"></a>
+                        <a class="social-icon-color twitter" data-original-title="Twitter" ng-click="socialLogin('twitter')"></a>
                     </li>
-                    <li >
-                        <a class="social-icon-color googleplus" data-original-title="Goole Plus" ng-click="login('google')"></a>
+                    <li>
+                        <a class="social-icon-color googleplus" data-original-title="Google Plus" ng-click="socialLogin('google')"></a>
                     </li>
                 </ul>
             </div>
             <div class="create-account">
                 <p>
-                    <a href="#" ui-sref="home.register" id="register-btn" class="uppercase">Create an account</a> 
+                    <a href="#" ui-sref="home.register" id="register-btn" class="uppercase">Create an account</a>
                     <a ui-sref="home.forgot" id="forget-password" class="pull-right"> Forgot Password?</a>
-                  
+
                 </p>
             </div>
-        </form>
+        </div>
     </div>
  
 </div>

@@ -1,8 +1,16 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router","ui.select","firebase",
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router", "ui.select", "firebase",
     "ui.bootstrap",
     "oc.lazyLoad",
-    "ngSanitize"])
+    "ngSanitize",
+'angularSpinner'])
 .config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    $httpProvider.defaults.headers.post = {};
+    $httpProvider.defaults.headers.put = {};
+    $httpProvider.defaults.headers.patch = {};
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
+    $httpProvider.interceptors.push('httpRequestInterceptor');
 
     $stateProvider
 
@@ -21,10 +29,7 @@
                           name: 'sakaryarehberi',
                           insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                           files: [
-                              'assets/global/css/login.min.css',
-                              "assets/global/plugins/jquery-validation/js/jquery.validate.min.js",
-                              "assets/global/plugins/jquery-validation/js/additional-methods.js",
-                              "assets/pages/scripts/login.min.js"
+                              'assets/global/css/login.min.css'
                           ]
                       });
                   }]
@@ -40,10 +45,7 @@
                           name: 'sakaryarehberi',
                           insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                           files: [
-                              'assets/global/css/login.min.css',
-                              "assets/global/plugins/jquery-validation/js/jquery.validate.min.js",
-                              "assets/global/plugins/jquery-validation/js/additional-methods.js",
-                              "assets/pages/scripts/login.min.js"
+                              'assets/global/css/login.min.css'
                           ]
                       });
                   }]
@@ -59,19 +61,16 @@
                       name: 'sakaryarehberi',
                       insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                       files: [
-                          'assets/global/css/login.min.css',
-                          "assets/global/plugins/jquery-validation/js/jquery.validate.min.js",
-                          "assets/global/plugins/jquery-validation/js/additional-methods.js",
-                          "assets/pages/scripts/login.min.js"
+                          'assets/global/css/login.min.css'
                       ]
                   });
               }]
           }
       })
-  
+
     $urlRouterProvider.otherwise("/");
 })
 .run(function ($rootScope, AUTH_EVENTS, AuthService) {
-   
+
 })
 ;

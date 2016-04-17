@@ -1,4 +1,4 @@
-﻿sakaryarehberi
+﻿angular.module('sakaryarehberi')
     .directive('main', function () {
         return {
             restrict: 'E', //This menas that it will be used as an attribute and NOT as an element. I don't like creating custom HTML elements
@@ -31,4 +31,25 @@
              controller: "MenuCtrl"
          }
      })
+.directive("repeatPassword", function () {
+    return {
+        require: "ngModel",
+        link: function (scope, elem, attrs, ctrl) {
+            var otherInput = elem.inheritedData("$formController")[attrs.repeatPassword];
+
+            ctrl.$parsers.push(function (value) {
+                if (value === otherInput.$viewValue) {
+                    ctrl.$setValidity("repeat", true);
+                    return value;
+                }
+                ctrl.$setValidity("repeat", false);
+            });
+
+            otherInput.$parsers.push(function (value) {
+                ctrl.$setValidity("repeat", value === ctrl.$viewValue);
+                return value;
+            });
+        }
+    };
+});
 ;
