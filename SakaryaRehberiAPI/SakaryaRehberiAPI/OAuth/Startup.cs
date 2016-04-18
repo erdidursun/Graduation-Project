@@ -20,6 +20,8 @@ namespace SakaryaRehberiAPI.OAuth
             ConfigureOAuth(appBuilder);
 
             HttpConfiguration httpConfiguration = new HttpConfiguration();
+
+            httpConfiguration.EnableCors();
             WebApiConfig.Register(httpConfiguration);
 
             appBuilder.UseWebApi(httpConfiguration);
@@ -32,8 +34,8 @@ namespace SakaryaRehberiAPI.OAuth
             {
                 TokenEndpointPath = new Microsoft.Owin.PathString("/token"), // token alacağımız path'i belirtiyoruz
                 AccessTokenExpireTimeSpan = TimeSpan.FromDays(1),
-                AllowInsecureHttp = true,  
-                ApplicationCanDisplayErrors=true,
+                AllowInsecureHttp = true,
+                ApplicationCanDisplayErrors = true,
                 Provider = new SimpleAuthorizationServerProvider()
             };
             appBuilder.UseOAuthAuthorizationServer(oAuthAuthorizationServerOptions);

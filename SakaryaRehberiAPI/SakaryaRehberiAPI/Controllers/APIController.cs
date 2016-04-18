@@ -22,7 +22,6 @@ namespace SakaryaRehberiAPI.Controllers
     {
         SehirRehberiEntities _db = new SehirRehberiEntities();
 
-
         #region utilities
         private static string ComputeHash(string hashedPassword, string message)
         {
@@ -41,14 +40,29 @@ namespace SakaryaRehberiAPI.Controllers
         #endregion
 
         #region User
-        [AllowAnonymous]
-        [HttpPost]
 
+
+
+        [HttpPost]
+        [AllowAnonymous]
         public HttpResponseMessage Register(RegisterModel model)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, model);
+            DBUser _user = new DBUser();
+            _user.User_Email = model.User_Email;
+            _user.User_Name = model.User_Name;
+            _user.User_Password = model.User_Password;
+            _user.User_SignUpDate = DateTime.Now;
+            _user.UserType_ID = 1;
+            _db.DBUsers.Add(_user);
+            _db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK, _user);
         }
-
+        [HttpGet]
+        [AllowAnonymous]
+        public HttpResponseMessage Register()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, "anan");
+        }
         #endregion
 
 

@@ -1,17 +1,18 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router", "ui.select", "firebase",
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router", "ui.select", "firebase",'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
-'angularSpinner'])
-.config(function ($httpProvider, $stateProvider, $urlRouterProvider) {
-    $httpProvider.defaults.useXDomain = true;
+    'angularSpinner'])
+.config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider) {
+   
+    //$httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.post = {};
     $httpProvider.defaults.headers.put = {};
     $httpProvider.defaults.headers.patch = {};
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-
+    $httpProvider.defaults.useXDomain = true;
     $httpProvider.interceptors.push('httpRequestInterceptor');
-
+    usSpinnerConfigProvider.setDefaults({ color: '#3598DC' });
     $stateProvider
 
           // setup an abstract state for the tabs directive

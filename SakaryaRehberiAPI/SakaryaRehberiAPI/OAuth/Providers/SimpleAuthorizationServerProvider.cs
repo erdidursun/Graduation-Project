@@ -36,12 +36,10 @@ namespace SakaryaRehberiAPI.OAuth.Providers
         // OAuthAuthorizationServerProvider sınıfının kaynak erişimine izin verebilmek için ilgili GrantResourceOwnerCredentials metotunu override ediyoruz.
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-            // CORS ayarlarını set ediyoruz.
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Methods", new[] { "POST" });
-            context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "authorization" });
+           
 
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "Content-Type" });
-            User user = db.Users.FirstOrDefault(u => u.User_Email.Equals(context.UserName) && u.User_Password.Equals(context.Password));
+            DBUser user = db.DBUsers.FirstOrDefault(u => u.User_Email.Trim().Equals(context.UserName) && u.User_Password.Equals(context.Password.Trim()));
             // Kullanıcının access_token alabilmesi için gerekli validation işlemlerini yapıyoruz.
             string json=JsonConvert.SerializeObject(user);
             Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);

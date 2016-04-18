@@ -9,7 +9,6 @@
         <EntityTypeShape EntityType="SehirRehberiModel.LocationImage" Width="1.5" PointX="5.25" PointY="5" IsExpanded="true" />
         <EntityTypeShape EntityType="SehirRehberiModel.LocationType" Width="1.5" PointX="0.75" PointY="5.25" IsExpanded="true" />
         <EntityTypeShape EntityType="SehirRehberiModel.sysdiagram" Width="1.5" PointX="7.75" PointY="1.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="SehirRehberiModel.User" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="SehirRehberiModel.UserComment" Width="1.5" PointX="5.25" PointY="1.875" IsExpanded="true" />
         <EntityTypeShape EntityType="SehirRehberiModel.UserLike" Width="1.5" PointX="5.25" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="SehirRehberiModel.UserType" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
@@ -17,9 +16,10 @@
         <AssociationConnector Association="SehirRehberiModel.FK_LocationImage_Location" ManuallyRouted="false" />
         <AssociationConnector Association="SehirRehberiModel.FK_UserComment_Location" ManuallyRouted="false" />
         <AssociationConnector Association="SehirRehberiModel.FK_UserLike_Location" ManuallyRouted="false" />
-        <AssociationConnector Association="SehirRehberiModel.FK_User_UserType" ManuallyRouted="false" />
-        <AssociationConnector Association="SehirRehberiModel.FK_UserComment_User" ManuallyRouted="false" />
-        <AssociationConnector Association="SehirRehberiModel.FK_UserLike_User" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="SehirRehberiModel.DBUser" Width="1.5" PointX="3" PointY="8.875" />
+        <AssociationConnector Association="SehirRehberiModel.FK_User_UserType1" />
+        <AssociationConnector Association="SehirRehberiModel.FK_UserComment_User1" />
+        <AssociationConnector Association="SehirRehberiModel.FK_UserLike_User1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

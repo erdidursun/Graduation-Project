@@ -10,18 +10,13 @@
 namespace SakaryaRehberiAPI.Models
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class UserType
+    public partial class sp_helpdiagrams_Result
     {
-        public UserType()
-        {
-            this.DBUsers = new HashSet<DBUser>();
-        }
-    
-        public int UserType_ID { get; set; }
-        public string UserType_Name { get; set; }
-    
-        public virtual ICollection<DBUser> DBUsers { get; set; }
+        public string Database { get; set; }
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public string Owner { get; set; }
+        public int OwnerID { get; set; }
     }
 }

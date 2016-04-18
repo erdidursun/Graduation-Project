@@ -61,7 +61,7 @@ angular.module('sakaryarehberi')
     };
 })
 
-.controller("LoginCtrl", function ($scope, $state, AuthService, AUTH_EVENTS, User, $uibModal) {
+.controller("LoginCtrl", function ($scope, $state, AuthService,md5, AUTH_EVENTS, User, $uibModal) {
 
     $scope.mail = "erdidursun13@gmail.com";
     $scope.pass = "1234567";
@@ -72,8 +72,9 @@ angular.module('sakaryarehberi')
         console.log(error);
 
     });
-    $scope.login = function () {
-        AuthService.Login($scope.mail, $scope.pass);
+    $scope.login = function () {      
+
+        AuthService.Login($scope.mail, md5.createHash($scope.pass));
     };
     $scope.socialLogin = function (provider) {
         AuthService.socialLogin(provider);
@@ -81,7 +82,7 @@ angular.module('sakaryarehberi')
 
 
 })
-.controller("RegisterCtrl", function ($scope, $state,User) {
+.controller("RegisterCtrl", function ($scope, $state, User) {
 
     $scope.test = "12345";
     $scope.master = "true";
@@ -89,8 +90,8 @@ angular.module('sakaryarehberi')
         User_Email: "erdidursun09@hotmail.com",
         User_Password: "12345",
         User_Name: "sdfsdfsdfsdf"
-    };
-    $scope.register = function () {
+    };  
+    $scope.register = function () {    
         User.Register($scope.user);
     };
 

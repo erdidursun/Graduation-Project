@@ -21,6 +21,6 @@ namespace SakaryaRehberiAPI.Models
         public System.DateTime UserComment_Date { get; set; }
     
         public virtual Location Location { get; set; }
-        public virtual User User { get; set; }
+        public virtual DBUser DBUser { get; set; }
     }
 }

@@ -1,5 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="SehirRehberiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="DBUser">
+    <Key>
+      <PropertyRef Name="User_ID" />
+    </Key>
+    <Property Name="User_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="User_Email" Type="nchar" MaxLength="100" Nullable="false" />
+    <Property Name="User_Password" Type="nchar" MaxLength="100" Nullable="false" />
+    <Property Name="User_SignUpDate" Type="datetime" Nullable="false" />
+    <Property Name="UserType_ID" Type="int" Nullable="false" />
+    <Property Name="User_Name" Type="nvarchar" MaxLength="50" />
+  </EntityType>
   <EntityType Name="Location">
     <Key>
       <PropertyRef Name="Location_ID" />
@@ -37,17 +48,6 @@
     <Property Name="version" Type="int" />
     <Property Name="definition" Type="varbinary(max)" />
   </EntityType>
-  <EntityType Name="User">
-    <Key>
-      <PropertyRef Name="User_ID" />
-    </Key>
-    <Property Name="User_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="User_Email" Type="nchar" MaxLength="100" Nullable="false" />
-    <Property Name="User_Password" Type="nchar" MaxLength="100" Nullable="false" />
-    <Property Name="User_SignUpDate" Type="datetime" Nullable="false" />
-    <Property Name="UserType_ID" Type="int" Nullable="false" />
-    <Property Name="User_Name" Type="nvarchar" MaxLength="50" />
-  </EntityType>
   <EntityType Name="UserComment">
     <Key>
       <PropertyRef Name="UserComment_ID" />
@@ -74,6 +74,18 @@
     <Property Name="UserType_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="UserType_Name" Type="nchar" MaxLength="100" Nullable="false" />
   </EntityType>
+  <Association Name="FK_DBUser_UserType">
+    <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
+    <End Role="DBUser" Type="Self.DBUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserType">
+        <PropertyRef Name="UserType_ID" />
+      </Principal>
+      <Dependent Role="DBUser">
+        <PropertyRef Name="UserType_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
   <Association Name="FK_Location_LocationType">
     <End Role="LocationType" Type="Self.LocationType" Multiplicity="1" />
     <End Role="Location" Type="Self.Location" Multiplicity="*" />
@@ -100,12 +112,12 @@
   </Association>
   <Association Name="FK_User_UserType">
     <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
-    <End Role="User" Type="Self.User" Multiplicity="*" />
+    <End Role="DBUser" Type="Self.DBUser" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="UserType">
         <PropertyRef Name="UserType_ID" />
       </Principal>
-      <Dependent Role="User">
+      <Dependent Role="DBUser">
         <PropertyRef Name="UserType_ID" />
       </Dependent>
     </ReferentialConstraint>
@@ -123,10 +135,10 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_UserComment_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="DBUser" Type="Self.DBUser" Multiplicity="1" />
     <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="User">
+      <Principal Role="DBUser">
         <PropertyRef Name="User_ID" />
       </Principal>
       <Dependent Role="UserComment">
@@ -147,10 +159,10 @@
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_UserLike_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
+    <End Role="DBUser" Type="Self.DBUser" Multiplicity="1" />
     <End Role="UserLike" Type="Self.UserLike" Multiplicity="*" />
     <ReferentialConstraint>
-      <Principal Role="User">
+      <Principal Role="DBUser">
         <PropertyRef Name="User_ID" />
       </Principal>
       <Dependent Role="UserLike">
@@ -158,15 +170,50 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
+  <Function Name="fn_diagramobjects" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="int" />
+  <Function Name="sp_alterdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_creatediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="version" Type="int" Mode="In" />
+    <Parameter Name="definition" Type="varbinary(max)" Mode="In" />
+  </Function>
+  <Function Name="sp_dropdiagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagramdefinition" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_helpdiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+  </Function>
+  <Function Name="sp_renamediagram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="diagramname" Type="nvarchar" Mode="In" />
+    <Parameter Name="owner_id" Type="int" Mode="In" />
+    <Parameter Name="new_diagramname" Type="nvarchar" Mode="In" />
+  </Function>
+  <Function Name="sp_upgraddiagrams" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <EntityContainer Name="SehirRehberiModelStoreContainer">
+    <EntitySet Name="DBUser" EntityType="Self.DBUser" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Location" EntityType="Self.Location" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="LocationImage" EntityType="Self.LocationImage" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="LocationType" EntityType="Self.LocationType" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserComment" EntityType="Self.UserComment" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserLike" EntityType="Self.UserLike" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserType" EntityType="Self.UserType" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="FK_DBUser_UserType" Association="Self.FK_DBUser_UserType">
+      <End Role="UserType" EntitySet="UserType" />
+      <End Role="DBUser" EntitySet="DBUser" />
+    </AssociationSet>
     <AssociationSet Name="FK_Location_LocationType" Association="Self.FK_Location_LocationType">
       <End Role="LocationType" EntitySet="LocationType" />
       <End Role="Location" EntitySet="Location" />
@@ -177,14 +224,14 @@
     </AssociationSet>
     <AssociationSet Name="FK_User_UserType" Association="Self.FK_User_UserType">
       <End Role="UserType" EntitySet="UserType" />
-      <End Role="User" EntitySet="User" />
+      <End Role="DBUser" EntitySet="DBUser" />
     </AssociationSet>
     <AssociationSet Name="FK_UserComment_Location" Association="Self.FK_UserComment_Location">
       <End Role="Location" EntitySet="Location" />
       <End Role="UserComment" EntitySet="UserComment" />
     </AssociationSet>
     <AssociationSet Name="FK_UserComment_User" Association="Self.FK_UserComment_User">
-      <End Role="User" EntitySet="User" />
+      <End Role="DBUser" EntitySet="DBUser" />
       <End Role="UserComment" EntitySet="UserComment" />
     </AssociationSet>
     <AssociationSet Name="FK_UserLike_Location" Association="Self.FK_UserLike_Location">
@@ -192,7 +239,7 @@
       <End Role="UserLike" EntitySet="UserLike" />
     </AssociationSet>
     <AssociationSet Name="FK_UserLike_User" Association="Self.FK_UserLike_User">
-      <End Role="User" EntitySet="User" />
+      <End Role="DBUser" EntitySet="DBUser" />
       <End Role="UserLike" EntitySet="UserLike" />
     </AssociationSet>
   </EntityContainer>

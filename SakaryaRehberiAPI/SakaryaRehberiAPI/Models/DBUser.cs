@@ -13,9 +13,9 @@ namespace SakaryaRehberiAPI.Models
     using System;
     using System.Collections.Generic;
 
-    public partial class User
+    public partial class DBUser
     {
-        public User()
+        public DBUser()
         {
             this.UserComments = new HashSet<UserComment>();
             this.UserLikes = new HashSet<UserLike>();

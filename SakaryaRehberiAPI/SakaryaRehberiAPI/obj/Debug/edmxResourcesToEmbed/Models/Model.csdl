@@ -43,20 +43,6 @@
     <Property Name="version" Type="Int32" />
     <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
   </EntityType>
-  <EntityType Name="User">
-    <Key>
-      <PropertyRef Name="User_ID" />
-    </Key>
-    <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="User_Email" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-    <Property Name="User_Password" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-    <Property Name="User_SignUpDate" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="UserType_ID" Type="Int32" Nullable="false" />
-    <NavigationProperty Name="UserType" Relationship="Self.FK_User_UserType" FromRole="User" ToRole="UserType" />
-    <NavigationProperty Name="UserComments" Relationship="Self.FK_UserComment_User" FromRole="User" ToRole="UserComment" />
-    <NavigationProperty Name="UserLikes" Relationship="Self.FK_UserLike_User" FromRole="User" ToRole="UserLike" />
-    <Property Name="User_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-  </EntityType>
   <EntityType Name="UserComment">
     <Key>
       <PropertyRef Name="UserComment_ID" />
@@ -67,7 +53,7 @@
     <Property Name="UserComment_Comment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="UserComment_Date" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="Location" Relationship="Self.FK_UserComment_Location" FromRole="UserComment" ToRole="Location" />
-    <NavigationProperty Name="User" Relationship="Self.FK_UserComment_User" FromRole="UserComment" ToRole="User" />
+    <NavigationProperty Name="DBUser" Relationship="SehirRehberiModel.FK_UserComment_User1" FromRole="UserComment" ToRole="DBUser" />
   </EntityType>
   <EntityType Name="UserLike">
     <Key>
@@ -78,7 +64,7 @@
     <Property Name="Location_ID" Type="Int32" Nullable="false" />
     <Property Name="UserLike_Date" Type="DateTime" Nullable="false" Precision="3" />
     <NavigationProperty Name="Location" Relationship="Self.FK_UserLike_Location" FromRole="UserLike" ToRole="Location" />
-    <NavigationProperty Name="User" Relationship="Self.FK_UserLike_User" FromRole="UserLike" ToRole="User" />
+    <NavigationProperty Name="DBUser" Relationship="SehirRehberiModel.FK_UserLike_User1" FromRole="UserLike" ToRole="DBUser" />
   </EntityType>
   <EntityType Name="UserType">
     <Key>
@@ -86,7 +72,7 @@
     </Key>
     <Property Name="UserType_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="UserType_Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
-    <NavigationProperty Name="Users" Relationship="Self.FK_User_UserType" FromRole="UserType" ToRole="User" />
+    <NavigationProperty Name="DBUsers" Relationship="SehirRehberiModel.FK_User_UserType1" FromRole="UserType" ToRole="DBUser" />
   </EntityType>
   <Association Name="FK_Location_LocationType">
     <End Role="LocationType" Type="Self.LocationType" Multiplicity="1" />
@@ -136,48 +122,11 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <Association Name="FK_User_UserType">
-    <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
-    <End Role="User" Type="Self.User" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="UserType">
-        <PropertyRef Name="UserType_ID" />
-      </Principal>
-      <Dependent Role="User">
-        <PropertyRef Name="UserType_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_UserComment_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
-    <End Role="UserComment" Type="Self.UserComment" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="User_ID" />
-      </Principal>
-      <Dependent Role="UserComment">
-        <PropertyRef Name="User_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_UserLike_User">
-    <End Role="User" Type="Self.User" Multiplicity="1" />
-    <End Role="UserLike" Type="Self.UserLike" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="User">
-        <PropertyRef Name="User_ID" />
-      </Principal>
-      <Dependent Role="UserLike">
-        <PropertyRef Name="User_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <EntityContainer Name="SehirRehberiEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="Locations" EntityType="Self.Location" />
     <EntitySet Name="LocationImages" EntityType="Self.LocationImage" />
     <EntitySet Name="LocationTypes" EntityType="Self.LocationType" />
     <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagram" />
-    <EntitySet Name="Users" EntityType="Self.User" />
     <EntitySet Name="UserComments" EntityType="Self.UserComment" />
     <EntitySet Name="UserLikes" EntityType="Self.UserLike" />
     <EntitySet Name="UserTypes" EntityType="Self.UserType" />
@@ -197,17 +146,109 @@
       <End Role="Location" EntitySet="Locations" />
       <End Role="UserLike" EntitySet="UserLikes" />
     </AssociationSet>
-    <AssociationSet Name="FK_User_UserType" Association="Self.FK_User_UserType">
+    <EntitySet Name="DBUsers" EntityType="SehirRehberiModel.DBUser" />
+    <AssociationSet Name="FK_User_UserType1" Association="SehirRehberiModel.FK_User_UserType1">
       <End Role="UserType" EntitySet="UserTypes" />
-      <End Role="User" EntitySet="Users" />
+      <End Role="DBUser" EntitySet="DBUsers" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserComment_User" Association="Self.FK_UserComment_User">
-      <End Role="User" EntitySet="Users" />
+    <AssociationSet Name="FK_UserComment_User1" Association="SehirRehberiModel.FK_UserComment_User1">
+      <End Role="DBUser" EntitySet="DBUsers" />
       <End Role="UserComment" EntitySet="UserComments" />
     </AssociationSet>
-    <AssociationSet Name="FK_UserLike_User" Association="Self.FK_UserLike_User">
-      <End Role="User" EntitySet="Users" />
+    <AssociationSet Name="FK_UserLike_User1" Association="SehirRehberiModel.FK_UserLike_User1">
+      <End Role="DBUser" EntitySet="DBUsers" />
       <End Role="UserLike" EntitySet="UserLikes" />
     </AssociationSet>
+    <FunctionImport Name="sp_alterdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_creatediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="version" Mode="In" Type="Int32" />
+      <Parameter Name="definition" Mode="In" Type="Binary" />
+    </FunctionImport>
+    <FunctionImport Name="sp_dropdiagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagramdefinition" ReturnType="Collection(SehirRehberiModel.sp_helpdiagramdefinition_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_helpdiagrams" ReturnType="Collection(SehirRehberiModel.sp_helpdiagrams_Result)">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+    </FunctionImport>
+    <FunctionImport Name="sp_renamediagram">
+      <Parameter Name="diagramname" Mode="In" Type="String" />
+      <Parameter Name="owner_id" Mode="In" Type="Int32" />
+      <Parameter Name="new_diagramname" Mode="In" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="sp_upgraddiagrams" />
   </EntityContainer>
+  <EntityType Name="DBUser">
+    <Key>
+      <PropertyRef Name="User_ID" />
+    </Key>
+    <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="User_Email" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="User_Password" Type="String" Nullable="false" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="User_SignUpDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="UserType_ID" Type="Int32" Nullable="false" />
+    <Property Name="User_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="UserType" Relationship="SehirRehberiModel.FK_User_UserType1" FromRole="DBUser" ToRole="UserType" />
+    <NavigationProperty Name="UserComments" Relationship="SehirRehberiModel.FK_UserComment_User1" FromRole="DBUser" ToRole="UserComment" />
+    <NavigationProperty Name="UserLikes" Relationship="SehirRehberiModel.FK_UserLike_User1" FromRole="DBUser" ToRole="UserLike" />
+  </EntityType>
+  <Association Name="FK_User_UserType1">
+    <End Type="SehirRehberiModel.UserType" Role="UserType" Multiplicity="1" />
+    <End Type="SehirRehberiModel.DBUser" Role="DBUser" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UserType">
+        <PropertyRef Name="UserType_ID" />
+      </Principal>
+      <Dependent Role="DBUser">
+        <PropertyRef Name="UserType_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserComment_User1">
+    <End Type="SehirRehberiModel.DBUser" Role="DBUser" Multiplicity="1" />
+    <End Type="SehirRehberiModel.UserComment" Role="UserComment" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DBUser">
+        <PropertyRef Name="User_ID" />
+      </Principal>
+      <Dependent Role="UserComment">
+        <PropertyRef Name="User_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_UserLike_User1">
+    <End Type="SehirRehberiModel.DBUser" Role="DBUser" Multiplicity="1" />
+    <End Type="SehirRehberiModel.UserLike" Role="UserLike" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DBUser">
+        <PropertyRef Name="User_ID" />
+      </Principal>
+      <Dependent Role="UserLike">
+        <PropertyRef Name="User_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <ComplexType Name="sp_helpdiagramdefinition_Result">
+    <Property Type="Int32" Name="version" Nullable="true" />
+    <Property Type="Binary" Name="definition" Nullable="true" />
+  </ComplexType>
+  <ComplexType Name="sp_helpdiagrams_Result">
+    <Property Type="String" Name="Database" Nullable="true" MaxLength="128" />
+    <Property Type="String" Name="Name" Nullable="false" MaxLength="128" />
+    <Property Type="Int32" Name="ID" Nullable="false" />
+    <Property Type="String" Name="Owner" Nullable="true" MaxLength="128" />
+    <Property Type="Int32" Name="OwnerID" Nullable="false" />
+  </ComplexType>
 </Schema>

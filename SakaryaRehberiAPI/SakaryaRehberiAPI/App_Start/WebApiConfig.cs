@@ -10,17 +10,13 @@ namespace SakaryaRehberiAPI
     public static class WebApiConfig
     {
         public static void Register(HttpConfiguration config)
-        {
-            var cors = new EnableCorsAttribute("*", "*", "*");
-
-            config.EnableCors(cors);
-            config.MapHttpAttributeRoutes();
-         
+        {           
+            config.MapHttpAttributeRoutes();        
 
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{action}/{id}",
-                defaults: new { controller = "API", action = "login", id = RouteParameter.Optional }
+                defaults: new { controller = "API", action = "Register", id = RouteParameter.Optional }
 
             );
 

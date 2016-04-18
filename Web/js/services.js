@@ -40,9 +40,9 @@
                     config.timeout = window.Settings.defaultRequestTimeout;
                 if (!config.hasOwnProperty('spinner'))
                     config.spinner = true;
+                usSpinnerService.spin('spinner-1');
 
             };
-
             config.url = config.url.replace('{apihost}', Settings.apiHostUrl);
             if (Auth.token) {
                 config.headers.Authorization = 'Bearer ' + Auth.token;
@@ -60,14 +60,12 @@
 
             if (window.Settings.logingEnabled && config.url.indexOf('http') > -1)
                 console.log('Api Request : ' + config.url);
-
             return config;
         },
         response: function (response) {
 
             if (response && response.config && response.config.url.indexOf('http') > -1) {
                 var url = response.config.url;
-
                 if (url.indexOf(Auth.host) > -1) {
                     if (window.Settings.logingEnabled) {
                         console.log('Api Response : ' + url);
@@ -78,10 +76,9 @@
                         if (window.Settings.logingEnabled) console.log('Cache removed : ' + url);
                     }, window.Settings.cacheTime);
 
-                    //var $spinner = $injector.get('$spinner');
-                    //setTimeout(function () {
-                    //    $spinner.hide();
-                    //}, 500);
+                    setTimeout(function () {
+                        usSpinnerService.stop('spinner-1');
+                    }, 500);
                 }
             }
 
@@ -89,18 +86,50 @@
             return response;
         },
         requestError: function (error) {
-            console.log(error);
+            setTimeout(function () {
+                usSpinnerService.stop('spinner-1');
+            }, 500);
+
 
         },
         responseError: function (error) {
-            console.log(error);
+            setTimeout(function () {
+                usSpinnerService.stop('spinner-1');
+            }, 500);
+
 
         }
     };
     return interceptor;
 }])
+.factory('$spinner', function ($ionicLoading, $translate, usSpinnerService) {
+    var openCount = 0;
+    return {
+        show: function () {          
+            return true;
+        },            
 
-.factory('AuthService', function ($rootScope, AUTH_EVENTS, $http, Auth, $ls, $firebaseAuth, transformRequestAsFormPost) {
+        hide: function () {
+            openCount--;
+            if (openCount <= 0) {
+                openCount = 0;
+                $ionicLoading.hide();
+            }
+            return true;
+        },
+        forceHide: function (message) {
+            $translate('r_gen_mob_spinnerforceerrortitle').then(function (title) {
+                $translate(message).then(function (msg) {
+                    swal({ title: title, text: msg, timer: 5000, type: 'warning' });
+                });
+            });
+            openCount = 0;
+            $ionicLoading.hide();
+            return true;
+        }
+    };
+})
+.factory('AuthService', function ($rootScope, AUTH_EVENTS, $http, Auth, $ls, $firebaseAuth, FirebaseSession, $httpParamSerializerJQLike) {
 
     var authService = {};
 
@@ -115,25 +144,21 @@
         this.SocialLoginProvider.$unauth();
     };
     authService.Login = function (mail, pass) {
-        var request = $http({
-            method: "POST",
-            url: "http://{apihost}/token",
-            transformRequest: transformRequestAsFormPost,
-            data: {
-                username: mail,
-                password: pass,
-                grant_type: "password"
-            }
+        var data = $httpParamSerializerJQLike({
+            username: mail,
+            password: pass,
+            grant_type: "password"
         });
-        request.success(function (data) {
-            if (data)
-                Auth.token = data.access_token;
-            Auth.type = "form";
-            $ls.setObject("User", data);
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data);
+        var func = $http.post("http://{apihost}/token", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (data) {
+                    Auth.type = "form";
+                    Auth.token = data.data.access_token;
+                    $ls.setObject(FirebaseSession.Data, data.data);
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data.data);
 
-        }
-        );
+                }, function (error) {
+                    console.log(error);
+                });
     };
     authService.socialLogin = function (provider, callback) {
         this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
@@ -172,44 +197,7 @@
         templateden istek gelmediği için cache süresi dolmuş olsa dahi yeni veriler yüklenmez.
      */
 })
-    .factory("transformRequestAsJsonPost", function () {
-        function transformRequest(data, headers) {
-            headers["Content-type"] = "application/json; charset=utf-8";
-            return data;
-        }
-        return (transformRequest);
-    })
-.factory("transformRequestAsFormPost", function () {
-    function transformRequest(data, headers) {
-        headers["Content-type"] = "application/x-www-form-urlencoded; charset=utf-8";
-        return (serializeData(data));
-    }
-    return (transformRequest);
-
-    function serializeData(data) {
-        if (!angular.isObject(data)) {
-            return ((data == null) ? "" : data.toString());
-        }
-        var buffer = [];
-        for (var name in data) {
-            if (!data.hasOwnProperty(name)) {
-                continue;
-            }
-            var value = data[name];
-            buffer.push(
-                encodeURIComponent(name) +
-                "=" +
-                encodeURIComponent((value == null) ? "" : value)
-            );
-        }
-        var source = buffer
-            .join("&")
-            .replace(/%20/g, "+")
-        ;
-        return (source);
-    }
-})
-.service('User', function (FirebaseSession, $ls, $timeout, Auth, $http) {
+.service('User', function (FirebaseSession, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
     var data = {};
     var User = {};
     User.Info = function () {
@@ -225,12 +213,11 @@
                     isAuthanthanced: data ? true : false
                 };
             }
-
             else
                 return {};
         }
         else if (Auth.type == 'form') {
-            data = $ls.getObject("User");
+            data = $ls.getObject(FirebaseSession.Data);
             if (data) {
                 return {
                     id: data.User_ID,
@@ -246,17 +233,29 @@
         }
 
     }
-    var config = {
-        headers: {
-            'Content-Type': 'application/json;charset=utf-8;'
-        }
-    }
-    User.Register = function (user) {
-        $http.post('http://{apihost}/API/Register', user, config)
-            .success(function (data, status, headers, config) {
-                console.log(data);
 
-            })
+    User.Register = function (user) {
+
+        //var req = $http({
+        //    url: "http://{apihost}/API/Register",
+        //    method: 'POST',
+        //    data: $httpParamSerializerJQLike(user),
+        //    headers: {
+        //        'Content-Type': 'application/x-www-form-urlencoded'
+        //    },
+        //    success:function(data){
+        //        console.log(data);
+        //    }
+        //});
+        user.User_Password = md5.createHash(user.User_Password);
+
+        var func = $http.post("http://{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                      .then(function (data) {
+                          console.log(data);
+
+                      }, function (error) {
+                          console.log(error);
+                      });
 
     }
     return User;
