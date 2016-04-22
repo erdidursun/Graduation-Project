@@ -8,6 +8,7 @@ using Owin;
 using System.Web.Http;
 using SakaryaRehberiAPI.OAuth.Providers;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
 
 [assembly: OwinStartup(typeof(SakaryaRehberiAPI.OAuth.Startup))]
 namespace SakaryaRehberiAPI.OAuth
@@ -23,7 +24,8 @@ namespace SakaryaRehberiAPI.OAuth
 
             httpConfiguration.EnableCors();
             WebApiConfig.Register(httpConfiguration);
-
+            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+            //other config settings, dependency injection/resolver settings, etc
             appBuilder.UseWebApi(httpConfiguration);
 
         }

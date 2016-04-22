@@ -1,8 +1,8 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* Cubic Bezier Transition */
 @media print {
   body {
-    background-color: #fff !important; }
+    background-color: #eff3f8 !important; }
   .page-header {
     display: none; }
   .theme-panel {
@@ -810,7 +810,7 @@ Pace - Page Progress
   clear: both; }
 
 .page-head {
-  background: #fff; }
+  background: #eff3f8; }
   .page-head .container {
     position: relative; }
   .page-head .page-title {

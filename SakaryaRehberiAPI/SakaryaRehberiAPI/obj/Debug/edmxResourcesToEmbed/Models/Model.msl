@@ -4,6 +4,7 @@
     <EntitySetMapping Name="Locations">
       <EntityTypeMapping TypeName="SehirRehberiModel.Location">
         <MappingFragment StoreEntitySet="Location">
+          <ScalarProperty Name="Location_Banner" ColumnName="Location_Banner" />
           <ScalarProperty Name="Location_ID" ColumnName="Location_ID" />
           <ScalarProperty Name="Location_Longtitude" ColumnName="Location_Longtitude" />
           <ScalarProperty Name="Location_Latitude" ColumnName="Location_Latitude" />

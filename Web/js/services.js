@@ -86,6 +86,8 @@
             return response;
         },
         requestError: function (error) {
+            console.log(error)
+
             setTimeout(function () {
                 usSpinnerService.stop('spinner-1');
             }, 500);
@@ -93,6 +95,7 @@
 
         },
         responseError: function (error) {
+            console.log(error)
             setTimeout(function () {
                 usSpinnerService.stop('spinner-1');
             }, 500);

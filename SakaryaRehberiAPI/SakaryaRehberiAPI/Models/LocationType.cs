@@ -11,17 +11,17 @@ namespace SakaryaRehberiAPI.Models
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     
     public partial class LocationType
     {
         public LocationType()
         {
-            this.Locations = new HashSet<Location>();
         }
-    
+                [Key]
+
         public int LocationType_ID { get; set; }
         public string LocationType_Name { get; set; }
     
-        public virtual ICollection<Location> Locations { get; set; }
     }
 }

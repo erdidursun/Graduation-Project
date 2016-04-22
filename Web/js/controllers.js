@@ -1,11 +1,61 @@
 ﻿
 angular.module('sakaryarehberi')
-.controller("MainCtrl", function ($scope, $timeout) {
+.controller("MainCtrl", function ($scope, $timeout, Location) {
+
+
+})
+.controller("LocationDetailCtrl", function ($scope, $stateParams) {
+    $scope.location = $stateParams.location;
+    $scope.slides = [];
+    $scope.selected = 'info';
+    $scope.select=function(tab){
+        $scope.selected = tab;
+        console.log(tab);
+    }
+    var slides = $scope.slides;
+    $scope.myInterval = 5000;
+    angular.forEach($scope.location.LocationImages, function (value) {
+        $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
+    });
+})
+.controller("LocationsCtrl", function ($scope,$state, Location, $uibModal) {
     $scope.$on('$viewContentLoaded', function () {
         App.initAjax(); // initialize core components
     });
 
+    $scope.model = [];
+    $scope.locations = [];
+    $scope.locationTypes = [];
+    $scope.open = function (location) {
+        //var modalInstance = $uibModal.open(
+        //{
+        //    templateUrl: 'locationFull.html',
+        //    controller: 'LocationDetailCtrl',
+        //    size:'lg',
+        //    resolve:
+        //    {
+        //        location: function () {
+        //            return location;
+        //        }
+        //    }
+        //});
+    };
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
 
+    }, function (error) {
+        console.log(error);
+    });
+    Location.GetLocations().then(function (data) {
+        angular.forEach(data.data, function (value, key) {
+            $scope.locations.push(value);
+            $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name });
+        });
+        $scope.selected = $scope.model[0];
+
+    }, function (error) {
+        console.log(error);
+    });;
 
     $scope.someGroupFn = function (item) {
 
@@ -20,11 +70,6 @@ angular.module('sakaryarehberi')
         console.log(item);
 
     }
-    $scope.model = [{ isim: "İstanbul", plakaNo: 34 },
-    { isim: "Sakarya", plakaNo: 54 },
-    { isim: "Ardahan", plakaNo: 75 }
-    ];
-    $scope.selected = $scope.model[0];
 })
 
 
@@ -61,7 +106,7 @@ angular.module('sakaryarehberi')
     };
 })
 
-.controller("LoginCtrl", function ($scope, $state, AuthService,md5, AUTH_EVENTS, User, $uibModal) {
+.controller("LoginCtrl", function ($scope, $state, AuthService, md5, AUTH_EVENTS, User, $uibModal) {
 
     $scope.mail = "erdidursun13@gmail.com";
     $scope.pass = "1234567";
@@ -72,7 +117,7 @@ angular.module('sakaryarehberi')
         console.log(error);
 
     });
-    $scope.login = function () {      
+    $scope.login = function () {
 
         AuthService.Login($scope.mail, md5.createHash($scope.pass));
     };
@@ -90,8 +135,8 @@ angular.module('sakaryarehberi')
         User_Email: "erdidursun09@hotmail.com",
         User_Password: "12345",
         User_Name: "sdfsdfsdfsdf"
-    };  
-    $scope.register = function () {    
+    };
+    $scope.register = function () {
         User.Register($scope.user);
     };
 
@@ -99,13 +144,5 @@ angular.module('sakaryarehberi')
 .controller("MenuCtrl", function ($scope) {
 
 })
-.controller("CarouselDemoCtrl", function ($scope) {
-    $scope.myInterval = 1000;
-    var slides = $scope.slides = [];
-    $scope.slides.push({ image: "assets/global/img/1.jpg", text: "test", active: true });
-    $scope.slides.push({ image: "assets/global/img/2.jpg", text: "test2", active: false });
-    $scope.slides.push({ image: "assets/global/img/3.jpg", text: "test2", active: false });
 
-    $scope.slides.push({ image: "http://placekitten.com/503/300", text: "asdasdsad", active: false });
-})
 ;

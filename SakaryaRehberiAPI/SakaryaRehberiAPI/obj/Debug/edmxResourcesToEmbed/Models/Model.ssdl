@@ -21,6 +21,7 @@
     <Property Name="Location_Name" Type="nchar" MaxLength="100" Nullable="false" />
     <Property Name="Location_Info" Type="text" />
     <Property Name="LocationType_ID" Type="int" Nullable="false" />
+    <Property Name="Location_Banner" Type="nvarchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="LocationImage">
     <Key>
@@ -74,7 +75,7 @@
     <Property Name="UserType_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="UserType_Name" Type="nchar" MaxLength="100" Nullable="false" />
   </EntityType>
-  <Association Name="FK_DBUser_UserType">
+  <Association Name="FK_DBUser_UserType1">
     <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
     <End Role="DBUser" Type="Self.DBUser" Multiplicity="*" />
     <ReferentialConstraint>
@@ -107,18 +108,6 @@
       </Principal>
       <Dependent Role="LocationImage">
         <PropertyRef Name="Location_ID" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
-  <Association Name="FK_User_UserType">
-    <End Role="UserType" Type="Self.UserType" Multiplicity="1" />
-    <End Role="DBUser" Type="Self.DBUser" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="UserType">
-        <PropertyRef Name="UserType_ID" />
-      </Principal>
-      <Dependent Role="DBUser">
-        <PropertyRef Name="UserType_ID" />
       </Dependent>
     </ReferentialConstraint>
   </Association>
@@ -210,7 +199,7 @@
     <EntitySet Name="UserComment" EntityType="Self.UserComment" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserLike" EntityType="Self.UserLike" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="UserType" EntityType="Self.UserType" Schema="dbo" store:Type="Tables" />
-    <AssociationSet Name="FK_DBUser_UserType" Association="Self.FK_DBUser_UserType">
+    <AssociationSet Name="FK_DBUser_UserType1" Association="Self.FK_DBUser_UserType1">
       <End Role="UserType" EntitySet="UserType" />
       <End Role="DBUser" EntitySet="DBUser" />
     </AssociationSet>
@@ -221,10 +210,6 @@
     <AssociationSet Name="FK_LocationImage_Location" Association="Self.FK_LocationImage_Location">
       <End Role="Location" EntitySet="Location" />
       <End Role="LocationImage" EntitySet="LocationImage" />
-    </AssociationSet>
-    <AssociationSet Name="FK_User_UserType" Association="Self.FK_User_UserType">
-      <End Role="UserType" EntitySet="UserType" />
-      <End Role="DBUser" EntitySet="DBUser" />
     </AssociationSet>
     <AssociationSet Name="FK_UserComment_Location" Association="Self.FK_UserComment_Location">
       <End Role="Location" EntitySet="Location" />

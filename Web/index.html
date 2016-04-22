@@ -1,15 +1,5 @@
 ﻿<!DOCTYPE html>
-<!--
-Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
-Version: 4.5.4
-Author: KeenThemes
-Website: http://www.keenthemes.com/
-Contact: support@keenthemes.com
-Follow: www.twitter.com/keenthemes
-Like: www.facebook.com/keenthemes
-Purchase: http://themeforest.net/item/metronic-responsive-admin-dashboard-template/4021469?ref=keenthemes
-License: You must have a valid license purchased only from themeforest(the above link) in order to legally use the theme for your project.
--->
+
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
@@ -21,14 +11,14 @@ License: You must have a valid license purchased only from themeforest(the above
     <title>Metronic | Dashboard</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1" name="viewport" />
-  
+
     <meta content="" name="description" />
     <meta content="" name="author" />
     <!-- BEGIN GLOBAL MANDATORY STYLES -->
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=all" rel="stylesheet" type="text/css" />
     <link href="assets/global/plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/global/plugins/simple-line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/global/plugins/bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="assets/global/plugins/bootstrap/css/bootstrap.css" rel="stylesheet" type="text/css" />
     <link href="assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
     <link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
     <link id="ng_load_plugins_before" />
@@ -38,9 +28,10 @@ License: You must have a valid license purchased only from themeforest(the above
     <link href="assets/global/css/plugins.min.css" rel="stylesheet" type="text/css" />
     <!-- END THEME GLOBAL STYLES -->
     <!-- BEGIN THEME LAYOUT STYLES -->
+    <link href="assets/global/css/search.min.css" rel="stylesheet" />
     <link href="assets/global/plugins/angular-ui-select/select.css" rel="stylesheet" />
-    <link href="assets/layouts/layout3/css/layout.min.css" rel="stylesheet" type="text/css" />
-    <link href="assets/layouts/layout3/css/themes/blue-steel.min.css" rel="stylesheet" type="text/css" id="style_color" />
+    <link href="assets/layouts/layout3/css/layout.css" rel="stylesheet" type="text/css" />
+    <link href="assets/layouts/layout3/css/themes/default.css" rel="stylesheet" type="text/css" id="style_color" />
     <link href="assets/layouts/layout3/css/custom.min.css" rel="stylesheet" type="text/css" />
     <!-- END THEME LAYOUT STYLES -->
     <link rel="shortcut icon" href="favicon.ico" />
@@ -63,12 +54,11 @@ License: You must have a valid license purchased only from themeforest(the above
 
 
     <script src="assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
-   
-    <!-- Firebase -->
-    <script src="https://cdn.firebase.com/js/client/2.2.4/firebase.js"></script>
-    <!-- AngularFire -->
-    <script src="https://cdn.firebase.com/libs/angularfire/1.2.0/angularfire.min.js"></script>
 
+    <!-- Firebase -->
+    <script src="assets/global/plugins/firebase/firebase.js"></script>
+    <!-- AngularFire -->
+    <script src="assets/global/plugins/angularfire/dist/angularfire.min.js"></script>
 
     <script src="assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>
 
@@ -91,12 +81,92 @@ License: You must have a valid license purchased only from themeforest(the above
     <script src="js/services.js"></script>
     <script src="js/constants.js"></script>
     <script src="js/filters.js"></script>
+    <script src="js/api.js"></script>
     <!-- END APP LEVEL ANGULARJS SCRIPTS -->
     <!-- BEGIN APP LEVEL JQUERY SCRIPTS -->
 
     <script src="assets/global/scripts/app.js" type="text/javascript"></script>
     <script src="assets/layouts/layout3/scripts/layout.js" type="text/javascript"></script>
 
+    <script type="text/ng-template" id="locationFull.html">
+        <div class="portlet light bordered">
+            <div class="portlet-title tabbable-line">
+                <div class="caption">
+                    <i class="icon-pin font-yellow-lemon"></i>
+                    <span class="caption-subject bold font-yellow-lemon uppercase"> {{location.Location_Name}} </span>
+                </div>
+                <ul class="nav nav-tabs">
+                    <li class="selected=='map'?active:''">
+                        <a ng-click="select('map')" data-toggle="tab"> Harita </a>
+                    </li>
+                    <li class="selected=='comment'?active:''">
+                        <a ng-click="select('comment')" data-toggle="tab"> Yorumlar </a>
+                    </li>
+                    <li class="selected=='info'?active:''">
+                        <a ng-click="select('info')" data-toggle="tab"> Hakkında </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="portlet-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <carousel interval="myInterval">
+                            <slide ng-repeat="slide in slides" active="slide.active">
+                                <img ng-src="{{slide.image}}" style="margin:auto;height:305px; width:100%">
+                                <div class="carousel-caption">
+                                    <p>{{slide.text}}</p>
+                                </div>
+                            </slide>
+                        </carousel>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="tab-content">
+                            <div class="tab-pane selected=='info'?active:''">
+                                <div class="scroller" style="height: 200px;">
+                                    <p>
+                                        {{location.Location_Info}}
+                                    </p>
+
+                                </div>
+                            </div>
+                            <div class="tab-pane selected=='map'?active:''" id="portlet_tab2">
+                                <div class="scroller" style="height: 200px;">
+                                    <h4>Tab 2 Content</h4>
+                                    <p>
+                                        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
+                                        et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt
+                                        ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo.
+                                    </p>
+                                    <p>
+                                        Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent
+                                        luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
+                                        erat volutpat.ut laoreet dolore magna ut laoreet dolore magna. ut laoreet dolore magna. ut laoreet dolore magna.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="portlet_tab3">
+                                <div class="scroller" style="height: 200px;">
+                                    <h4>Tab 3 Content</h4>
+                                    <p>
+                                        Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent
+                                        luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam
+                                        erat volutpat.ut laoreet dolore magna ut laoreet dolore magna. ut laoreet dolore magna. ut laoreet dolore magna.
+                                    </p>
+                                    <p>
+                                        Ut wisi enim ad btn-smm veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse
+                                        molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
+                                        facilisi.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </script>
 </body>
 
 </html>

@@ -11,16 +11,19 @@ namespace SakaryaRehberiAPI.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class UserComment
     {
+        [Key]
+
         public int UserComment_ID { get; set; }
         public int User_ID { get; set; }
         public int Location_ID { get; set; }
         public string UserComment_Comment { get; set; }
         public System.DateTime UserComment_Date { get; set; }
-    
+
         public virtual Location Location { get; set; }
-        public virtual DBUser DBUser { get; set; }
+        public virtual User DBUser { get; set; }
     }
 }

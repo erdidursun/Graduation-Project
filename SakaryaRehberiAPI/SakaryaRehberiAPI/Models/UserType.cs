@@ -11,17 +11,17 @@ namespace SakaryaRehberiAPI.Models
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel.DataAnnotations;
+
     public partial class UserType
     {
         public UserType()
         {
-            this.DBUsers = new HashSet<DBUser>();
         }
-    
+
+        [Key]
         public int UserType_ID { get; set; }
         public string UserType_Name { get; set; }
-    
-        public virtual ICollection<DBUser> DBUsers { get; set; }
+
     }
 }

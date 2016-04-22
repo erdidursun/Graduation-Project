@@ -15,7 +15,7 @@ namespace SakaryaRehberiAPI.OAuth.Providers
 
     public class SimpleAuthorizationServerProvider:OAuthAuthorizationServerProvider
     {
-        SehirRehberiEntities db = new SehirRehberiEntities();
+        DBContext db = new DBContext();
         public override  System.Threading.Tasks.Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Methods", new[] { "POST" });
@@ -36,15 +36,15 @@ namespace SakaryaRehberiAPI.OAuth.Providers
         // OAuthAuthorizationServerProvider sınıfının kaynak erişimine izin verebilmek için ilgili GrantResourceOwnerCredentials metotunu override ediyoruz.
         public override Task GrantResourceOwnerCredentials(OAuthGrantResourceOwnerCredentialsContext context)
         {
-           
+
 
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "Content-Type" });
-            DBUser user = db.DBUsers.FirstOrDefault(u => u.User_Email.Trim().Equals(context.UserName) && u.User_Password.Equals(context.Password.Trim()));
+            User user = db.Users.FirstOrDefault(u => u.User_Email.Trim().Equals(context.UserName) && u.User_Password.Equals(context.Password.Trim()));
             // Kullanıcının access_token alabilmesi için gerekli validation işlemlerini yapıyoruz.
-            string json=JsonConvert.SerializeObject(user);
+            string json = JsonConvert.SerializeObject(user, Formatting.None);
             Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             var props = new AuthenticationProperties(values);
-            if (user!=null)
+            if (user != null)
             {
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
@@ -52,7 +52,7 @@ namespace SakaryaRehberiAPI.OAuth.Providers
                 identity.AddClaim(new Claim(ClaimTypes.Role, "User"));
                 var ticket = new AuthenticationTicket(identity, props);
 
-            
+
                 context.Validated(ticket);
             }
             else

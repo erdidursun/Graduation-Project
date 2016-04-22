@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /*!
  * Bootstrap v3.3.6 (http://getbootstrap.com)
  * Copyright 2011-2015 Twitter, Inc.
@@ -3923,8 +3923,7 @@ tbody.collapse.in {
     .navbar-toggle {
       display: none; } }
 
-.navbar-nav {
-  margin: 7.5px -15px; }
+
   .navbar-nav > li > a {
     padding-top: 10px;
     padding-bottom: 10px;

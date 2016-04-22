@@ -20,11 +20,13 @@ namespace SakaryaRehberiAPI.Controllers
 
     public class APIController : ApiController
     {
-        SehirRehberiEntities _db = new SehirRehberiEntities();
+
+        DBContext _db = new DBContext();
 
         #region utilities
         private static string ComputeHash(string hashedPassword, string message)
         {
+
             var key = Encoding.UTF8.GetBytes(hashedPassword.ToUpper());
             string hashString;
 
@@ -47,13 +49,16 @@ namespace SakaryaRehberiAPI.Controllers
         [AllowAnonymous]
         public HttpResponseMessage Register(RegisterModel model)
         {
-            DBUser _user = new DBUser();
+
+            User _user = new User();
+          
             _user.User_Email = model.User_Email;
             _user.User_Name = model.User_Name;
             _user.User_Password = model.User_Password;
             _user.User_SignUpDate = DateTime.Now;
             _user.UserType_ID = 1;
-            _db.DBUsers.Add(_user);
+
+            _db.Users.Add(_user);
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, _user);
         }
@@ -65,7 +70,16 @@ namespace SakaryaRehberiAPI.Controllers
         }
         #endregion
 
-
+        [AllowAnonymous]
+        public HttpResponseMessage GetLocations(int page)
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.Locations.ToList());
+        }
+        [AllowAnonymous]
+        public HttpResponseMessage GetLocationTypes()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
+        }
     }
 
 }

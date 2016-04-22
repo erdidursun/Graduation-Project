@@ -12,15 +12,16 @@ namespace SakaryaRehberiAPI.Models
     using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
 
-    public partial class DBUser
+    public partial class User
     {
-        public DBUser()
+        public User()
         {
             this.UserComments = new HashSet<UserComment>();
             this.UserLikes = new HashSet<UserLike>();
         }
-
+        [Key]
         public int User_ID { get; set; }
         public string User_Email { get; set; }
         public string User_Password { get; set; }

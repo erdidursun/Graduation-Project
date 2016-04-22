@@ -97,4 +97,6 @@ D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\TokenAuthorization.Co
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Antlr3.Runtime.pdb
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.dll
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.pdb
+D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.tf.resources
+D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache

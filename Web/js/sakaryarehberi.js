@@ -36,6 +36,18 @@
                   }]
               }
           })
+        .state('home.locations', {
+            url: "anasayfa",
+            templateUrl: 'views/partials/locations.html',
+            controller: 'LocationsCtrl'
+        })
+         .state('home.locationDetails', {
+             url: "locationDetail",
+             templateUrl: 'locationFull.html',
+             controller: 'LocationDetailCtrl',
+             params: { location: null }
+               
+         })
           .state('home.forgot', {
               url: "forgot",
               templateUrl: 'views/partials/forgot.html',
@@ -69,7 +81,7 @@
           }
       })
 
-    $urlRouterProvider.otherwise("/");
+    $urlRouterProvider.otherwise("/anasayfa");
 })
 .run(function ($rootScope, AUTH_EVENTS, AuthService) {
 
