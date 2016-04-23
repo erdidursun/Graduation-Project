@@ -100,3 +100,4 @@ D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiA
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.tf.resources
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache
+D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.tf1.resources

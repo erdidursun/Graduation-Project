@@ -7,9 +7,12 @@ using System.Web;
 
 namespace SakaryaRehberiAPI.Models
 {
-    public class DBContext:DbContext
+    public class DBContext : DbContext
     {
-        public DBContext() : base("DbContext") { }
+        public DBContext() : base("DbContext") {
+            //this.Configuration.LazyLoadingEnabled = false;
+            //this.Configuration.ProxyCreationEnabled = false;
+        }
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
         public DbSet<LocationImage> LocationImages { get; set; }
@@ -18,9 +21,10 @@ namespace SakaryaRehberiAPI.Models
         public DbSet<UserLike> UserLikes { get; set; }
         public DbSet<UserType> UserTypes { get; set; }
 
+
+    
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-
             //modelBuilder.Conventions.ad>();
         }
     }

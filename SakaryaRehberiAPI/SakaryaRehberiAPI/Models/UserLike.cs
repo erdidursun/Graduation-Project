@@ -21,8 +21,5 @@ namespace SakaryaRehberiAPI.Models
         public int User_ID { get; set; }
         public int Location_ID { get; set; }
         public System.DateTime UserLike_Date { get; set; }
-
-        public virtual Location Location { get; set; }
-        public virtual User User { get; set; }
     }
 }

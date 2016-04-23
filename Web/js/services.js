@@ -226,7 +226,7 @@
                     id: data.User_ID,
                     name: data.User_Name,
                     access_token: data.access_token,
-                    profileImageURL: data.profileImageURL,
+                    profileImageURL: data.User_ImgPath,
                     isAuthanthanced: data ? true : false
                 };
             }

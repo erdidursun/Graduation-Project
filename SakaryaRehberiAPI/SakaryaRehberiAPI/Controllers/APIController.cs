@@ -51,7 +51,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
 
             User _user = new User();
-          
+
             _user.User_Email = model.User_Email;
             _user.User_Name = model.User_Name;
             _user.User_Password = model.User_Password;
@@ -73,7 +73,9 @@ namespace SakaryaRehberiAPI.Controllers
         [AllowAnonymous]
         public HttpResponseMessage GetLocations(int page)
         {
-            return Request.CreateResponse(HttpStatusCode.OK, _db.Locations.ToList());
+
+            var result = _db.Locations;
+            return Request.CreateResponse(HttpStatusCode.OK, result);
         }
         [AllowAnonymous]
         public HttpResponseMessage GetLocationTypes()

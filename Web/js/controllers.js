@@ -4,21 +4,145 @@ angular.module('sakaryarehberi')
 
 
 })
-.controller("LocationDetailCtrl", function ($scope, $stateParams) {
-    $scope.location = $stateParams.location;
-    $scope.slides = [];
-    $scope.selected = 'info';
-    $scope.select=function(tab){
-        $scope.selected = tab;
-        console.log(tab);
+.controller("MapRouteCtrl", function ($scope, data, $timeout) {
+
+    $scope.map = {
+        control: {},
+        center: {
+            latitude: data.Location_Latitude,
+            longitude: data.Location_Longtitude
+        },
+        mapTypeControl: true,
+        mapTypeControlOptions: {
+            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
+            mapTypeIds: [
+              google.maps.MapTypeId.ROADMAP,
+              google.maps.MapTypeId.TERRAIN
+            ]
+        },
+        zoom: 8
+    };
+
+    // marker object
+    $scope.marker = {
+        center: {
+            latitude: data.Location_Latitude,
+            longitude: data.Location_Longtitude
+        }
     }
-    var slides = $scope.slides;
-    $scope.myInterval = 5000;
+    //$scope.initialize = function () {
+    //    var latlng = new google.maps.LatLng(data.Location_Latitude, data.Location_Longtitude);
+    //    $scope.map2 = {
+    //        control: {},
+    //        center:latlng,
+    //        zoom: 8
+    //    };
+    //};
+
+    //var directionsDisplay = new google.maps.DirectionsRenderer();
+    //var directionsService = new google.maps.DirectionsService();
+    //var geocoder = new google.maps.Geocoder();
+
+
+    //navigator.geolocation.getCurrentPosition(function (loc) {
+    //    $scope.directions = {
+    //        origin: new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude),
+    //        destination: new google.maps.LatLng(location.Location_Latitude, location.Location_Longtitude),
+    //        showList: false
+    //    }
+    //    var request = {
+    //        origin: $scope.directions.origin,
+    //        destination: $scope.directions.destination,
+    //        travelMode: google.maps.DirectionsTravelMode.DRIVING
+    //    };
+    //    directionsService.route(request, function (response, status) {
+    //        console.log(response);
+    //        if (status === google.maps.DirectionsStatus.OK) {
+    //            $scope.marker = {};
+    //            directionsDisplay.setDirections(response);
+    //            directionsDisplay.setMap($scope.map.control.getGMap());
+    //            directionsDisplay.setPanel(document.getElementById('directionsList'));
+    //            $scope.directions.showList = true;
+    //        } else {
+    //            alert('Google route unsuccesfull!');
+    //        }
+    //    });
+    //});
+
+
+})
+.controller("LocationDetailCtrl", function ($scope, $stateParams, $ls, $uibModal, $timeout) {
+    $scope.location = $stateParams.location;
+    if ($scope.location != null)
+        $ls.setObject("lastLocation", $scope.location);
+    else
+        $scope.location = $ls.getObject("lastLocation");
+    $scope.slides = [];
+    $scope.map = {
+        control:{},     
+        center: {
+            latitude: $scope.location.Location_Latitude,
+            longitude: $scope.location.Location_Longtitude
+        },       
+        zoom:14
+    };
+
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    var directionsService = new google.maps.DirectionsService();
+    var geocoder = new google.maps.Geocoder();
+    console.log($scope.map);
+
+    // marker object
+    $scope.marker = {
+        center: {
+            latitude: $scope.location.Location_Latitude,
+            longitude: $scope.location.Location_Longtitude
+        }
+    }
+
+    $scope.getDirections = function () {
+        navigator.geolocation.getCurrentPosition(function (loc) {
+            $scope.directions = {
+                origin: new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude),
+                destination: new google.maps.LatLng($scope.location.Location_Latitude, $scope.location.Location_Longtitude),
+                showList: false
+            }
+            var request = {
+                origin: $scope.directions.origin,
+                destination: $scope.directions.destination,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+            directionsService.route(request, function (response, status) {
+                console.log(response)
+                if (status === google.maps.DirectionsStatus.OK) {
+                    $scope.marker = {};
+                    directionsDisplay.setDirections(response);
+                    directionsDisplay.setMap($scope.map.control.getGMap());
+                    directionsDisplay.setPanel(document.getElementById('directionsList'));
+                    $scope.directions.showList = true;
+                } else {
+                    alert('Google route unsuccesfull!');
+                }
+            });
+        });
+
+      
+    };
+
+    $scope.selected = 'map';
+    $scope.select = function (tab) {
+        $scope.selected = tab;
+    }
+    $scope.like = function (location) {
+
+    }
+    $scope.myInterval = 2000;
+
     angular.forEach($scope.location.LocationImages, function (value) {
         $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
     });
 })
-.controller("LocationsCtrl", function ($scope,$state, Location, $uibModal) {
+.controller("LocationsCtrl", function ($scope, $state, Location) {
     $scope.$on('$viewContentLoaded', function () {
         App.initAjax(); // initialize core components
     });
@@ -48,6 +172,8 @@ angular.module('sakaryarehberi')
     });
     Location.GetLocations().then(function (data) {
         angular.forEach(data.data, function (value, key) {
+            console.log(JSON.stringify(value));
+
             $scope.locations.push(value);
             $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name });
         });

@@ -188,9 +188,14 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="JsonNetFormatter.cs" />
     <Compile Include="Migrations\201604221305167_tf.cs" />
     <Compile Include="Migrations\201604221305167_tf.Designer.cs">
       <DependentUpon>201604221305167_tf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201604231640461_tf1.cs" />
+    <Compile Include="Migrations\201604231640461_tf1.Designer.cs">
+      <DependentUpon>201604231640461_tf1.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DBContext.cs" />
@@ -269,6 +274,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604221305167_tf.resx">
       <DependentUpon>201604221305167_tf.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201604231640461_tf1.resx">
+      <DependentUpon>201604231640461_tf1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

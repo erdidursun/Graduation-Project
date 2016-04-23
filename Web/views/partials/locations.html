@@ -41,8 +41,9 @@
                                 <h3>
                                     <a ui-sref="home.locationDetails({location:{{location}}})">{{location.Location_Name}}</a>
                                 </h3>
-                                <a href="javascript:;">
-                                    <i class="icon-like font-blue"></i>
+
+                                <a ng-click="like(location)" ng-if="">
+                                    <i class="fa fa-heart font-red"></i>
                                 </a>
                                 <a href="javascript:;">
                                     <i class="icon-comment font-green-meadow"></i>

@@ -1,4 +1,4 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', "ui.router", "ui.select", "firebase",'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'google-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
@@ -13,6 +13,8 @@
     $httpProvider.defaults.useXDomain = true;
     $httpProvider.interceptors.push('httpRequestInterceptor');
     usSpinnerConfigProvider.setDefaults({ color: '#3598DC' });
+
+   
     $stateProvider
 
           // setup an abstract state for the tabs directive
