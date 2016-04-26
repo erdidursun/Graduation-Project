@@ -42,6 +42,7 @@ angular.module('sakaryarehberi')
     $scope.slides = [];
     ;
     $rootScope.hideMarker = false;
+    $scope.filterDisplayName="Yol Tarifi"
     $scope.mapResult;
     $scope.map = {
         control: {},
@@ -86,11 +87,20 @@ angular.module('sakaryarehberi')
                 travelMode: google.maps.DirectionsTravelMode.DRIVING
             };
             if (type == 'car')
-                request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
-            else if (type == 'bicyle')
+            {
+                request.travelMode = google.maps.DirectionsTravelMode.DRIVING; 
+                $scope.filterDisplayName = "Araçla";
+            }
+            else if (type == 'bicyle'){
                 request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
-            else if (type == 'walk')
+                $scope.filterDisplayName = "Bisikletle";
+
+            }
+            else if (type == 'walk') {
                 request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+                $scope.filterDisplayName = "Yürüyerek";
+
+            }
             $timeout(function () {
 
                 directionsService.route(request, function (response, status) {
@@ -101,10 +111,12 @@ angular.module('sakaryarehberi')
                         directionsDisplay.setPanel(document.getElementById('directionsList'));
                         $rootScope.directions.showList = true;
                     } else {
+                        $scope.filterDisplayName = "Yol Tarifi"
+
                         swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
                     }
                 });
-            }, 2000);
+            }, 500);
         })
 
 
