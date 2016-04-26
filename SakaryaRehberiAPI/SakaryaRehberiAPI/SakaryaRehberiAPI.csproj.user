@@ -1,4 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<<<<<<< HEAD
 <Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <WebStackScaffolding_ControllerDialogWidth>600</WebStackScaffolding_ControllerDialogWidth>
@@ -7,6 +8,9 @@
     <WebStackScaffolding_IsReferencingScriptLibrariesSelected>True</WebStackScaffolding_IsReferencingScriptLibrariesSelected>
     <WebStackScaffolding_LayoutPageFile />
   </PropertyGroup>
+=======
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+>>>>>>> 074e292b963ca4dbcad28cad496fe8540d155364
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">

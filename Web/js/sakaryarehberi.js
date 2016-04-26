@@ -1,9 +1,9 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'google-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
     'angularSpinner'])
-.config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider) {
+.config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider, uiGmapGoogleMapApiProvider) {
    
     //$httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.post = {};
@@ -14,7 +14,11 @@
     $httpProvider.interceptors.push('httpRequestInterceptor');
     usSpinnerConfigProvider.setDefaults({ color: '#3598DC' });
 
-   
+    uiGmapGoogleMapApiProvider.configure({
+        //    key: 'your api key',
+        v: '3.20', //defaults to latest 3.X anyhow
+        libraries: 'weather,geometry,visualization'
+    });
     $stateProvider
 
           // setup an abstract state for the tabs directive
@@ -45,7 +49,7 @@
         })
          .state('home.locationDetails', {
              url: "locationDetail",
-             templateUrl: 'locationFull.html',
+             templateUrl: 'views/partials/locationFull.html',
              controller: 'LocationDetailCtrl',
              params: { location: null }
                

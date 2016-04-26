@@ -9,6 +9,8 @@ using System.Web.Http;
 using SakaryaRehberiAPI.OAuth.Providers;
 using Microsoft.Owin.Security;
 using Newtonsoft.Json;
+using System.Web.Http.Cors;
+using Microsoft.Owin.Cors;
 
 [assembly: OwinStartup(typeof(SakaryaRehberiAPI.OAuth.Startup))]
 namespace SakaryaRehberiAPI.OAuth
@@ -18,15 +20,17 @@ namespace SakaryaRehberiAPI.OAuth
     {
         public void Configuration(IAppBuilder appBuilder)
         {
-            ConfigureOAuth(appBuilder);
-
             HttpConfiguration httpConfiguration = new HttpConfiguration();
 
-            httpConfiguration.EnableCors();
-            WebApiConfig.Register(httpConfiguration);
-            httpConfiguration.Formatters.JsonFormatter.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Serialize;
+            //var cors = new EnableCorsAttribute("*", "*", "*");
+            //httpConfiguration.EnableCors(cors);
+
+
+            //appBuilder.UseCors(CorsOptions.AllowAll);
             //other config settings, dependency injection/resolver settings, etc
-            appBuilder.UseWebApi(httpConfiguration);
+            //appBuilder.UseWebApi(httpConfiguration);
+            ConfigureOAuth(appBuilder);
+
 
         }
 

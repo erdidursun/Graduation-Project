@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.Cors;
-using TokenAuthorization.Core.Account;
-using TokenAuthorization.Core.Attributes;
+
 
 namespace SakaryaRehberiAPI.Controllers
 {
+
 
     public class APIController : ApiController
     {

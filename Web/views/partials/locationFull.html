@@ -1,0 +1,76 @@
+﻿<div class="portlet light bordered">
+    <div class="portlet-title tabbable-line">
+        <div class="caption">
+            <i class="icon-pin font-yellow-lemon"></i>
+            <span class="caption-subject bold font-yellow-lemon uppercase"> {{location.Location_Name}} </span>
+        </div>
+        <ul class="nav nav-tabs">
+            <li class="selected=='map'?active:''">
+                <a ng-click="select('map')" data-toggle="tab"> Yol Tarifi Al </a>
+            </li>
+            <li class="selected=='info'?active:''">
+                <a ng-click="select('info')" data-toggle="tab"> Hakkında </a>
+            </li>
+        </ul>
+    </div>
+    <div class="portlet-body">
+
+        <div class="tab-content">
+            <div class="tab-pane active" ng-if="selected=='info'">
+                <div class="row">
+                    <div class="col-md-6">
+                        <br />
+                        <uib-carousel interval="myInterval">
+                            <uib-slide ng-repeat="slide in slides" active="slide.active">
+                                <img ng-src="{{slide.image}}" style="margin:auto;height:305px; width:100%">
+                                <div class="carousel-caption">
+                                    <p>{{slide.text}}</p>
+                                </div>
+                            </uib-slide>
+                        </uib-carousel>
+
+                        <div class="general-item-list" ng-repeat="comment in location.UserComments">
+                            <div class="item">
+                                <div class="item-head">
+                                    <div class="item-details">
+                                        <img class="item-pic rounded" ng-src="{{comment.User.User_ImgPath}}">
+                                        <a href="" class="item-name primary-link">{{comment.User.User_Name}}</a>
+                                        <span class="item-label">{{comment.UserComment_Date}}</span>
+                                    </div>
+                                </div>
+                                <div class="item-body">{{comment.UserComment_Comment}}  </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-6">
+                        <p>
+                            {{location.Location_Info}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tab-pane active" ng-if="selected=='map'">
+                <div class="row">
+                    <div class="col-md-6">
+                        <ui-gmap-google-map control="map.control" events="map.events" center="map.center" zoom="map.zoom" options="map.options">
+                            <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id"></ui-gmap-marker>
+                            <ui-gmap-map-control template="control.tpl.html" position="top-left" index="-1"></ui-gmap-map-control>
+                        </ui-gmap-google-map>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="scroller" style="height:510px;  overflow: auto;">
+                            <br />
+                            <div id="directionsList" ng-show="directions.showList" class="panel panel-primary"></div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>

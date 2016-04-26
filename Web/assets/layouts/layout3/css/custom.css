@@ -2,7 +2,7 @@
 .hor-menu a{
     color:darkblue;
 }
-.angular-google-map-container { height:300px; width:100%}
+.angular-google-map-container { height: 500px; }
 img.adp-marker {
 margin-right:15px!important;
 }
