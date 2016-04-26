@@ -9,7 +9,7 @@ namespace SakaryaRehberiAPI.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(SakaryaRehberiAPI.Models.DBContext context)

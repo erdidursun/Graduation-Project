@@ -33,6 +33,7 @@
     <link href="assets/global/plugins/angular-ui-select/select.css" rel="stylesheet" />
     <link href="assets/layouts/layout3/css/layout.css" rel="stylesheet" type="text/css" />
     <link href="assets/layouts/layout3/css/custom.css" rel="stylesheet" type="text/css" />
+    <link href="assets/global/plugins/sweetalert/dist/sweetalert.css" rel="stylesheet" />
     <!-- END THEME LAYOUT STYLES -->
     <link rel="shortcut icon" href="favicon.ico" />
 
@@ -55,15 +56,15 @@
     <script src="assets/global/plugins/lodash.min.js"></script>
 
     <script src="assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
-
-    <script src="assets/global/plugins/angular-google-maps.min.js"></script>
+    <script src="assets/global/plugins/angular-simple-logger/dist/angular-simple-logger.js"></script>
+    <script src="assets/global/plugins/angular-google-maps/dist/angular-google-maps.js"></script>
     <!-- Firebase -->
     <script src="assets/global/plugins/firebase/firebase.js"></script>
     <!-- AngularFire -->
     <script src="assets/global/plugins/angularfire/dist/angularfire.min.js"></script>
 
     <script src="assets/global/plugins/angularjs/angular-sanitize.min.js" type="text/javascript"></script>
-
+    <script src="assets/global/plugins/sweetalert/dist/sweetalert.min.js"></script>
     <script src="assets/global/plugins/angular-ui-select/select.min.js"></script>
     <script src="assets/global/plugins/angularjs/angular-touch.min.js" type="text/javascript"></script>
     <script src="assets/global/plugins/angularjs/plugins/angular-ui-router.min.js" type="text/javascript"></script>
@@ -91,94 +92,24 @@
     <script src="assets/global/scripts/app.js" type="text/javascript"></script>
     <script src="assets/layouts/layout3/scripts/layout.js" type="text/javascript"></script>
 
-    <script type="text/ng-template" id="locationFull.html">
-        <div class="portlet light bordered">
-            <div class="portlet-title tabbable-line">
-                <div class="caption">
-                    <i class="icon-pin font-yellow-lemon"></i>
-                    <span class="caption-subject bold font-yellow-lemon uppercase"> {{location.Location_Name}} </span>
-                </div>
-                <ul class="nav nav-tabs">
-                    <li class="selected=='map'?active:''">
-                        <a ng-click="select('map')" data-toggle="tab"> Harita </a>
-                    </li>
-                    <li class="selected=='comment'?active:''">
-                        <a ng-click="select('comment')" data-toggle="tab"> Yorumlar </a>
-                    </li>
-                    <li class="selected=='info'?active:''">
-                        <a ng-click="select('info')" data-toggle="tab"> Hakkında </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="portlet-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <uib-carousel interval="myInterval">
-                            <uib-slide ng-repeat="slide in slides" active="slide.active">
-                                <img ng-src="{{slide.image}}" style="margin:auto;height:305px; width:100%">
-                                <div class="carousel-caption">
-                                    <p>{{slide.text}}</p>
-                                </div>
-                            </uib-slide>
-                        </uib-carousel>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="tab-content">
-                            <div class="tab-pane active" ng-if="selected=='info'">
-                                <div class="scroller" style="height: 200px;">
-                                    <p>
-                                        {{location.Location_Info}}
-                                    </p>
-
-                                </div>
-                            </div>
-                            <div class="tab-pane active" ng-if="selected=='map'" >
-                                <div>
-                                    <google-map control="map.control" center="map.center" zoom="map.zoom">
-                                        <marker coords="marker.center"></marker>
-                                    </google-map>
-                                </div>
-                               
-
-                                <button ng-click="getDirections()" class="btn btn-primary">Yol Tarifi </button>
-                            </div>
-                            <div class="tab-pane active" ng-if="selected=='comment'">
-                                <div class="scroller" style="height: 200px;">
-                                    <div class="general-item-list" ng-repeat="comment in location.UserComments">
-                                        <div class="item">
-                                            <div class="item-head">
-                                                <div class="item-details">
-                                                    <img class="item-pic rounded" ng-src="{{comment.User.User_ImgPath}}">
-                                                    <a href="" class="item-name primary-link">{{comment.User.User_Name}}</a>
-                                                    <span class="item-label">{{comment.UserComment_Date}}</span>
-                                                </div>
-                                            </div>
-                                            <div class="item-body">{{comment.UserComment_Comment}}  </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="row" ng-show="directions.showList">
-                    <div class="portlet light bordered">
-                        <div class="portlet-body">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div id="directionsList" ng-show="directions.showList" class="panel panel-primary"></div>
-
-                                </div>                             
-                            </div>
-
-
-                        </div>                  
-                    </div>
-                </div>
-            </div>
+    <script type="text/ng-template" id="control.tpl.html" >
+        <div class="btn-group" ng-controller="LocationDetailCtrl">
+            <label  class="btn btn-sm btn-default" style="margin-top:11px; margin-right:0; margin-left:5px">Yol Tarifi</label>
+            <button type="button" class="btn btn-sm btn-default dropdown-toggle"  style="margin-top:11px; margin-right:0;" data-toggle="dropdown" aria-expanded="true">
+                <i class="fa fa-angle-down"></i>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li>
+                    <a ng-click="getDirections('car')"><i class="fa fa-car"></i>&nbsp;Araç</a>
+                </li>
+                <li>
+                    <a ng-click="getDirections('bicyle')"><i class="fa fa-bicycle"></i> &nbsp;Bisiklet</a>
+                </li>
+                <li>
+                    <a ng-click="getDirections('walk')"><i class="fa fa-rub"></i>&nbsp;Yürüme</a>
+                </li>
+            </ul>
         </div>
-
     </script>
 </body>
 

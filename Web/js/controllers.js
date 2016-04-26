@@ -30,122 +30,116 @@ angular.module('sakaryarehberi')
             longitude: data.Location_Longtitude
         }
     }
-    //$scope.initialize = function () {
-    //    var latlng = new google.maps.LatLng(data.Location_Latitude, data.Location_Longtitude);
-    //    $scope.map2 = {
-    //        control: {},
-    //        center:latlng,
-    //        zoom: 8
-    //    };
-    //};
-
-    //var directionsDisplay = new google.maps.DirectionsRenderer();
-    //var directionsService = new google.maps.DirectionsService();
-    //var geocoder = new google.maps.Geocoder();
-
-
-    //navigator.geolocation.getCurrentPosition(function (loc) {
-    //    $scope.directions = {
-    //        origin: new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude),
-    //        destination: new google.maps.LatLng(location.Location_Latitude, location.Location_Longtitude),
-    //        showList: false
-    //    }
-    //    var request = {
-    //        origin: $scope.directions.origin,
-    //        destination: $scope.directions.destination,
-    //        travelMode: google.maps.DirectionsTravelMode.DRIVING
-    //    };
-    //    directionsService.route(request, function (response, status) {
-    //        console.log(response);
-    //        if (status === google.maps.DirectionsStatus.OK) {
-    //            $scope.marker = {};
-    //            directionsDisplay.setDirections(response);
-    //            directionsDisplay.setMap($scope.map.control.getGMap());
-    //            directionsDisplay.setPanel(document.getElementById('directionsList'));
-    //            $scope.directions.showList = true;
-    //        } else {
-    //            alert('Google route unsuccesfull!');
-    //        }
-    //    });
-    //});
 
 
 })
-.controller("LocationDetailCtrl", function ($scope, $stateParams, $ls, $uibModal, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
     $scope.location = $stateParams.location;
     if ($scope.location != null)
         $ls.setObject("lastLocation", $scope.location);
     else
         $scope.location = $ls.getObject("lastLocation");
     $scope.slides = [];
+    ;
+    $rootScope.hideMarker = false;
+    $scope.mapResult;
     $scope.map = {
-        control:{},     
+        control: {},
+        events: {
+        },
+        options: {
+            scrollwheel: false,
+            disableDoubleClickZoom: true,
+            fullscreenControl: true,
+            tilt: 40,
+        },
         center: {
             latitude: $scope.location.Location_Latitude,
             longitude: $scope.location.Location_Longtitude
-        },       
-        zoom:14
+        },
+        zoom: 10
     };
+    uiGmapIsReady.promise(1).then(function (instances) {
+        instances.forEach(function (inst) {
+            $scope.mapResult = inst.map;
+            return;
+        });
+    });
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
     var geocoder = new google.maps.Geocoder();
-    console.log($scope.map);
 
-    // marker object
-    $scope.marker = {
-        center: {
-            latitude: $scope.location.Location_Latitude,
-            longitude: $scope.location.Location_Longtitude
-        }
-    }
 
-    $scope.getDirections = function () {
+    $scope.getDirections = function (type) {
         navigator.geolocation.getCurrentPosition(function (loc) {
-            $scope.directions = {
-                origin: new google.maps.LatLng(loc.coords.latitude, loc.coords.longitude),
+            $scope.currentLocation = loc;
+            $rootScope.directions = {
+                origin: new google.maps.LatLng($scope.currentLocation.coords.latitude, $scope.currentLocation.coords.longitude),
                 destination: new google.maps.LatLng($scope.location.Location_Latitude, $scope.location.Location_Longtitude),
                 showList: false
+
             }
             var request = {
-                origin: $scope.directions.origin,
-                destination: $scope.directions.destination,
+                origin: $rootScope.directions.origin,
+                destination: $rootScope.directions.destination,
                 travelMode: google.maps.DirectionsTravelMode.DRIVING
             };
-            directionsService.route(request, function (response, status) {
-                console.log(response)
-                if (status === google.maps.DirectionsStatus.OK) {
-                    $scope.marker = {};
-                    directionsDisplay.setDirections(response);
-                    directionsDisplay.setMap($scope.map.control.getGMap());
-                    directionsDisplay.setPanel(document.getElementById('directionsList'));
-                    $scope.directions.showList = true;
-                } else {
-                    alert('Google route unsuccesfull!');
-                }
-            });
-        });
+            if (type == 'car')
+                request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+            else if (type == 'bicyle')
+                request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
+            else if (type == 'walk')
+                request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+            $timeout(function () {
 
-      
+                directionsService.route(request, function (response, status) {
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        $rootScope.marker = {};
+                        directionsDisplay.setDirections(response);
+                        directionsDisplay.setMap($scope.mapResult);
+                        directionsDisplay.setPanel(document.getElementById('directionsList'));
+                        $rootScope.directions.showList = true;
+                    } else {
+                        swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+                    }
+                });
+            }, 2000);
+        })
+
+
     };
 
-    $scope.selected = 'map';
+
+    $scope.selected = 'info';
     $scope.select = function (tab) {
         $scope.selected = tab;
+        if (tab == 'map') {
+            $rootScope.marker = {
+                id: 1,
+                coords: {
+                    latitude: $scope.location.Location_Latitude,
+                    longitude: $scope.location.Location_Longtitude
+                },
+
+                options: {
+                    title: $scope.location.Location_Name,
+                    visible: !$scope.hideMarker
+                }
+            };
+        }
     }
     $scope.like = function (location) {
 
     }
-    $scope.myInterval = 2000;
+    $scope.myInterval = 5000;
 
     angular.forEach($scope.location.LocationImages, function (value) {
         $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
     });
 })
 .controller("LocationsCtrl", function ($scope, $state, Location) {
-    $scope.$on('$viewContentLoaded', function () {
-        App.initAjax(); // initialize core components
-    });
+
 
     $scope.model = [];
     $scope.locations = [];

@@ -101,3 +101,45 @@ D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiA
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache
 D:\Bitirme Projesi\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.tf1.resources
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.dll.config
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.pdb
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Cors.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Security.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Security.OAuth.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Web.Infrastructure.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Newtonsoft.Json.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Owin.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Net.Http.Formatting.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Cors.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Helpers.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Http.Cors.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Http.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Mvc.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Razor.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Deployment.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Razor.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Cors.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Security.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Microsoft.Owin.Security.OAuth.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\Newtonsoft.Json.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Net.Http.Formatting.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Helpers.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Http.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Http.Cors.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Mvc.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Razor.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Deployment.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Razor.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.pdb
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\EntityFramework.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\EntityFramework.SqlServer.dll
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\EntityFramework.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\EntityFramework.SqlServer.xml
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.a1.resources
+D:\Projeler\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
