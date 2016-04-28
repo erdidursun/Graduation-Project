@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="search-filter ">
-                    <div class="search-label uppercase">Search By</div>
+                    <div class="search-label uppercase">İsme Göre Ara</div>
                     <div class="input right">
                         <ui-select ng-model="selected"
                                    theme="bootstrap"
@@ -18,7 +18,7 @@
                             </ui-select-choices>
                         </ui-select>
                     </div>
-                    <div class="search-label uppercase">Filtrele</div>
+                    <div class="search-label uppercase">Tipe Göre Filtrele</div>
                     <select class="form-control">
                         <option value="-1"></option>
                         <option ng-repeat="type in  locationTypes" value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>

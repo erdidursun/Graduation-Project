@@ -1,4 +1,4 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularMoment','uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
@@ -89,7 +89,7 @@
 
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope, AUTH_EVENTS, AuthService) {
-
+.run(function ($rootScope, AUTH_EVENTS, AuthService, amMoment) {
+    amMoment.changeLocale('tr');
 })
 ;

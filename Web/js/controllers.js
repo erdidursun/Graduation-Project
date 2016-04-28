@@ -1,48 +1,22 @@
 ﻿
 angular.module('sakaryarehberi')
-.controller("MainCtrl", function ($scope, $timeout, Location) {
-
-
-})
-.controller("MapRouteCtrl", function ($scope, data, $timeout) {
-
-    $scope.map = {
-        control: {},
-        center: {
-            latitude: data.Location_Latitude,
-            longitude: data.Location_Longtitude
-        },
-        mapTypeControl: true,
-        mapTypeControlOptions: {
-            style: google.maps.MapTypeControlStyle.DROPDOWN_MENU,
-            mapTypeIds: [
-              google.maps.MapTypeId.ROADMAP,
-              google.maps.MapTypeId.TERRAIN
-            ]
-        },
-        zoom: 8
-    };
-
-    // marker object
-    $scope.marker = {
-        center: {
-            latitude: data.Location_Latitude,
-            longitude: data.Location_Longtitude
-        }
-    }
-
+.controller("MainCtrl", function () {
+   
 
 })
-.controller("LocationDetailCtrl", function ($scope, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("MapRouteCtrl", function ($scope,$rootScope, $timeout, uiGmapIsReady) {
+
+    $scope.location = data;
+   
+
+})
+.controller("LocationDetailCtrl", function ($scope, $uibModal,$rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
     $scope.location = $stateParams.location;
     if ($scope.location != null)
         $ls.setObject("lastLocation", $scope.location);
     else
         $scope.location = $ls.getObject("lastLocation");
     $scope.slides = [];
-    ;
-    $rootScope.hideMarker = false;
-    $scope.filterDisplayName="Yol Tarifi"
     $scope.mapResult;
     $scope.map = {
         control: {},
@@ -66,12 +40,9 @@ angular.module('sakaryarehberi')
             return;
         });
     });
-
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
     var geocoder = new google.maps.Geocoder();
-
-
     $scope.getDirections = function (type) {
         navigator.geolocation.getCurrentPosition(function (loc) {
             $scope.currentLocation = loc;
@@ -79,19 +50,17 @@ angular.module('sakaryarehberi')
                 origin: new google.maps.LatLng($scope.currentLocation.coords.latitude, $scope.currentLocation.coords.longitude),
                 destination: new google.maps.LatLng($scope.location.Location_Latitude, $scope.location.Location_Longtitude),
                 showList: false
-
             }
             var request = {
                 origin: $rootScope.directions.origin,
                 destination: $rootScope.directions.destination,
                 travelMode: google.maps.DirectionsTravelMode.DRIVING
             };
-            if (type == 'car')
-            {
-                request.travelMode = google.maps.DirectionsTravelMode.DRIVING; 
+            if (type == 'car') {
+                request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
                 $scope.filterDisplayName = "Araçla";
             }
-            else if (type == 'bicyle'){
+            else if (type == 'bicyle') {
                 request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
                 $scope.filterDisplayName = "Bisikletle";
 
@@ -121,26 +90,24 @@ angular.module('sakaryarehberi')
 
 
     };
-
-
-    $scope.selected = 'info';
+    $rootScope.hideMarker = false;
+    $scope.filterDisplayName="Yol Tarifi"
+    $scope.mapResult;
+    $scope.open = function (location) {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/partials/map.html',
+            animation: true,
+            scope:$scope,
+            size:'lg'           
+        });
+    };
+   
     $scope.select = function (tab) {
         $scope.selected = tab;
         if (tab == 'map') {
 
-            $rootScope.marker = {
-                id: 1,
-                coords: {
-                    latitude: $scope.location.Location_Latitude,
-                    longitude: $scope.location.Location_Longtitude
-                },
-
-                options: {
-                    title: $scope.location.Location_Name,
-                    visible: !$scope.hideMarker
-                }
-            };
-
+          
         }
     }
     $scope.like = function (location) {
@@ -158,20 +125,7 @@ angular.module('sakaryarehberi')
     $scope.model = [];
     $scope.locations = [];
     $scope.locationTypes = [];
-    $scope.open = function (location) {
-        //var modalInstance = $uibModal.open(
-        //{
-        //    templateUrl: 'locationFull.html',
-        //    controller: 'LocationDetailCtrl',
-        //    size:'lg',
-        //    resolve:
-        //    {
-        //        location: function () {
-        //            return location;
-        //        }
-        //    }
-        //});
-    };
+    
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
@@ -212,6 +166,7 @@ angular.module('sakaryarehberi')
     $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
     $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
     $scope.nick = userInfo ? userInfo.name : "";
+    $scope.logo = "../assets/layouts/layout3/img/logo-default.jpg";
     $scope.logout = function (provider) {
         AuthService.logout();
         $state.go("home", {}, { reload: true });
