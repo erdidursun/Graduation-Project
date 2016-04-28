@@ -127,6 +127,7 @@ angular.module('sakaryarehberi')
     $scope.select = function (tab) {
         $scope.selected = tab;
         if (tab == 'map') {
+
             $rootScope.marker = {
                 id: 1,
                 coords: {
@@ -139,6 +140,7 @@ angular.module('sakaryarehberi')
                     visible: !$scope.hideMarker
                 }
             };
+
         }
     }
     $scope.like = function (location) {

@@ -1,4 +1,4 @@
 ﻿var Settings = {
-    apiHostUrl: "192.168.1.117:8054",
+    apiHostUrl: "tommycarter-001-site1.itempurl.com",
     logingEnabled:false
 }

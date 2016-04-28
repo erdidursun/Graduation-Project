@@ -10,8 +10,8 @@ namespace SakaryaRehberiAPI.Models
     public class DBContext : DbContext
     {
         public DBContext() : base("DbContext") {
-            //this.Configuration.LazyLoadingEnabled = false;
-            //this.Configuration.ProxyCreationEnabled = false;
+            this.Configuration.LazyLoadingEnabled = false;
+            this.Configuration.ProxyCreationEnabled = false;
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }

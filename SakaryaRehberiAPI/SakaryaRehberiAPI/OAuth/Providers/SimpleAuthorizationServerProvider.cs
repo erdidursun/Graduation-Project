@@ -39,7 +39,7 @@ namespace SakaryaRehberiAPI.OAuth.Providers
 
 
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "Content-Type" });
-            User user = db.Users.FirstOrDefault(u => u.User_Email.Trim().Equals(context.UserName) && u.User_Password.Equals(context.Password.Trim()));
+            User user = db.Users.FirstOrDefault(u => u.User_Email.Equals(context.UserName) && u.User_Password.Equals(context.Password));
             // Kullanıcının access_token alabilmesi için gerekli validation işlemlerini yapıyoruz.
             string json = JsonConvert.SerializeObject(user, Formatting.None);
             Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
