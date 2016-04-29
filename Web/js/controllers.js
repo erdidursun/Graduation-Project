@@ -4,39 +4,53 @@ angular.module('sakaryarehberi')
    
 
 })
-.controller("MapRouteCtrl", function ($scope,$rootScope, $timeout, uiGmapIsReady) {
 
-    $scope.location = data;
+.controller("LocationDetailCtrl", function ($scope, User, $state,Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+
+    var locationId = $stateParams.locationID;
    
-
-})
-.controller("LocationDetailCtrl", function ($scope, $uibModal,$rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
-    $scope.location = $stateParams.location;
-    if ($scope.location != null)
-        $ls.setObject("lastLocation", $scope.location);
+    if (locationId != null)
+        $ls.set("LocationId", locationId);
     else
-        $scope.location = $ls.getObject("lastLocation");
+        locationId = $ls.get("LocationId");
+
+    Location.GetLocationById(locationId).then(function (data) {
+        $scope.location = data.data;
+        angular.forEach($scope.location.LocationImages, function (value) {
+            $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
+        });
+        $scope.map = {
+            control: {},
+            events: {
+            },
+            options: {
+                scrollwheel: false,
+                disableDoubleClickZoom: true,
+                fullscreenControl: true,
+                tilt: 40,
+            },
+            center: {
+                latitude: $scope.location.Location_Latitude,
+                longitude: $scope.location.Location_Longtitude
+            },
+            zoom: 10
+        };
+    })
+    $rootScope.hideMarker = false;
     $scope.slides = [];
+    $scope.filterDisplayName = "Yol Tarifi"
     $scope.mapResult;
-    $scope.map = {
-        control: {},
-        events: {
-        },
-        options: {
-            scrollwheel: false,
-            disableDoubleClickZoom: true,
-            fullscreenControl: true,
-            tilt: 40,
-        },
-        center: {
-            latitude: $scope.location.Location_Latitude,
-            longitude: $scope.location.Location_Longtitude
-        },
-        zoom: 10
-    };
+    $scope.comment = {};
+    $scope.myInterval = 5000;
+
+
+
+   
+  
     uiGmapIsReady.promise(1).then(function (instances) {
         instances.forEach(function (inst) {
             $scope.mapResult = inst.map;
+            $scope.getDirections("car");
             return;
         });
     });
@@ -90,9 +104,8 @@ angular.module('sakaryarehberi')
 
 
     };
-    $rootScope.hideMarker = false;
-    $scope.filterDisplayName="Yol Tarifi"
-    $scope.mapResult;
+    
+  
     $scope.open = function (location) {
         var modalInstance = $uibModal.open(
         {
@@ -101,25 +114,25 @@ angular.module('sakaryarehberi')
             scope:$scope,
             size:'lg'           
         });
-    };
-   
-    $scope.select = function (tab) {
-        $scope.selected = tab;
-        if (tab == 'map') {
+    };  
 
-          
-        }
-    }
     $scope.like = function (location) {
 
     }
-    $scope.myInterval = 5000;
 
-    angular.forEach($scope.location.LocationImages, function (value) {
-        $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
-    });
+    $scope.sendComment = function () {
+        $scope.comment.UserId = User.Info().id;
+        $scope.comment.LocationId = $scope.location.Location_ID;
+ 
+        User.SendComment($scope.comment).then(function (data) {
+            $state.go("home.locationDetails", { locationID: locationId }, { reload: true });
+        });
+    }
+
+    
 })
-.controller("LocationsCtrl", function ($scope, $state, Location) {
+.controller("LocationsCtrl", function ($scope, Auth,$state, Location) {
+    console.log(Auth.getToken());
 
 
     $scope.model = [];
@@ -134,8 +147,6 @@ angular.module('sakaryarehberi')
     });
     Location.GetLocations().then(function (data) {
         angular.forEach(data.data, function (value, key) {
-            console.log(JSON.stringify(value));
-
             $scope.locations.push(value);
             $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name });
         });
@@ -195,17 +206,10 @@ angular.module('sakaryarehberi')
     };
 })
 
-.controller("LoginCtrl", function ($scope, $state, AuthService, md5, AUTH_EVENTS, User, $uibModal) {
+.controller("LoginCtrl", function ($scope, AuthService, md5,User) {
 
     $scope.mail = "erdidursun13@gmail.com";
-    $scope.pass = "1234567";
-    $scope.$on(AUTH_EVENTS.loginSuccess, function (data) {
-        $state.go("home", {}, { reload: true });
-    });
-    $scope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        console.log(error);
-
-    });
+    $scope.pass = "1234567";  
     $scope.login = function () {
 
         AuthService.Login($scope.mail, md5.createHash($scope.pass));

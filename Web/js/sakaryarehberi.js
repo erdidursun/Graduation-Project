@@ -5,7 +5,7 @@
     'angularSpinner'])
 .config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider, uiGmapGoogleMapApiProvider) {
    
-    //$httpProvider.defaults.headers.common = {};
+    $httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.post = {};
     $httpProvider.defaults.headers.put = {};
     $httpProvider.defaults.headers.patch = {};
@@ -51,7 +51,7 @@
              url: "locationDetail",
              templateUrl: 'views/partials/locationFull.html',
              controller: 'LocationDetailCtrl',
-             params: { location: null }
+             params: { locationID: null }
                
          })
           .state('home.forgot', {
@@ -89,7 +89,15 @@
 
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope, AUTH_EVENTS, AuthService, amMoment) {
+.run(function ($rootScope, $state,AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
+
+    $rootScope.$on(AUTH_EVENTS.loginSuccess, function (data) {
+        $state.go("home.locations", {}, { reload: true });
+    });
+    $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
+        console.log(error);
+
+    });
 })
 ;

@@ -22,18 +22,18 @@
                     <select class="form-control">
                         <option value="-1"></option>
                         <option ng-repeat="type in  locationTypes" value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
-                     
-                    </select>                
+
+                    </select>
                     <button class="btn green bold uppercase btn-block">Sonuçları Listele</button>
-                  <br />
+                    <br />
                 </div>
             </div>
             <div class="col-lg-8">
                 <div class="row">
-                    <div class="col-md-4" ng-repeat="location in locations" >
+                    <div class="col-md-4" ng-repeat="location in locations">
                         <div class="tile-container">
                             <div class="tile-thumbnail">
-                                <a ui-sref="home.locationDetails({location:{{location}}})">
+                                <a ui-sref="home.locationDetails({locationID:{{location.Location_ID}}})">
                                     <img ng-src="{{location.Location_Banner}}" />
                                 </a>
                             </div>
@@ -50,30 +50,31 @@
                                 </a>
                                 <div class="tile-desc">
                                     <p>
-                                       {{location.Location_Info |limitTo: 100}} {{location.Location_Info < 100 ? '' : '...'}}
+                                        {{location.Location_Info |limitTo: 100}} {{location.Location_Info < 100 ? '' : '...'}}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                
                 </div>
-                <div class="search-pagination pagination-rounded">
-                    <ul class="pagination">
-                        <li class="page-active">
-                            <a href="javascript:;"> 1 </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;"> 2 </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;"> 3 </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;"> 4 </a>
-                        </li>
-                    </ul>
-                </div>
+
+
+            </div>
+            <div class="search-pagination pagination-rounded">
+                <ul class="pagination">
+                    <li class="page-active">
+                        <a href="javascript:;"> 1 </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"> 2 </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"> 3 </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;"> 4 </a>
+                    </li>
+                </ul>
             </div>
         </div>
     </div>

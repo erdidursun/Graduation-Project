@@ -22,13 +22,8 @@ namespace SakaryaRehberiAPI.OAuth
         {
             HttpConfiguration httpConfiguration = new HttpConfiguration();
 
-            //var cors = new EnableCorsAttribute("*", "*", "*");
-            //httpConfiguration.EnableCors(cors);
-
-
-            //appBuilder.UseCors(CorsOptions.AllowAll);
-            //other config settings, dependency injection/resolver settings, etc
-            //appBuilder.UseWebApi(httpConfiguration);
+            appBuilder.UseCors(CorsOptions.AllowAll);
+            appBuilder.UseWebApi(httpConfiguration);
             ConfigureOAuth(appBuilder);
 
 

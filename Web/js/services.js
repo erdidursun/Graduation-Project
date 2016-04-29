@@ -41,13 +41,13 @@
                 if (!config.hasOwnProperty('spinner'))
                     config.spinner = true;
                 usSpinnerService.spin('spinner-1');
-
+                config.url = config.url.replace('{apihost}', Settings.apiHostUrl);
+                //var token = Auth.getToken();
+                //if (token && config.RequireAuth) {
+                //    config.headers.Authorization = 'Bearer ' + token;
+                //}
             };
-            config.url = config.url.replace('{apihost}', Settings.apiHostUrl);
-            if (Auth.token) {
-                config.headers.Authorization = 'Bearer ' + Auth.token;
-
-            }
+           
             if (config.cache == false) {
                 if (window.Settings.logingEnabled) console.log('Cache removed : ' + config.url);
                 try {
@@ -66,7 +66,7 @@
 
             if (response && response.config && response.config.url.indexOf('http') > -1) {
                 var url = response.config.url;
-                if (url.indexOf(Auth.host) > -1) {
+                if (url.indexOf(Settings.apiHostUrl) > -1) {
                     if (window.Settings.logingEnabled) {
                         console.log('Api Response : ' + url);
                         console.log(response);
@@ -108,9 +108,9 @@
 .factory('$spinner', function ($ionicLoading, $translate, usSpinnerService) {
     var openCount = 0;
     return {
-        show: function () {          
+        show: function () {
             return true;
-        },            
+        },
 
         hide: function () {
             openCount--;
@@ -154,8 +154,8 @@
         });
         var func = $http.post("http://{apihost}/token", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
-                    Auth.type = "form";
-                    Auth.token = data.data.access_token;
+                    Auth.setType("form")
+                    Auth.setToken(data.data.access_token);
                     $ls.setObject(FirebaseSession.Data, data.data);
                     $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data.data);
 
@@ -165,8 +165,8 @@
     };
     authService.socialLogin = function (provider, callback) {
         this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-            Auth.type = "social";
-            Auth.token = authData["" + authData.provider + ""].accessToken;
+            Auth.setType("social");
+            Auth.setType(authData["" + authData.provider + ""].accessToken);
 
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, authData);
 
@@ -178,17 +178,22 @@
 
     return authService;
 })
-.service('Auth', function () {
-    this.host = window.Settings.apiHostUrl;
-    this.token = '';
+.service('Auth', function ($ls) {
+    var Auth = {};
 
-    this.type = 'form';
-    this.setToken = function (token) {
-        this.token = token;
+    Auth.setToken = function (token) {
+        $ls.set("token", token)
     }
-    this.setType = function (type) {
-        this.type = type;
-    }
+    Auth.getToken = function () {
+        return $ls.get("token");
+    };
+    Auth.setType = function (type) {
+        $ls.set("AuthType", type)
+    };
+    Auth.getType = function () {
+       return $ls.get("AuthType")
+    };
+    return Auth;
 })
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');
@@ -200,70 +205,5 @@
         templateden istek gelmediği için cache süresi dolmuş olsa dahi yeni veriler yüklenmez.
      */
 })
-.service('User', function (FirebaseSession, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
-    var data = {};
-    var User = {};
-    User.Info = function () {
-        if (Auth.type == 'social') {
-            data = $ls.getObject(FirebaseSession.Data);
-            if (data) {
-                var provider = data["" + data.provider + ""];
-                return {
-                    id: provider.id,
-                    name: provider.displayName,
-                    access_token: provider.accessToken,
-                    profileImageURL: provider.profileImageURL,
-                    isAuthanthanced: data ? true : false
-                };
-            }
-            else
-                return {};
-        }
-        else if (Auth.type == 'form') {
-            data = $ls.getObject(FirebaseSession.Data);
-            if (data) {
-                return {
-                    id: data.User_ID,
-                    name: data.User_Name,
-                    access_token: data.access_token,
-                    profileImageURL: data.User_ImgPath,
-                    isAuthanthanced: data ? true : false
-                };
-            }
 
-            else
-                return {};
-        }
-
-    }
-
-    User.Register = function (user) {
-
-        //var req = $http({
-        //    url: "http://{apihost}/API/Register",
-        //    method: 'POST',
-        //    data: $httpParamSerializerJQLike(user),
-        //    headers: {
-        //        'Content-Type': 'application/x-www-form-urlencoded'
-        //    },
-        //    success:function(data){
-        //        console.log(data);
-        //    }
-        //});
-        user.User_Password = md5.createHash(user.User_Password);
-
-        var func = $http.post("http://{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                      .then(function (data) {
-                          console.log(data);
-
-                      }, function (error) {
-                          console.log(error);
-                      });
-
-    }
-    return User;
-
-
-
-
-})
+;

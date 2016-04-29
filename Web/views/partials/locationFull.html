@@ -65,10 +65,10 @@
                     <h3 class="sbold blog-comments-title">Yorum Yap</h3>
                     <form action="#">
                         <div class="form-group">
-                            <textarea rows="8" name="message" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
+                            <textarea rows="8" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
                         </div>
                         <div class="form-group">
-                            <button type="submit" class="btn blue uppercase btn-md sbold btn-block">Submit</button>
+                            <button type="button" class="btn blue uppercase btn-md sbold btn-block" ng-click="sendComment()">Submit</button>
                         </div>
                     </form>
                 </div>

@@ -82,13 +82,32 @@ namespace SakaryaRehberiAPI.Controllers
             //                Locations = loc                             
             //            } );
             var list = _db.Locations.ToList();
-                                 
+
             return Request.CreateResponse(HttpStatusCode.OK, list);
+        }
+        [AllowAnonymous]
+        public HttpResponseMessage GetLocationById(int id)
+        {
+            var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
+            if (list != null)
+                return Request.CreateResponse(HttpStatusCode.OK, list);
+            else
+                return Request.CreateResponse(HttpStatusCode.NoContent, "");
+
         }
         [AllowAnonymous]
         public HttpResponseMessage GetLocationTypes()
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public HttpResponseMessage SendComment(CommentModel comment)
+        {
+            var Comment = new UserComment() { Location_ID = comment.LocationId, User_ID = comment.UserId, UserComment_Comment = comment.Comment, UserComment_Date = DateTime.Now };
+            _db.UserComments.Add(Comment);
+            _db.SaveChanges();  
+            return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
     }
 
