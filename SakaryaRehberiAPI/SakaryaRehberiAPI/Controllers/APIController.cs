@@ -73,13 +73,17 @@ namespace SakaryaRehberiAPI.Controllers
         [AllowAnonymous]
         public HttpResponseMessage GetLocations(int page)
         {
-            var list = (from loc in _db.Locations
-                        join o in _db.LocationTypes
-                        on loc.LocationType_ID equals o.LocationType_ID
-                        join i in _db.LocationImages
-                        on loc.Location_ID equals i.Location_ID
-                        select loc);
-            return Request.CreateResponse(HttpStatusCode.OK, _db.Locations.ToList());
+            //var list = (from loc in _db.Locations
+            //            join o in _db.LocationTypes
+            //            on loc.LocationType_ID equals o.LocationType_ID
+            //            join i in _db.LocationImages
+            //            on loc.Location_ID equals i.Location_ID
+            //            select new {
+            //                Locations = loc                             
+            //            } );
+            var list = _db.Locations.ToList();
+                                 
+            return Request.CreateResponse(HttpStatusCode.OK, list);
         }
         [AllowAnonymous]
         public HttpResponseMessage GetLocationTypes()
