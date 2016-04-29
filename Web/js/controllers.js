@@ -148,7 +148,7 @@ angular.module('sakaryarehberi')
     Location.GetLocations().then(function (data) {
         angular.forEach(data.data, function (value, key) {
             $scope.locations.push(value);
-            $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name });
+            $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name, id: value.Location_ID });
         });
         $scope.selected = $scope.model[0];
 
@@ -167,6 +167,8 @@ angular.module('sakaryarehberi')
     };
     $scope.selectChange = function (item) {
         console.log(item);
+        $state.go("home.locationDetails", { locationID: item.id }, { reload: true });
+
 
     }
 })

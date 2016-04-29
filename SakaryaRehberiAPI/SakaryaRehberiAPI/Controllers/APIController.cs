@@ -106,7 +106,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             var Comment = new UserComment() { Location_ID = comment.LocationId, User_ID = comment.UserId, UserComment_Comment = comment.Comment, UserComment_Date = DateTime.Now };
             _db.UserComments.Add(Comment);
-            _db.SaveChanges();  
+            _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
     }
