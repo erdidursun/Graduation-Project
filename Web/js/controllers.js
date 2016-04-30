@@ -234,11 +234,8 @@ angular.module('sakaryarehberi')
 
 })
 
-<<<<<<< HEAD
 .controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
-=======
-.controller("AdminMainCtrl", function ($scope, $state, Location, User) {
->>>>>>> 3516b7a3c3a665389ff04e8fc9ccce5f903887c6
+
 
     $scope.locations = {};
     $scope.users = {};
