@@ -3,7 +3,8 @@
     var data = {};
     var User = {};
     User.Info = function () {
-        if (Auth.type == 'social') {
+        var type = Auth.getType();
+        if (type == 'social') {
             data = $ls.getObject(FirebaseSession.Data);
             if (data) {
                 var provider = data["" + data.provider + ""];
@@ -18,7 +19,7 @@
             else
                 return {};
         }
-        else if (Auth.type == 'form') {
+        else if (type == 'form') {
             data = $ls.getObject(FirebaseSession.Data);
             if (data) {
                 return {
@@ -48,6 +49,13 @@
                       });
 
     }
+
+    User.SendComment = function (comment) {
+        var data = $httpParamSerializerJQLike(comment);
+        var func = $http.post("http://{apihost}/API/SendComment", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+                   
+        return func;
+    };
     return User;
 
 
@@ -58,19 +66,18 @@
     var data = {};
     var Location = {};
     Location.GetLocations = function () {
-        var func = $http.get("http://{apihost}/API/GetLocations?page=1", {});
-        //.then(function (data) {
-        //    console.log(data);
-
-        //}, function (error) {
-        //    console.log(error);
-        //});
+      var func = $http.get("http://{apihost}/API/GetLocations?page=1", { RequireAuth: false });
       return func;
     }
-    Location.GetLocationTypes = function () {
-        var func = $http.get("http://{apihost}/API/GetLocationTypes", {});
+    Location.GetLocationById = function (id) {
+        var func = $http.get("http://{apihost}/API/GetLocationById?id="+id, {});
         return func;
     }
+    Location.GetLocationTypes = function () {
+        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth:false });
+        return func;
+    }
+
     return Location;
 })
 

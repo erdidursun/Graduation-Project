@@ -197,6 +197,7 @@
     <Compile Include="Models\UserComment.cs" />
     <Compile Include="Models\UserLike.cs" />
     <Compile Include="Models\UserType.cs" />
+    <Compile Include="Models\ViewModels\CommentModel.cs" />
     <Compile Include="Models\ViewModels\LoginModel.cs" />
     <Compile Include="Models\ViewModels\RegisterModel.cs" />
     <Compile Include="OAuth\Providers\SimpleAuthorizationServerProvider.cs" />

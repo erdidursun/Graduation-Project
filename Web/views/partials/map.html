@@ -1,0 +1,16 @@
+﻿<div class="modal-body">
+    <div class="row">
+        <div class="col-lg-6">
+            <ui-gmap-google-map control="map.control" events="map.events" center="map.center" zoom="map.zoom" options="map.options">
+                <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id"></ui-gmap-marker>
+                <ui-gmap-map-control template="control.tpl.html" position="top-left" index="-1"></ui-gmap-map-control>
+            </ui-gmap-google-map>
+        </div>
+        <div class="col-lg-6">
+            <div class="scroller" style="height:510px;  overflow: auto;">
+                <div id="directionsList" ng-show="directions.showList" class="panel panel-primary"></div>
+
+            </div>
+        </div>
+    </div>
+</div>

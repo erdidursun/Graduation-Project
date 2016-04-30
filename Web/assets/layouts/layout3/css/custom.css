@@ -15,4 +15,7 @@ width: 100%;
     font-size: 22px;
     margin: 10px;
 }
-
+.search-content-3 .tile-container>.tile-thumbnail img{
+        height: 150px;
+       
+}
