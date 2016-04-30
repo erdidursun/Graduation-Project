@@ -1,10 +1,10 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularMoment','uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
     'angularSpinner'])
 .config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider, uiGmapGoogleMapApiProvider) {
-   
+
     $httpProvider.defaults.headers.common = {};
     $httpProvider.defaults.headers.post = {};
     $httpProvider.defaults.headers.put = {};
@@ -28,21 +28,21 @@
               controller: "MainCtrl"
           })
            .state('home.login', {
-              url: "login",
-              templateUrl: 'views/partials/login.html',
-              controller: 'LoginCtrl',
-              resolve: {
-                  deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                      return $ocLazyLoad.load({
-                          name: 'sakaryarehberi',
-                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                          files: [
-                              'assets/global/css/login.min.css'
-                          ]
-                      });
-                  }]
-              }
-          })
+               url: "login",
+               templateUrl: 'views/partials/login.html',
+               controller: 'LoginCtrl',
+               resolve: {
+                   deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                       return $ocLazyLoad.load({
+                           name: 'sakaryarehberi',
+                           insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                           files: [
+                               'assets/global/css/login.min.css'
+                           ]
+                       });
+                   }]
+               }
+           })
         .state('home.locations', {
             url: "anasayfa",
             templateUrl: 'views/partials/locations.html',
@@ -53,7 +53,7 @@
              templateUrl: 'views/partials/locationFull.html',
              controller: 'LocationDetailCtrl',
              params: { locationID: null }
-               
+
          })
           .state('home.forgot', {
               url: "forgot",
@@ -90,12 +90,41 @@
          .state('admin', {
              url: "/admin",
              templateUrl: 'views/adminmain.html',
-             controller: "AdminMainCtrl"
-         })
+             controller: "AdminMainCtrl",
+             resolve: {
+                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                     return $ocLazyLoad.load({
+                         name: 'sakaryarehberi',
+                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                         files: [
+                             'assets/layouts/layout2/css/layout.min.css',
+                             'assets/layouts/layout2/css/themes/default.min.css',
+                             'assets/layouts/layout2/css/custom.min.css',
+                             'assets/layouts/layout2/scripts/layout.min.js',
+                             'assets/layouts/layout2/quick-sidebar.min.js',
+                             'assets/layouts/layout2/css/themes/blue.min.css'
 
+                         ]
+                     });
+                 }]
+             }
+         })
+    .state('admin.locations', {
+        url: "/locations",
+        templateUrl: 'views/admin-partials/locations.html',
+        controller: "AdminMainCtrl",
+     
+    })
+        .state('admin.users', {
+            url: "/users",
+            templateUrl: 'views/admin-partials/users.html',
+            controller: "AdminMainCtrl",
+
+        })
+    ;
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope, $state,AUTH_EVENTS, AuthService, amMoment) {
+.run(function ($rootScope, $state, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
 
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (data) {

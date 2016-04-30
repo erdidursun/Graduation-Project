@@ -56,6 +56,12 @@
                    
         return func;
     };
+
+    User.GetAll = function () {
+        var func = $http.get("http://{apihost}/API/GetUsers", {})
+        return func;
+    }
+
     return User;
 
 

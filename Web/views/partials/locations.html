@@ -50,7 +50,7 @@
                                 </a>
                                 <div class="tile-desc">
                                     <p>
-                                        {{location.Location_Info |limitTo: 100}} {{location.Location_Info < 100 ? '' : '...'}}
+                                        {{location.Location_Info |limitTo: 100}} {{location.Location_Info.length < 100 ? '' : '...'}}
                                     </p>
                                 </div>
                             </div>

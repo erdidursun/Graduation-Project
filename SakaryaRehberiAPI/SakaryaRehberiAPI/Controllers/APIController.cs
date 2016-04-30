@@ -109,6 +109,12 @@ namespace SakaryaRehberiAPI.Controllers
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
+        [AllowAnonymous]
+        public HttpResponseMessage GetUsers()
+        {
+            var user = from u in _db.Users select new { u.User_Email, u.User_Name, u.User_SignUpDate, u.UserComments, u.UserLikes, u.UserType };
+            return Request.CreateResponse(HttpStatusCode.OK, user);
+        }
     }
 
 }

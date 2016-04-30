@@ -240,9 +240,34 @@ angular.module('sakaryarehberi')
 
 })
 
-.controller("AdminMainCtrl", function ($scope) {
+.controller("AdminMainCtrl", function ($scope, $state,Location,User) {
 
+    $scope.locations = {};
+    $scope.users = {};
 
+    var stateName = $state.current.name;
+
+    function  GetLocations () {
+        Location.GetLocations().then(function (data) {
+            console.log(data);
+            $scope.locations = data.data;
+        }, function (e) {
+
+        });
+    }
+    function GetUsers() {
+        User.GetAll().then(function (data) {
+            console.log(data);
+            $scope.users = data.data;
+        }, function (e) {
+
+        });
+    };
+ 
+    if (stateName == "admin.locations")
+        GetLocations();
+    if (stateName == "admin.users")
+        GetUsers();
 })
 
 
