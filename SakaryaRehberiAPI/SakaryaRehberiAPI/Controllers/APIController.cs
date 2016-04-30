@@ -112,8 +112,24 @@ namespace SakaryaRehberiAPI.Controllers
         [AllowAnonymous]
         public HttpResponseMessage GetUsers()
         {
-            var user = from u in _db.Users select new { u.User_Email, u.User_Name, u.User_SignUpDate, u.UserComments, u.UserLikes, u.UserType };
+            var user = from u in _db.Users select new {u.User_ID, u.User_Email, u.User_Name, u.User_SignUpDate, u.UserComments, u.UserLikes, u.UserType };
             return Request.CreateResponse(HttpStatusCode.OK, user);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage DeleteUser(int UserID)
+        {
+           var user =  _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+           if (user != null)
+           {
+               _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
+               _db.SaveChanges();
+               return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+           }
+           return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
         }
     }
 

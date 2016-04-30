@@ -61,7 +61,13 @@
         var func = $http.get("http://{apihost}/API/GetUsers", {})
         return func;
     }
-
+    User.Delete = function (id) {
+        var data = {
+            UserID:id
+        }
+        var func = $http.get("http://{apihost}/API/DeleteUser?UserID=" + id);
+        return func;
+    }
     return User;
 
 

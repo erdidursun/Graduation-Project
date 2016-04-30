@@ -263,7 +263,14 @@ angular.module('sakaryarehberi')
 
         });
     };
- 
+    $scope.DeleteUser = function (id) {
+        console.log(id);
+        User.Delete(id).then(function (data) {
+            $state.go("admin.users", {}, { reload: true });
+        }, function (e) {
+
+        });
+    }
     if (stateName == "admin.locations")
         GetLocations();
     if (stateName == "admin.users")
