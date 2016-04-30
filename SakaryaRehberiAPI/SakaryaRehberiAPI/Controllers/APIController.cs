@@ -131,6 +131,22 @@ namespace SakaryaRehberiAPI.Controllers
            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
 
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage DeleteLocation(int LocationID)
+        {
+            var location = _db.Locations.Where(u => u.Location_ID == LocationID).FirstOrDefault();
+            if (location != null)
+            {
+                _db.Entry(location).State = System.Data.Entity.EntityState.Deleted;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
     }
 
 }

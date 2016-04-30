@@ -56,7 +56,6 @@
                    
         return func;
     };
-
     User.GetAll = function () {
         var func = $http.get("http://{apihost}/API/GetUsers", {})
         return func;
@@ -68,6 +67,9 @@
         var func = $http.get("http://{apihost}/API/DeleteUser?UserID=" + id);
         return func;
     }
+
+    User.AddUserCtrl = function (user) { }
+
     return User;
 
 
@@ -87,6 +89,14 @@
     }
     Location.GetLocationTypes = function () {
         var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth:false });
+        return func;
+    }
+
+    Location.Delete = function (id) {
+        var data = {
+            LocationID:id
+        }
+        var func = $http.get("http://{apihost}/API/DeleteLocation?LocationID=" + id);
         return func;
     }
 

@@ -240,7 +240,7 @@ angular.module('sakaryarehberi')
 
 })
 
-.controller("AdminMainCtrl", function ($scope, $state,Location,User) {
+.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
 
     $scope.locations = {};
     $scope.users = {};
@@ -275,8 +275,49 @@ angular.module('sakaryarehberi')
         GetLocations();
     if (stateName == "admin.users")
         GetUsers();
+
+    $scope.DeleteLocation = function (id) {
+        console.log(id);
+        Location.Delete(id).then(function (data) {
+            $state.go("admin.locations", {}, { reload: true });
+        }, function (e) {
+
+        });
+    }
+    $scope.open = function () {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/addnewuser.html',
+            animation: true,
+            scope: $scope,
+            size: 'lg',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/global/css/login.min.css'
+                        ]
+                    });
+                }]
+            }
+        });
+    };
+    
 })
 
 
+.controller("AddNewUserCtrl", function ($scope, User) {
+    $scope.user = {
+        User_Name: "",
+        User_Password: "",
+        User_Email:""
+    };
+    $scope.addnewuser = function () {
+        User.AddNewUser($scope.user);
+    };
 
-;
+
+
+})
