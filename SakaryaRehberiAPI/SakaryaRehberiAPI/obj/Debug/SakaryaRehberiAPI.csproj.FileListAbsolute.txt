@@ -185,7 +185,6 @@ D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehbe
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.dll
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.pdb
-D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache
 C:\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.dll.config
 C:\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.dll
 C:\Bitirme\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\SakaryaRehberiAPI.pdb

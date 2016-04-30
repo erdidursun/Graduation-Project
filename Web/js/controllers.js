@@ -1,14 +1,14 @@
 ﻿
 angular.module('sakaryarehberi')
 .controller("MainCtrl", function () {
-   
+
 
 })
 
-.controller("LocationDetailCtrl", function ($scope, User, $state,Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, User, $state, Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationID;
-   
+
     if (locationId != null)
         $ls.set("LocationId", locationId);
     else
@@ -45,8 +45,8 @@ angular.module('sakaryarehberi')
 
 
 
-   
-  
+
+
     uiGmapIsReady.promise(1).then(function (instances) {
         instances.forEach(function (inst) {
             $scope.mapResult = inst.map;
@@ -104,17 +104,17 @@ angular.module('sakaryarehberi')
 
 
     };
-    
-  
+
+
     $scope.open = function (location) {
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/partials/map.html',
             animation: true,
-            scope:$scope,
-            size:'lg'           
+            scope: $scope,
+            size: 'lg'
         });
-    };  
+    };
 
     $scope.like = function (location) {
 
@@ -123,22 +123,19 @@ angular.module('sakaryarehberi')
     $scope.sendComment = function () {
         $scope.comment.UserId = User.Info().id;
         $scope.comment.LocationId = $scope.location.Location_ID;
- 
+
         User.SendComment($scope.comment).then(function (data) {
             $state.go("home.locationDetails", { locationID: locationId }, { reload: true });
         });
     }
 
-    
+
 })
-.controller("LocationsCtrl", function ($scope, Auth,$state, Location) {
-    console.log(Auth.getToken());
-
-
+.controller("LocationsCtrl", function ($scope, Auth, $state, Location) {
     $scope.model = [];
     $scope.locations = [];
     $scope.locationTypes = [];
-    
+
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
@@ -148,7 +145,7 @@ angular.module('sakaryarehberi')
     Location.GetLocations().then(function (data) {
         angular.forEach(data.data, function (value, key) {
             $scope.locations.push(value);
-            $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name, id: value.Location_ID });
+            $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
         });
         $scope.selected = $scope.model[0];
 
@@ -166,14 +163,11 @@ angular.module('sakaryarehberi')
 
     };
     $scope.selectChange = function (item) {
-        console.log(item);
         $state.go("home.locationDetails", { locationID: item.id }, { reload: true });
 
 
     }
 })
-
-
 .controller("HeaderCtrl", function ($scope, $state, $uibModal, User, AuthService) {
     var userInfo = User.Info();
     $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
@@ -208,10 +202,10 @@ angular.module('sakaryarehberi')
     };
 })
 
-.controller("LoginCtrl", function ($scope, AuthService, md5,User) {
+.controller("LoginCtrl", function ($scope, AuthService, md5, User) {
 
     $scope.mail = "erdidursun13@gmail.com";
-    $scope.pass = "1234567";  
+    $scope.pass = "1234567";
     $scope.login = function () {
 
         AuthService.Login($scope.mail, md5.createHash($scope.pass));
@@ -240,16 +234,19 @@ angular.module('sakaryarehberi')
 
 })
 
+<<<<<<< HEAD
 .controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
+=======
+.controller("AdminMainCtrl", function ($scope, $state, Location, User) {
+>>>>>>> 3516b7a3c3a665389ff04e8fc9ccce5f903887c6
 
     $scope.locations = {};
     $scope.users = {};
 
     var stateName = $state.current.name;
 
-    function  GetLocations () {
+    function GetLocations() {
         Location.GetLocations().then(function (data) {
-            console.log(data);
             $scope.locations = data.data;
         }, function (e) {
 
@@ -257,14 +254,12 @@ angular.module('sakaryarehberi')
     }
     function GetUsers() {
         User.GetAll().then(function (data) {
-            console.log(data);
             $scope.users = data.data;
         }, function (e) {
 
         });
     };
     $scope.DeleteUser = function (id) {
-        console.log(id);
         User.Delete(id).then(function (data) {
             $state.go("admin.users", {}, { reload: true });
         }, function (e) {
