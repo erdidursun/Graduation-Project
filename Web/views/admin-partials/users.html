@@ -25,16 +25,19 @@
                 <th width="20"> Mail </th>
                 <th width="20%"> Kayıt Tarihi </th>
                 <th width="20%"> Kullanıcı Tipi </th>
+                <th width="20%"> Yorum Sayısı </th>
+                <th width="20%"> Beğeni Sayısı</th>
                 <th width="20%"> İşlemler </th>
 
             </tr>
             <tr role="row" class="filter" ng-repeat="user in users">
-                <td> {{user.User_Name}} </td>
-                <td> {{user.User_Email}} </td>
-                <td> {{user.User_SignUpDate|date}} </td>
-                <td> {{user.UserType.UserType_Name}} </td>
+                <td> {{user.Name}} </td>
+                <td> {{user.Email}} </td>
+                <td> {{user.SignUpDate|date}} </td>
+                <td> {{user.Type_Name}} </td>
+                <td> {{user.CommentCount}} </td>
+                <td> {{user.LikeCount}} </td>
 
-         
                 <td>
                     <div class="btn-group">
                         <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown">
@@ -48,7 +51,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a ng-click="DeleteUser(user.User_ID)">
+                                <a ng-click="DeleteUser(user.ID)">
                                     <i class="fa fa-pencil"></i> Sil
                                 </a>
                             </li>

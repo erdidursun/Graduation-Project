@@ -23,10 +23,10 @@
             data = $ls.getObject(FirebaseSession.Data);
             if (data) {
                 return {
-                    id: data.User_ID,
-                    name: data.User_Name,
+                    id: data.ID,
+                    name: data.Name,
                     access_token: data.access_token,
-                    profileImageURL: data.profileImageURL,
+                    profileImageURL: data.ImgPath,
                     isAuthanthanced: data ? true : false
                 };
             }
@@ -58,7 +58,7 @@
     };
 
     User.GetAll = function () {
-        var func = $http.get("http://{apihost}/API/GetUsers", {})
+        var func = $http.get("http://{apihost}/API/GetUsers", { headers: { 'Content-Type': 'application/json' } })
         return func;
     }
     User.Delete = function (id) {

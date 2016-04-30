@@ -21,7 +21,7 @@
                     <div class="search-label uppercase">Tipe Göre Filtrele</div>
                     <select class="form-control">
                         <option value="-1"></option>
-                        <option ng-repeat="type in  locationTypes" value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
+                        <option ng-repeat="type in  locationTypes" value="{{type.TypeID}}">{{type.TypeName}}</option>
 
                     </select>
                     <button class="btn green bold uppercase btn-block">Sonuçları Listele</button>
@@ -33,13 +33,13 @@
                     <div class="col-md-4" ng-repeat="location in locations">
                         <div class="tile-container">
                             <div class="tile-thumbnail">
-                                <a ui-sref="home.locationDetails({locationID:{{location.Location_ID}}})">
-                                    <img ng-src="{{location.Location_Banner}}" />
+                                <a ui-sref="home.locationDetails({locationID:{{location.ID}}})">
+                                    <img ng-src="{{location.Banner}}" />
                                 </a>
                             </div>
                             <div class="tile-title">
                                 <h3>
-                                    <a ui-sref="home.locationDetails({locationID:{{location.Location_ID}}}">{{location.Location_Name}}</a>
+                                    <a ui-sref="home.locationDetails({locationID:{{location.ID}}})">{{location.Name}}</a>
                                 </h3>
 
                                 <a ng-click="like(location)" ng-if="">
@@ -50,7 +50,7 @@
                                 </a>
                                 <div class="tile-desc">
                                     <p>
-                                        {{location.Location_Info |limitTo: 100}} {{location.Location_Info.length < 100 ? '' : '...'}}
+                                        {{location.Info |limitTo: 100}} {{location.Info.length < 100 ? '' : '...'}}
                                     </p>
                                 </div>
                             </div>

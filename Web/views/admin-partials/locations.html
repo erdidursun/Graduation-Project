@@ -33,15 +33,15 @@
 
             </tr>
             <tr role="row" class="filter" ng-repeat="location in locations">
-                <td> {{location.Location_Name}} </td>
-                <td> {{location.LocationType.LocationType_Name}} </td>
-                <td> {{location.LocationImages.length}} </td>
-                <td>{{location.Location_Info |limitTo: 100}} {{location.Location_Info.length < 100 ? '' : '...'}}</td> 
-                <td> {{location.Location_Latitude  | number : 3}} </td>
-                <td> {{location.Location_Longtitude | number : 3}} </td>
-                <td> {{location.UserLikes.length}} </td>
+                <td> {{location.Name}} </td>
+                <td> {{location.TypeName}} </td>
+                <td> {{location.ImageCount}} </td>
+                <td>{{location.Info |limitTo: 100}} {{location.Info.length < 100 ? '' : '...'}}</td> 
+                <td> {{location.Latitude  | number : 3}} </td>
+                <td> {{location.Longtitude | number : 3}} </td>
+                <td> {{location.LikeCount}} </td>
 
-                <td> {{location.UserComments.length}} </td>
+                <td> {{location.CommentCount}} </td>
                 <td>
                     <div class="btn-group">
                         <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown" >

@@ -127,8 +127,13 @@
 .run(function ($rootScope, $state, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
 
-    $rootScope.$on(AUTH_EVENTS.loginSuccess, function (data) {
-        $state.go("home.locations", {}, { reload: true });
+    $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
+        console.log(data.UserType_ID);
+        if (data.Type_ID == 2)
+            $state.go("admin", {}, { reload: true });
+        else
+            $state.go("home.locations", {}, { reload: true });
+
     });
     $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
         console.log(error);
