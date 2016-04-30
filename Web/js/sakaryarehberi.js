@@ -26,7 +26,8 @@
               url: "/",
               templateUrl: 'views/main.html',
               controller: "MainCtrl"
-          }).state('home.login', {
+          })
+           .state('home.login', {
               url: "login",
               templateUrl: 'views/partials/login.html',
               controller: 'LoginCtrl',
@@ -86,6 +87,11 @@
               }]
           }
       })
+         .state('admin', {
+             url: "/admin",
+             templateUrl: 'views/adminmain.html',
+             controller: "AdminMainCtrl"
+         })
 
     $urlRouterProvider.otherwise("/anasayfa");
 })

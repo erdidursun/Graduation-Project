@@ -279,4 +279,11 @@ angular.module('sakaryarehberi')
 
 })
 
+.controller("AdminMainCtrl", function ($scope) {
+
+
+})
+
+
+
 ;
