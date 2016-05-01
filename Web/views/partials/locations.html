@@ -2,64 +2,104 @@
 <div class="page-content-inner">
     <div class="portfolio-content portfolio-1">
         <div class="row">
-            <div class="col-md-8">
-                <div id="js-filters-juicy-projects" class="cbp-l-filters-button">
-                    <div data-filter="*" class="cbp-filter-item-active cbp-filter-item btn dark btn-outline uppercase">
-                        Hepsi
-                        <div class="cbp-filter-counter"></div>
-                    </div>
-                    <div data-filter="{{'.'+type.LocationType_ID}}" class="cbp-filter-item btn dark btn-outline uppercase" ng-repeat="type in locationTypes">
-                        {{type.LocationType_Name}}
-                        <div class="cbp-filter-counter"></div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="col-md-4">
-                <ui-select ng-model="selected"
-                           theme="bootstrap"
-                           ng-class="{open: $select.open}" on-select="selectChange($item)"
-                           ng-disabled="false">
-                    <ui-select-match placeholder="Ulaşmak İstediğiniz Yeri Arayın.">{{$select.selected.name}}</ui-select-match>
-                    <ui-select-choices repeat="city in model| propsFilter: {name: $select.search, type: $select.search}">
-                        <div ng-bind-html="city.name | highlight: $select.search" class="font-blue-dark"></div>
-                        <small>
-                            Tür: <span ng-bind-html="''+city.type | highlight: $select.search"></span>
-                        </small>
-                    </ui-select-choices>
-                </ui-select>
-            </div>
-        </div>
-        <div id="js-grid-juicy-projects" class="cbp">
-            <div class="cbp-item {{location.TypeId}}" ng-repeat="location in locations">
-                <div class="cbp-caption">
-                    <div class="cbp-caption-defaultWrap">
-                        <img ng-src="{{location.Banner}}" alt="">
-                    </div>
-                    <div class="cbp-caption-activeWrap">
-                        <div class="cbp-l-caption-alignCenter">
-                            <div class="cbp-l-caption-body">
-                                <a ui-sref="home.locationDetails({locationId: id})" class=" cbp-singlepage cbp-l-caption-buttonleft btn red uppercase btn red uppercase" rel="nofollow">Detay</a>
-                                <a href="{{location.Banner}}" class="cbp-lightbox cbp-l-caption-buttonRight btn red uppercase btn red uppercase" data-title="{{location.Name}}">Büyük Ekran</a>
+            <div class="col-md-12">
+                <div class="portlet-body">
+                    <div class="mt-element-overlay">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="mt-overlay-6">
+                                    <img src="assets/global/img/4.jpg" />                                    
+                                    <div class="mt-overlay">
+                                        <h2>Sakarya'nın En Güzel Yerlerini Keşfedin!</h2>
+                                        <ui-select id="searchInput" ng-model="selected"
+                                                  
+                                                   ng-class="{open: $select.open}" on-select="selectChange($item.id)"
+                                                   ng-disabled="false">
+                                            <ui-select-match placeholder="Ulaşmak İstediğiniz Yeri Arayın.">{{$select.selected.name}}</ui-select-match>
+                                            <ui-select-choices repeat="city in model| propsFilter: {name: $select.search, type: $select.search}">
+                                                <div ng-bind-html="city.name | highlight: $select.search" class="font-black"></div>
+                                                <small>
+                                                    Tür: <span ng-bind-html="''+city.type | highlight: $select.search"></span>
+                                                </small>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="cbp-l-grid-projects-title uppercase text-left uppercase text-left">{{location.Name}}</div>
-                <div class="cbp-l-grid-projects-desc uppercase text-left uppercase text-left">{{location.TypeName}}</div>
-                <div class="blog-post-meta">
-                    <i class="icon-like font-blue"></i>
-                    <a href="javascript:;">{{location.LikeCount}} Beğeni</a>
-                    <span style="margin-left:15px"></span>
-                    <i class="icon-bubble font-blue"></i>
-                    <a href="javascript:;">{{location.CommentCount}} Yorum</a>
-                   
-                </div>                
-           
+
+        
             </div>
-
         </div>
+        <div class="clearfix"> </div>
+        <br /><br />
 
+        <div class="row border-yellow-saffron" style="margin-bottom:20px;">
+            <div class="col-lg-12" style="margin-top:20px">
+                <div class="portlet light bordered">
+                    <div class="portlet-title">
+                        <div class="caption font-green-sharp">
+                            <i class="fa fa-map-marker font-green"></i>
+                            <span class="caption-subject bold uppercase"> Mekanlar</span>
+                        </div>
+                        <div class="actions">
+                            <div id="js-filters-juicy-projects" class="cbp-l-filters-button">
+                                <div data-filter="*" class="cbp-filter-item btn btn-circle blue-soft uppercase">
+                                    Hepsi
+                                    <div class="cbp-filter-counter font-green-haze"></div>
+                                </div>
+                                <div data-filter="{{'.'+type.LocationType_ID}}" class="cbp-filter-item btn btn-circle blue-soft uppercase" ng-repeat="type in locationTypes">
+                                    {{type.LocationType_Name}}
+                                    <div class="cbp-filter-counter"></div>
+                                </div>
+
+                            </div>
+                           
+                        </div>
+                    </div>
+                    <div class="portlet-body">
+                        <div class="scroller" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
+                            <div id="js-grid-juicy-projects" class="cbp">
+                                <div class="cbp-item {{location.TypeId}}" ng-repeat="location in locations">
+                                    <div class="cbp-caption">
+                                        <div class="cbp-caption-defaultWrap">
+                                            <img ng-src="{{location.Banner}}" alt="">
+                                        </div>
+                                        <div class="cbp-caption-activeWrap">
+                                            <div class="cbp-l-caption-alignCenter">
+                                                <div class="cbp-l-caption-body">
+                                                    <a ui-sref="home.locationDetails({locationId: location.ID   })" class=" cbp-singlepage cbp-l-caption-buttonleft btn red uppercase btn red uppercase" rel="nofollow">Detay</a>
+                                                    <a href="{{location.Banner}}" class="cbp-lightbox cbp-l-caption-buttonRight btn red uppercase btn red uppercase" data-title="{{location.Name}}">Büyük Ekran</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">{{location.Name}}</div>
+                                    <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center">{{location.TypeName}}</div>
+                                   <hr />
+                                     <div class="blog-post-meta text-center">
+                                        <i class="icon-like font-blue"></i>
+                                        <a href="javascript:;">{{location.LikeCount}} Beğeni</a>
+                                        <span style="margin-left:15px"></span>
+                                        <i class="icon-bubble font-blue"></i>
+                                        <a href="javascript:;">{{location.CommentCount}} Yorum</a>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+              
+
+            </div>
+        </div>
+       
     </div>
 </div>
+<script src="assets/global/plugins/jquery-slimscroll/jquery.slimscroll.min.js" type="text/javascript"></script>

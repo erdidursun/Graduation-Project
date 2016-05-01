@@ -89,7 +89,7 @@
       return func;
     }
     Location.GetLocationById = function (id) {
-        var func = $http.get("http://{apihost}/API/GetLocationById?id="+id, {});
+        var func = $http.get("http://{apihost}/API/GetLocationById?id=" + id, { headers: {'Content-Type':'application/json'}});
         return func;
     }
     Location.GetLocationTypes = function () {

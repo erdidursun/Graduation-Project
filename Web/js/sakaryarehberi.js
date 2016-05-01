@@ -61,8 +61,8 @@
         })
          .state('home.locationDetails', {
              url: "locationDetail/:locationId",
-             //templateUrl: 'views/partials/locationFull.html',
-             controller: 'LocationDetailCtrl'       
+             templateUrl: 'views/partials/locationFull.html',
+             controller: 'LocationDetailCtrl'
 
          })
           .state('home.forgot', {

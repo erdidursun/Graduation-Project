@@ -120,13 +120,13 @@ angular.module('sakaryarehberi')
         $scope.comment.LocationId = $scope.location.Location_ID;
 
         User.SendComment($scope.comment).then(function (data) {
-            $state.go("home.locationDetails", { locationID: locationId }, { reload: true });
+            $state.go("home.locationDetails/" + locationId);
         });
     }
 
 
 })
-.controller("LocationsCtrl", function ($scope, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
+.controller("LocationsCtrl", function ($scope,$location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
     $scope.model = [];
 
     $scope.locations = [];
@@ -165,8 +165,8 @@ angular.module('sakaryarehberi')
         });
     };
   
-    $scope.selectChange = function (item) {
-        $state.go("home.locationDetails", { locationID: item.id }, { reload: true });
+    $scope.selectChange = function (locationId) {
+        $location.path('/locationDetail/' + locationId);
 
 
     }
