@@ -47,8 +47,8 @@
                       }, function (error) {
                           console.log(error);
                       });
-
     }
+    
 
     User.SendComment = function (comment) {
         var data = $httpParamSerializerJQLike(comment);
@@ -68,7 +68,16 @@
         return func;
     }
 
-    User.AddUserCtrl = function (user) { }
+    User.GetUserTypes = function () {
+        var func = $http.get("http://{apihost}/API/GetUserTypes", { RequireAuth: false });
+        return func;
+    }
+
+    User.AddNewUserCtrl = function () {
+        
+
+
+    }
 
     return User;
 

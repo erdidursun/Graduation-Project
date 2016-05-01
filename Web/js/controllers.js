@@ -201,7 +201,6 @@ angular.module('sakaryarehberi')
         });
     };
 })
-
 .controller("LoginCtrl", function ($scope, AuthService, md5, User) {
 
     $scope.mail = "erdidursun13@gmail.com";
@@ -223,7 +222,8 @@ angular.module('sakaryarehberi')
     $scope.user = {
         User_Email: "erdidursun09@hotmail.com",
         User_Password: "12345",
-        User_Name: "sdfsdfsdfsdf"
+        User_Name: "sdfsdfsdfsdf",
+        UserType_ID: 1
     };
     $scope.register = function () {
         User.Register($scope.user);
@@ -234,13 +234,22 @@ angular.module('sakaryarehberi')
 
 })
 
-.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
+.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad)
+{
 
 
     $scope.locations = {};
     $scope.users = {};
+    $scope.userTypes = {};
 
     var stateName = $state.current.name;
+    
+    User.GetUserTypes().then(function (data) {
+        $scope.userTypes = data.data;
+
+    }, function (error) {
+        console.log(error);
+    });
 
     function GetLocations() {
         Location.GetLocations().then(function (data) {
@@ -256,6 +265,8 @@ angular.module('sakaryarehberi')
 
         });
     };
+
+  
     $scope.DeleteUser = function (id) {
         User.Delete(id).then(function (data) {
             $state.go("admin.users", {}, { reload: true });
@@ -263,6 +274,7 @@ angular.module('sakaryarehberi')
 
         });
     }
+
     if (stateName == "admin.locations")
         GetLocations();
     if (stateName == "admin.users")
@@ -283,6 +295,7 @@ angular.module('sakaryarehberi')
             animation: true,
             scope: $scope,
             size: 'lg',
+            windowClass: 'center-modal',
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
@@ -296,20 +309,18 @@ angular.module('sakaryarehberi')
             }
         });
     };
-    
-})
 
 
-.controller("AddNewUserCtrl", function ($scope, User) {
     $scope.user = {
         User_Name: "",
         User_Password: "",
-        User_Email:""
+        User_Email: ""
     };
     $scope.addnewuser = function () {
-        User.AddNewUser($scope.user);
+        console.log($scope.user);
+        User.Register($scope.user);
     };
 
-
-
+    
 })
+

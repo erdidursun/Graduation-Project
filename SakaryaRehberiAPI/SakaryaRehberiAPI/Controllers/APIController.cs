@@ -56,7 +56,7 @@ namespace SakaryaRehberiAPI.Controllers
             _user.User_Name = model.User_Name;
             _user.User_Password = model.User_Password;
             _user.User_SignUpDate = DateTime.Now;
-            _user.UserType_ID = 1;
+            _user.UserType_ID = model.UserType_ID.Value;
 
             _db.Users.Add(_user);
             _db.SaveChanges();
@@ -66,7 +66,6 @@ namespace SakaryaRehberiAPI.Controllers
                 Email = _user.User_Email,
                 SignUpDate = _user.User_SignUpDate,
                 Type_ID = _user.UserType_ID,
-                Type_Name = _user.UserType.UserType_Name,
                 ImgPath = _user.User_ImgPath,
                 Name = _user.User_Name,
                 LikeCount = _user.UserLikes.Count,
@@ -122,6 +121,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
+       
         [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage SendComment(CommentModel comment)
@@ -133,7 +133,7 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet]
+        [HttpGet] 
         public HttpResponseMessage GetUsers(int count = 100)
         {
             var user = from u in _db.Users
@@ -185,6 +185,16 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
 
         }
-    }
+
+        [AllowAnonymous]
+        public HttpResponseMessage GetUserTypes() {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
+        
+        }
+
+
+
+    
+     }
 
 }
