@@ -1,4 +1,6 @@
-﻿
+﻿/// <reference path="../assets/global/plugins/cubeportfolio/js/jquery.cubeportfolio.js" />
+/// <reference path="../assets/global/plugins/cubeportfolio/js/jquery.cubeportfolio.js" />
+
 angular.module('sakaryarehberi')
 .controller("MainCtrl", function () {
 
@@ -7,12 +9,8 @@ angular.module('sakaryarehberi')
 
 .controller("LocationDetailCtrl", function ($scope, User, $state, Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
-    var locationId = $stateParams.locationID;
-
-    if (locationId != null)
-        $ls.set("LocationId", locationId);
-    else
-        locationId = $ls.get("LocationId");
+ 
+    var locationId = $stateParams.locationId;
 
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data;
@@ -42,9 +40,6 @@ angular.module('sakaryarehberi')
     $scope.mapResult;
     $scope.comment = {};
     $scope.myInterval = 5000;
-
-
-
 
 
     uiGmapIsReady.promise(1).then(function (instances) {
@@ -131,11 +126,11 @@ angular.module('sakaryarehberi')
 
 
 })
-.controller("LocationsCtrl", function ($scope, Auth, $state, Location) {
+.controller("LocationsCtrl", function ($scope, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
     $scope.model = [];
+
     $scope.locations = [];
     $scope.locationTypes = [];
-
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
@@ -146,22 +141,30 @@ angular.module('sakaryarehberi')
         angular.forEach(data.data, function (value, key) {
             $scope.locations.push(value);
             $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
+        });       
+        $ocLazyLoad.load({
+            files: ['assets/pages/scripts/portfolio-1.js'],
+            cache: false
         });
-        $scope.selected = $scope.model[0];
-
     }, function (error) {
         console.log(error);
     });;
 
-    $scope.someGroupFn = function (item) {
-
-        if (item.name[0] >= 'A' && item.name[0] <= 'M')
-            return 'From A - M';
-
-        if (item.name[0] >= 'N' && item.name[0] <= 'Z')
-            return 'From N - Z';
-
+    $scope.open = function (locationId) {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/partials/locationFull.html',
+            animation: true,
+            controller:"LocationDetailCtrl",
+            size: 'lg',
+            resolve: {
+                locationId: function () {
+                    return locationId;
+                }
+            }
+        });
     };
+  
     $scope.selectChange = function (item) {
         $state.go("home.locationDetails", { locationID: item.id }, { reload: true });
 
@@ -239,7 +242,11 @@ angular.module('sakaryarehberi')
 
     $scope.locations = {};
     $scope.users = {};
-
+    var userInfo = User.Info();
+    $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
+    $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+    $scope.nick = userInfo ? userInfo.name : "";
+    $scope.showAdminPanel = User.isAdmin();
     var stateName = $state.current.name;
 
     function GetLocations() {
@@ -296,7 +303,7 @@ angular.module('sakaryarehberi')
             }
         });
     };
-    
+
 })
 
 
@@ -304,7 +311,7 @@ angular.module('sakaryarehberi')
     $scope.user = {
         User_Name: "",
         User_Password: "",
-        User_Email:""
+        User_Email: ""
     };
     $scope.addnewuser = function () {
         User.AddNewUser($scope.user);

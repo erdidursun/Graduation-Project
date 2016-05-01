@@ -2,10 +2,15 @@
 .service('User', function (FirebaseSession, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
     var data = {};
     var User = {};
+    var isAuthanthanced = false;
+    User.isAdmin=function(){
+        return isAuthanthanced;
+    }
     User.Info = function () {
         var type = Auth.getType();
         if (type == 'social') {
             data = $ls.getObject(FirebaseSession.Data);
+            isAuthanthanced = data ? true : false;
             if (data) {
                 var provider = data["" + data.provider + ""];
                 return {
@@ -13,7 +18,7 @@
                     name: provider.displayName,
                     access_token: provider.accessToken,
                     profileImageURL: provider.profileImageURL,
-                    isAuthanthanced: data ? true : false
+                    isAuthanthanced: isAuthanthanced
                 };
             }
             else

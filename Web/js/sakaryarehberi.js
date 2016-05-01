@@ -46,13 +46,23 @@
         .state('home.locations', {
             url: "anasayfa",
             templateUrl: 'views/partials/locations.html',
-            controller: 'LocationsCtrl'
+            controller: 'LocationsCtrl',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        files: [
+                            'assets/global/plugins/cubeportfolio/css/cubeportfolio.css',
+                            'assets/pages/css/portfolio.min.css'
+                        ]
+                    });
+                }]
+            }
         })
          .state('home.locationDetails', {
-             url: "locationDetail",
-             templateUrl: 'views/partials/locationFull.html',
-             controller: 'LocationDetailCtrl',
-             params: { locationID: null }
+             url: "locationDetail/:locationId",
+             //templateUrl: 'views/partials/locationFull.html',
+             controller: 'LocationDetailCtrl'       
 
          })
           .state('home.forgot', {
