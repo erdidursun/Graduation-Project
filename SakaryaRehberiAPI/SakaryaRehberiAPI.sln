@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SakaryaRehberiAPI", "SakaryaRehberiAPI\SakaryaRehberiAPI.csproj", "{B479B2F4-0B65-471E-95E0-AD0E43266FA4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D8145EF1-03CA-434D-876A-C36284FBB487} = {D8145EF1-03CA-434D-876A-C36284FBB487}
+	EndProjectSection
 EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web", "http://localhost:7617", "{D8145EF1-03CA-434D-876A-C36284FBB487}"
 	ProjectSection(WebsiteProperties) = preProject
@@ -24,6 +27,13 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Web", "http://localhost:761
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
 		SlnRelativePath = "..\Web\"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{FA501BA9-B999-46DC-8B46-D76CB1E19629}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Global

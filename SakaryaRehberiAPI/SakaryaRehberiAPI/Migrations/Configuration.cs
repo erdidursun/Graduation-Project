@@ -24,11 +24,12 @@ namespace SakaryaRehberiAPI.Migrations
             context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 1, Location_Name = "Sapanca Gölü", LocationType_ID = 1, Location_Info = "Test", Location_Latitude = 40.7167f, Location_Longtitude = 30.25f, Location_Banner = "assets/global/img/locationImages/1.jpg" });
             context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 2, Location_Name = "Poyrazlar Gölü", LocationType_ID = 1, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
 
-            context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 3, Location_Name = "Poyrazlar Gölü", LocationType_ID = 1, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
+            context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 3, Location_Name = "Poyrazlar Gölü", LocationType_ID = 2, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
 
             context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 4, Location_Name = "Poyrazlar Gölü", LocationType_ID = 1, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
 
-            context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 5, Location_Name = "Poyrazlar Gölü", LocationType_ID = 1, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
+            context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 5, Location_Name = "Sakarya Gölü", LocationType_ID = 2, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "assets/global/img/locationImages/2.jpg" });
+
 
             context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 1, LocationImage_Info = "Resim 1", LocationImage_Path = "assets/global/img/locationImages/1.jpg" });
             context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 2, LocationImage_Info = "Resim 2", LocationImage_Path = "assets/global/img/locationImages/2.jpg" });
