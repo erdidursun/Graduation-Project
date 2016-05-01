@@ -1,6 +1,6 @@
 ﻿<div class="blog-page blog-content-2">
     <div class="row">
-        <div class="col-lg-8 col-lg-offset-2">
+        <div class="col-lg-12">
 
             <div class="blog-single-content bordered blog-container">
                 <div class="blog-single-head">
@@ -10,7 +10,7 @@
                     </div>
                 </div>
                 <div class="blog-single-img">
-                    <uib-carousel interval="myInterval">
+                    <uib-carousel interval="myInterval" style="margin:auto;height:305px; max-width:800px">
                         <uib-slide ng-repeat="slide in slides" active="slide.active">
                             <img ng-src="{{slide.image}}" style="margin:auto;height:305px; width:100%">
                             <div class="carousel-caption">
@@ -31,22 +31,17 @@
                             <a ng-click="open(location)" data-toggle="tab" class="btn btn-primary"> Yol Tarifi Al </a>
                         </li>
                     </ul>
-                    <!--<ul class="blog-post-tags">
-                        <li class="uppercase">
-                            <a href="javascript:;">Bootstrap</a>
-                        </li>
-                        <li class="uppercase">
-                            <a href="javascript:;">Sass</a>
-                        </li>
-                        <li class="uppercase">
-                            <a href="javascript:;">HTML</a>
-                        </li>
-                    </ul>-->
+                    <div class="blog-post-meta">
+                        <i class="icon-bubble font-blue"></i>
+                        <a href="javascript:;">{{location.UserComments.length}} Yorum</a>
+                    </div>                   
                 </div>
+              
                 <div class="blog-comments">
-                    <h3 class="sbold blog-comments-title">Yorumlar({{location.UserComments.length}})</h3>
+                  
+                    <!--<h3 class="sbold blog-comments-title">Yorumlar({{location.UserComments.length}})</h3>-->
 
-                    <br /><div class="c-comment-list" style="height:310px;  overflow: auto;">
+               <div class="c-comment-list" style="height:310px;  overflow: auto;">
                         <div class="media" ng-repeat="comment in location.UserComments">
                             <div class="media-left">
                                 <a href="#">
