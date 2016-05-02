@@ -6,7 +6,7 @@
 
 .controller("LocationDetailCtrl", function ($scope, User, $state, Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
- 
+
     var locationId = $stateParams.locationId;
 
     Location.GetLocationById(locationId).then(function (data) {
@@ -123,7 +123,7 @@
 
 
 })
-.controller("LocationsCtrl", function ($scope,$location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
+.controller("LocationsCtrl", function ($scope, $location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
     $scope.model = [];
 
     $scope.locations = [];
@@ -138,7 +138,7 @@
         angular.forEach(data.data, function (value, key) {
             $scope.locations.push(value);
             $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
-        });       
+        });
         $ocLazyLoad.load({
             files: ['assets/pages/scripts/portfolio-1.js'],
             cache: false
@@ -152,7 +152,7 @@
         {
             templateUrl: 'views/partials/locationFull.html',
             animation: true,
-            controller:"LocationDetailCtrl",
+            controller: "LocationDetailCtrl",
             size: 'lg',
             resolve: {
                 locationId: function () {
@@ -161,9 +161,9 @@
             }
         });
     };
-  
+
     $scope.selectChange = function (locationId) {
-        $location.path('/locationDetail/' + locationId);
+        //$location.path('/locationDetail/' + locationId);
 
 
     }
@@ -233,9 +233,29 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
+.controller("LocationNewCtrl", function ($scope, $state, Location) {
+    $scope.locationTypes = {};
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
 
-.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad)
-{
+    }, function (error) {
+        console.log(error);
+    });
+    $scope.location = {
+        Banner: "assets/global/img/locationImages/1.jpg",
+        Name: "Ozan Gölü",
+        Info: "Test",
+        Latitude: 40.716701507568359,
+        Longtitude: 40.716701507568359
+    }
+    $scope.addNewLocation = function () {
+        console.log($scope.location);
+        Location.Add($scope.location).then(function (data) {
+            console.log(data);
+        });
+    };
+})
+.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
@@ -245,14 +265,24 @@
     $scope.nick = userInfo ? userInfo.name : "";
     $scope.showAdminPanel = User.isAdmin();
     var stateName = $state.current.name;
-    
+    $scope.user = {
+        User_Name: "",
+        User_Password: "",
+        User_Email: ""
+    };
+
+    if (stateName == "admin.locations")
+        GetLocations();
+    if (stateName == "admin.users")
+        GetUsers();
+
     User.GetUserTypes().then(function (data) {
         $scope.userTypes = data.data;
 
     }, function (error) {
         console.log(error);
     });
-
+    
     function GetLocations() {
         Location.GetLocations().then(function (data) {
             $scope.locations = data.data;
@@ -261,6 +291,7 @@
         });
     }
     function GetUsers() {
+
         User.GetAll().then(function (data) {
             $scope.users = data.data;
         }, function (e) {
@@ -268,7 +299,7 @@
         });
     };
 
-  
+
     $scope.DeleteUser = function (id) {
         User.Delete(id).then(function (data) {
             $state.go("admin.users", {}, { reload: true });
@@ -277,10 +308,7 @@
         });
     }
 
-    if (stateName == "admin.locations")
-        GetLocations();
-    if (stateName == "admin.users")
-        GetUsers();
+    
 
     $scope.DeleteLocation = function (id) {
         console.log(id);
@@ -290,6 +318,8 @@
 
         });
     }
+   
+   
     $scope.open = function () {
         var modalInstance = $uibModal.open(
         {
@@ -311,17 +341,36 @@
             }
         });
     };
-
-    $scope.user = {
-        User_Name: "",
-        User_Password: "",
-        User_Email: ""
+    $scope.newLocation = function () {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/addLocation.html',
+            animation: true,
+            scope: $scope,
+            size: 'lg',
+            windowClass: 'center-modal',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             'assets/global/css/login.min.css',
+                              "/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
+                              "assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css",
+                             "/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+                        ]
+                    });
+                }]
+            }
+        });
     };
+ 
     $scope.addnewuser = function () {
         console.log($scope.user);
         User.Register($scope.user);
     };
 
-    
+
 })
 

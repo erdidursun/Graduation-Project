@@ -43,7 +43,17 @@ namespace SakaryaRehberiAPI.Controllers
 
         #region User
 
-
+        [AllowAnonymous]
+        public HttpResponseMessage getTranslate(string text)
+        {
+            string from = "tr";
+            string to = "en";
+            String key = "trnsl.1.1.20160404T133544Z.118307a783fa4264.b8bb47bd147e5440f61f898c192922f3e47b93a2";
+            String uri = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=" + from + "-" + to + "&format=text";
+            WebClient c = new WebClient();
+            var json = c.DownloadString(uri);
+            return Request.CreateResponse(HttpStatusCode.OK, json);
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -82,6 +92,31 @@ namespace SakaryaRehberiAPI.Controllers
         }
         #endregion
 
+
+        [AllowAnonymous]
+        [HttpPost]
+        public HttpResponseMessage AddLocation(LocationNew loc)
+        {
+            Location _loc = new Location();
+            _loc.Location_Banner = loc.Banner;
+            _loc.Location_Info = loc.Info;
+            _loc.Location_Name = loc.Name;
+            _loc.Location_Latitude = loc.Latitude;
+            _loc.Location_Longtitude = loc.Longtitude;
+            if (loc.Images != null)
+            {
+                foreach (var item in loc.Images)
+                {
+                    _loc.LocationImages.Add(item);
+                }
+            }
+          
+            _loc.LocationType_ID = loc.Type_ID;
+            _db.Locations.Add(_loc);
+            _db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK, _loc);
+        }
+
         [AllowAnonymous]
         public HttpResponseMessage GetLocations(int page)
         {
@@ -93,9 +128,9 @@ namespace SakaryaRehberiAPI.Controllers
                            Name = l.Location_Name,
                            Info = l.Location_Info,
                            TypeId = l.LocationType_ID,
-                           ImageCount=l.LocationImages.Count,
-                           Latitude=l.Location_Latitude,
-                           Longtitude=l.Location_Latitude,
+                           ImageCount = l.LocationImages.Count,
+                           Latitude = l.Location_Latitude,
+                           Longtitude = l.Location_Latitude,
                            TypeName = l.LocationType.LocationType_Name,
                            CommentCount = l.UserComments.Count,
                            LikeCount = l.UserLikes.Count
@@ -121,7 +156,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
-       
+
         [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage SendComment(CommentModel comment)
@@ -133,7 +168,7 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [AllowAnonymous]
-        [HttpGet] 
+        [HttpGet]
         public HttpResponseMessage GetUsers(int count = 100)
         {
             var user = from u in _db.Users
@@ -187,14 +222,15 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [AllowAnonymous]
-        public HttpResponseMessage GetUserTypes() {
+        public HttpResponseMessage GetUserTypes()
+        {
             return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
-        
+
         }
 
 
 
-    
-     }
+
+    }
 
 }

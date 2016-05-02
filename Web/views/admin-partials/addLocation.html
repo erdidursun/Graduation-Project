@@ -1,0 +1,57 @@
+﻿
+<div class="row">
+    <div class="col-md-6 col-xs-12 col-lg-4 col-md-offset-4 margin-top-20 ">
+        <form class="register-form" name="form" novalidate>
+            <h3 class=" font-green">
+                Yeni Bir Mekan Ekle
+            </h3>
+            <p class="hint">  </p>
+            <div class="form-group">
+                <!--<label class="control-label visible-ie8 visible-ie9">Ad Soyad</label>-->
+                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Yer İsmi" name="name" ng-minlength="3"
+                       required ng-model="location.Name" />
+
+                <div ng-show="form.$submitted || form.name.$touched">
+                    <p ng-show="form.name.$error.required" class="alert alert-info">Yer Adını Doldurunuz</p>
+                    <p ng-show="form.username.$error.minlength" class="alert alert-danger">Yer Adı 3 karakterden az olamaz</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <!--<label class="control-label visible-ie8 visible-ie9">Ad Soyad</label>-->
+                <textarea class="form-control placeholder-no-fix" placeholder="Yer Açıklaması" name="info" ng-minlength="10"
+                          required ng-model="location.Info" />
+                <div ng-show="form.$submitted || form.info.$touched">
+                    <p ng-show="form.info.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
+                    <p ng-show="form.info.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <select class="form-control" name="select" ng-model="location.Type_ID">
+                    <option value="">Mekan Tipi...</option>
+                    <option ng-repeat="type in locationTypes " value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
+
+                </select>
+            </div>
+            <div class="form-group">
+                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="5"
+                       required ng-model="location.Latitude" />
+                <div ng-show="form.$submitted || form.enlem.$touched">
+                    <p ng-show="form.enlem.$error.required" class="alert alert-info">Enlem  Doldurunuz</p>
+                    <p ng-show="form.enlem.$error.minlength" class="alert alert-danger">ENLEM 3 karakterden az olamaz</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
+                       required ng-model="location.Longtitude" />
+                <div ng-show="form.$submitted || form.boylam.$touched">
+                    <p ng-show="form.boylam.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
+                    <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                </div>
+            </div>        
+            <div class="form-actions">
+                <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addNewLocation()">Ekle</button>
+            </div>
+        </form>
+    </div>
+
+</div>
