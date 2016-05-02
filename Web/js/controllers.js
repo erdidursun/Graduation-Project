@@ -9,10 +9,12 @@
 
     var locationId = $stateParams.locationId;
 
+    console.log(locationId);
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data;
+        console.log($scope.location);
         angular.forEach($scope.location.LocationImages, function (value) {
-            $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
+            $scope.slides.push({ image: "http://"+Settings.apiHostUrl + "/" + value.LocationImage_Path, text: value.LocationImage_Info });
         });
         $scope.map = {
             control: {},
@@ -50,6 +52,7 @@
     var directionsService = new google.maps.DirectionsService();
     var geocoder = new google.maps.Geocoder();
     $scope.getDirections = function (type) {
+        console.log($scope.location);
         navigator.geolocation.getCurrentPosition(function (loc) {
             $scope.currentLocation = loc;
             $rootScope.directions = {
@@ -117,7 +120,8 @@
         $scope.comment.LocationId = $scope.location.Location_ID;
 
         User.SendComment($scope.comment).then(function (data) {
-            $state.go("home.locationDetails/" + locationId);
+            console.log(data);
+            $state.go("home.locationDetails", { locationId: locationId }, { reload: true });
         });
     }
 
@@ -163,7 +167,7 @@
     };
 
     $scope.selectChange = function (locationId) {
-        //$location.path('/locationDetail/' + locationId);
+        $state.go("home.locationDetails", { locationId: locationId });
 
 
     }
@@ -233,7 +237,7 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
-.controller("LocationNewCtrl", function ($scope, $state, Location) {
+.controller("LocationNewCtrl", function ($scope, $state, Location, FileUploader) {
     $scope.locationTypes = {};
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
@@ -241,6 +245,8 @@
     }, function (error) {
         console.log(error);
     });
+  
+
     $scope.location = {
         Banner: "assets/global/img/locationImages/1.jpg",
         Name: "Ozan Gölü",
@@ -248,10 +254,27 @@
         Latitude: 40.716701507568359,
         Longtitude: 40.716701507568359
     }
+    $scope.fileUploadVisible = false;
+    $scope.uploader = new FileUploader();
+    $scope.uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
     $scope.addNewLocation = function () {
-        console.log($scope.location);
         Location.Add($scope.location).then(function (data) {
+            $scope.fileUploadVisible = true;
             console.log(data);
+            var id = data.data.Location_ID;
+            
+             $scope.uploader.url= "http://localhost:8054/api/Upload?locationID=" + id
+          
+
+        
+
+            
         });
     };
 })
