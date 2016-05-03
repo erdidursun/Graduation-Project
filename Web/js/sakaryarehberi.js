@@ -1,4 +1,4 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad','angularFileUpload', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
@@ -65,6 +65,25 @@
              controller: 'LocationDetailCtrl'
 
          })
+        .state('admin.newLocation', {
+            url: 'addLocation',
+            templateUrl: 'views/admin-partials/addLocation.html',
+            controller:"LocationNewCtrl",
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             'assets/global/css/login.min.css',
+                              "/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
+                              "assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css",
+                             "/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+                        ]
+                    });
+                }]
+            }      
+        })
           .state('home.forgot', {
               url: "forgot",
               templateUrl: 'views/partials/forgot.html',
