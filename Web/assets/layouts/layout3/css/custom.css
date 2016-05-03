@@ -42,8 +42,20 @@ body {
     border-color: red;
 }
 
+.nav > li > a:hover, .nav > li > a:focus{
+        background-color: transparent; 
 
 
+}
+.nav > li > a > img {
+height:50px;
+}
+.navbar-nav > li{
+    padding:0!important;
+}
+.navbar-nav{
+    height:80px;
+}
  .mt-overlay-6 img {
         height: 400px;
     }
