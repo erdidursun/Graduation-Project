@@ -18,7 +18,8 @@
 *.lib
 *.sbr
 *.sdf
-SakaryaRehberiAPI/SakaryaRehberiAPI/obj
+SakaryaRehberiAPI/SakaryaRehberiAPI/obj*/
+
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Bb]in
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Dd]ebug*/
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Rr]elease*/
