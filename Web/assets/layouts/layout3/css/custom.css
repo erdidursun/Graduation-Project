@@ -1,21 +1,84 @@
 /* here you can put your own css to customize and override the theme */
-.hor-menu a{
-    color:darkblue;
+.hor-menu a {
+    color: darkblue;
 }
-.angular-google-map-container { height: 500px; }
+
+.angular-google-map-container {
+    height: 500px;
+}
+
 img.adp-marker {
-margin-right:15px!important;
+    margin-right: 15px !important;
 }
+
 .adp, .adp table {
-width: 100%;
+    width: 100%;
 }
+
 .adp-summary {
     text-align: center;
     color: #337ab7;
     font-size: 22px;
     margin: 10px;
 }
-.search-content-3 .tile-container>.tile-thumbnail img{
-        height: 150px;
-       
+
+.search-content-3 .tile-container > .tile-thumbnail img {
+    height: 150px;
+}
+
+body {
+    background-color: #eff3f8;
+}
+
+.mt-element-overlay .mt-overlay-5 h2 {
+    padding: 0 !important;
+}
+
+#searchInput {
+    width: 60%;
+    margin-left: 20%;
+    color: red;
+    border: thick;
+    border-color: red;
+}
+
+
+
+ .mt-overlay-6 img {
+        height: 400px;
+    }
+
+.ui-select-bootstrap .ui-select-choices-row.active > a {
+    background-color: #26C281;
+}
+
+.ui-select-bootstrap .ui-select-choices-row > a {
+    background-color: white;
+}
+
+.ui-select-bootstrap > .ui-select-match > .btn {
+    background: #fff !important;
+}
+
+@media (max-width: 768px) {
+    #searchInput {
+        width: 100%;
+        margin-left: 5px;
+    }
+
+  .mt-overlay-6 img {
+        height: 300px;
+    }
+}
+.portfolio-content .cbp-l-filters-button .cbp-filter-item.cbp-filter-item-active {
+background-color:#36918b!important;
+}
+.center-modal {
+    position: fixed;
+    top: 10%;
+    left: 18.5%;
+    z-index: 1050;
+    width: 80%;
+    height: 80%;
+    margin-left: -10%;
 }

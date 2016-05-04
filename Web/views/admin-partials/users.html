@@ -1,0 +1,69 @@
+﻿<div class="page-bar">
+    <ul class="page-breadcrumb">
+        <li>
+            <i class="icon-home"></i>
+            <a ui-sref="admin">Admin Panel</a>
+            <i class="fa fa-angle-right"></i>
+        </li>
+        <li>
+            <span>Kullanıcı Listesi</span>
+        </li>
+    </ul>
+
+</div>
+
+<button type="button" class="btn green" ng-click="open()"> <i class="fa fa-user-plus"></i>&nbsp; Kullanici Ekle</button>
+<hr />
+<div class="table-container">
+
+    <table class="table table-striped table-bordered table-hover dataTable no-footer dtr-inline" id="datatable_ajax">
+        <thead>
+            <tr role="row" class="heading">
+
+
+                <th width="20%"> Ad Soyad  </th>
+                <th width="20"> Mail </th>
+                <th width="20%"> Kayıt Tarihi </th>
+                <th width="20%"> Kullanıcı Tipi </th>
+                <th width="20%"> Yorum Sayısı </th>
+                <th width="20%"> Beğeni Sayısı</th>
+                <th width="20%"> İşlemler </th>
+
+            </tr>
+            <tr role="row" class="filter" ng-repeat="user in users">
+                <td> {{user.Name}} </td>
+                <td> {{user.Email}} </td>
+                <td> {{user.SignUpDate|date}} </td>
+                <td> {{user.Type_Name}} </td>
+                <td> {{user.CommentCount}} </td>
+                <td> {{user.LikeCount}} </td>
+
+                <td>
+                    <div class="btn-group">
+                        <a class="btn btn-sm green dropdown-toggle" href="javascript:;" data-toggle="dropdown">
+                            İşlemler
+                            <i class="fa fa-angle-down"></i>
+                        </a>
+                        <ul class="dropdown-menu pull-right">
+                            <li>
+                                <a href="javascript:;">
+                                    <i class="fa fa-pencil"></i> Düzenle
+                                </a>
+                            </li>
+                            <li>
+                                <a ng-click="DeleteUser(user.ID)">
+                                    <i class="fa fa-pencil"></i> Sil
+                                </a>
+                            </li>
+
+
+                        </ul>
+                    </div>
+                </td>
+
+
+            </tr>
+        </thead>
+        <tbody> </tbody>
+    </table>
+</div>

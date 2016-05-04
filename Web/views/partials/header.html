@@ -4,7 +4,7 @@
             <div class="row">
                 <ul class="nav navbar-nav">                   
                     <li style="max-width:500px; padding: 16px;float:left">
-                        <a ui-sref="home.locations">
+                        <a ui-sref="home.locations" ui-sref-opts="{reload: true}">
                             <img src="{{logo}}" alt="logo" class="logo-default">
                         </a>
                     </li>                 
@@ -32,6 +32,11 @@
                                 <li>
                                     <a ng-click="logout()">
                                         <i class="icon-key"></i> Log Out
+                                    </a>
+                                </li>
+                                <li>
+                                    <a ng-show="showAdminPanel" ui-sref="admin">
+                                        <i class="icon-key"></i> Admin Panel
                                     </a>
                                 </li>
                             </ul>

@@ -43,7 +43,17 @@ namespace SakaryaRehberiAPI.Controllers
 
         #region User
 
-
+        [AllowAnonymous]
+        public HttpResponseMessage getTranslate(string text)
+        {
+            string from = "tr";
+            string to = "en";
+            String key = "trnsl.1.1.20160404T133544Z.118307a783fa4264.b8bb47bd147e5440f61f898c192922f3e47b93a2";
+            String uri = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=" + from + "-" + to + "&format=text";
+            WebClient c = new WebClient();
+            var json = c.DownloadString(uri);
+            return Request.CreateResponse(HttpStatusCode.OK, json);
+        }
 
         [HttpPost]
         [AllowAnonymous]
@@ -56,11 +66,23 @@ namespace SakaryaRehberiAPI.Controllers
             _user.User_Name = model.User_Name;
             _user.User_Password = model.User_Password;
             _user.User_SignUpDate = DateTime.Now;
-            _user.UserType_ID = 1;
+            _user.UserType_ID = model.UserType_ID.Value;
 
             _db.Users.Add(_user);
             _db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK, _user);
+            var data = new
+            {
+                ID = _user.User_ID,
+                Email = _user.User_Email,
+                SignUpDate = _user.User_SignUpDate,
+                Type_ID = _user.UserType_ID,
+                ImgPath = _user.User_ImgPath,
+                Name = _user.User_Name,
+                LikeCount = _user.UserLikes.Count,
+                CommentCount = _user.UserComments.Count
+
+            };
+            return Request.CreateResponse(HttpStatusCode.OK, data);
         }
         [HttpGet]
         [AllowAnonymous]
@@ -70,18 +92,49 @@ namespace SakaryaRehberiAPI.Controllers
         }
         #endregion
 
+
+        [AllowAnonymous]
+        [HttpPost]
+        public HttpResponseMessage AddLocation(LocationNew loc)
+        {
+            Location _loc = new Location();
+            _loc.Location_Banner = loc.Banner;
+            _loc.Location_Info = loc.Info;
+            _loc.Location_Name = loc.Name;
+            _loc.Location_Latitude = loc.Latitude;
+            _loc.Location_Longtitude = loc.Longtitude;
+            if (loc.Images != null)
+            {
+                foreach (var item in loc.Images)
+                {
+                    _loc.LocationImages.Add(item);
+                }
+            }
+          
+            _loc.LocationType_ID = loc.Type_ID;
+            _db.Locations.Add(_loc);
+            _db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK, _loc);
+        }
+
         [AllowAnonymous]
         public HttpResponseMessage GetLocations(int page)
         {
-            //var list = (from loc in _db.Locations
-            //            join o in _db.LocationTypes
-            //            on loc.LocationType_ID equals o.LocationType_ID
-            //            join i in _db.LocationImages
-            //            on loc.Location_ID equals i.Location_ID
-            //            select new {
-            //                Locations = loc                             
-            //            } );
-            var list = _db.Locations.ToList();
+            var list = from l in _db.Locations
+                       select new
+                       {
+                           ID = l.Location_ID,
+                           Banner = l.Location_Banner,
+                           Name = l.Location_Name,
+                           Info = l.Location_Info,
+                           TypeId = l.LocationType_ID,
+                           ImageCount = l.LocationImages.Count,
+                           Latitude = l.Location_Latitude,
+                           Longtitude = l.Location_Latitude,
+                           TypeName = l.LocationType.LocationType_Name,
+                           CommentCount = l.UserComments.Count,
+                           LikeCount = l.UserLikes.Count
+                       };
 
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
@@ -90,7 +143,10 @@ namespace SakaryaRehberiAPI.Controllers
         {
             var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
             if (list != null)
+            {
+                list.UserComments = list.UserComments.OrderBy(p => p.UserComment_Date).ToList(); ;
                 return Request.CreateResponse(HttpStatusCode.OK, list);
+            }
             else
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");
 
@@ -100,6 +156,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
+
         [AllowAnonymous]
         [HttpPost]
         public HttpResponseMessage SendComment(CommentModel comment)
@@ -109,6 +166,71 @@ namespace SakaryaRehberiAPI.Controllers
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage GetUsers(int count = 100)
+        {
+            var user = from u in _db.Users
+                       select new
+                       {
+                           ID = u.User_ID,
+                           Email = u.User_Email,
+                           SignUpDate = u.User_SignUpDate,
+                           Type_ID = u.UserType_ID,
+                           Type_Name = u.UserType.UserType_Name,
+                           ImgPath = u.User_ImgPath,
+                           Name = u.User_Name,
+                           LikeCount = u.UserLikes.Count,
+                           CommentCount = u.UserComments.Count
+                       };
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, user);
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage DeleteUser(int UserID)
+        {
+            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (user != null)
+            {
+                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public HttpResponseMessage DeleteLocation(int LocationID)
+        {
+            var location = _db.Locations.Where(u => u.Location_ID == LocationID).FirstOrDefault();
+            if (location != null)
+            {
+                _db.Entry(location).State = System.Data.Entity.EntityState.Deleted;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
+        [AllowAnonymous]
+        public HttpResponseMessage GetUserTypes()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
+
+        }
+
+
+
+
     }
 
 }

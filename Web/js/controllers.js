@@ -1,23 +1,20 @@
-﻿
-angular.module('sakaryarehberi')
+﻿angular.module('sakaryarehberi')
 .controller("MainCtrl", function () {
-   
+
 
 })
 
-.controller("LocationDetailCtrl", function ($scope, User, $state,Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, User, $state, Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
-    var locationId = $stateParams.locationID;
-   
-    if (locationId != null)
-        $ls.set("LocationId", locationId);
-    else
-        locationId = $ls.get("LocationId");
 
+    var locationId = $stateParams.locationId;
+
+    console.log(locationId);
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data;
+        console.log($scope.location);
         angular.forEach($scope.location.LocationImages, function (value) {
-            $scope.slides.push({ image: value.LocationImage_Path, text: value.LocationImage_Info });
+            $scope.slides.push({ image: "http://"+Settings.apiHostUrl + "/" + value.LocationImage_Path, text: value.LocationImage_Info });
         });
         $scope.map = {
             control: {},
@@ -44,9 +41,6 @@ angular.module('sakaryarehberi')
     $scope.myInterval = 5000;
 
 
-
-   
-  
     uiGmapIsReady.promise(1).then(function (instances) {
         instances.forEach(function (inst) {
             $scope.mapResult = inst.map;
@@ -58,6 +52,7 @@ angular.module('sakaryarehberi')
     var directionsService = new google.maps.DirectionsService();
     var geocoder = new google.maps.Geocoder();
     $scope.getDirections = function (type) {
+        console.log($scope.location);
         navigator.geolocation.getCurrentPosition(function (loc) {
             $scope.currentLocation = loc;
             $rootScope.directions = {
@@ -104,17 +99,17 @@ angular.module('sakaryarehberi')
 
 
     };
-    
-  
+
+
     $scope.open = function (location) {
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/partials/map.html',
             animation: true,
-            scope:$scope,
-            size:'lg'           
+            scope: $scope,
+            size: 'lg'
         });
-    };  
+    };
 
     $scope.like = function (location) {
 
@@ -123,22 +118,20 @@ angular.module('sakaryarehberi')
     $scope.sendComment = function () {
         $scope.comment.UserId = User.Info().id;
         $scope.comment.LocationId = $scope.location.Location_ID;
- 
+
         User.SendComment($scope.comment).then(function (data) {
-            $state.go("home.locationDetails", { locationID: locationId }, { reload: true });
+            console.log(data);
+            $state.go("home.locationDetails", { locationId: locationId }, { reload: true });
         });
     }
 
-    
+
 })
-.controller("LocationsCtrl", function ($scope, Auth,$state, Location) {
-    console.log(Auth.getToken());
-
-
+.controller("LocationsCtrl", function ($scope, $location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
     $scope.model = [];
+
     $scope.locations = [];
     $scope.locationTypes = [];
-    
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
@@ -148,32 +141,37 @@ angular.module('sakaryarehberi')
     Location.GetLocations().then(function (data) {
         angular.forEach(data.data, function (value, key) {
             $scope.locations.push(value);
-            $scope.model.push({ name: value.Location_Name, type: value.LocationType.LocationType_Name, id: value.Location_ID });
+            $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
         });
-        $scope.selected = $scope.model[0];
-
+        $ocLazyLoad.load({
+            files: ['assets/pages/scripts/portfolio-1.js'],
+            cache: false
+        });
     }, function (error) {
         console.log(error);
     });;
 
-    $scope.someGroupFn = function (item) {
-
-        if (item.name[0] >= 'A' && item.name[0] <= 'M')
-            return 'From A - M';
-
-        if (item.name[0] >= 'N' && item.name[0] <= 'Z')
-            return 'From N - Z';
-
+    $scope.open = function (locationId) {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/partials/locationFull.html',
+            animation: true,
+            controller: "LocationDetailCtrl",
+            size: 'lg',
+            resolve: {
+                locationId: function () {
+                    return locationId;
+                }
+            }
+        });
     };
-    $scope.selectChange = function (item) {
-        console.log(item);
-        $state.go("home.locationDetails", { locationID: item.id }, { reload: true });
+
+    $scope.selectChange = function (locationId) {
+        $state.go("home.locationDetails", { locationId: locationId });
 
 
     }
 })
-
-
 .controller("HeaderCtrl", function ($scope, $state, $uibModal, User, AuthService) {
     var userInfo = User.Info();
     $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
@@ -207,11 +205,10 @@ angular.module('sakaryarehberi')
         });
     };
 })
-
-.controller("LoginCtrl", function ($scope, AuthService, md5,User) {
+.controller("LoginCtrl", function ($scope, AuthService, md5, User) {
 
     $scope.mail = "erdidursun13@gmail.com";
-    $scope.pass = "1234567";  
+    $scope.pass = "1234567";
     $scope.login = function () {
 
         AuthService.Login($scope.mail, md5.createHash($scope.pass));
@@ -229,7 +226,8 @@ angular.module('sakaryarehberi')
     $scope.user = {
         User_Email: "erdidursun09@hotmail.com",
         User_Password: "12345",
-        User_Name: "sdfsdfsdfsdf"
+        User_Name: "sdfsdfsdfsdf",
+        UserType_ID: 1
     };
     $scope.register = function () {
         User.Register($scope.user);
@@ -239,5 +237,163 @@ angular.module('sakaryarehberi')
 .controller("MenuCtrl", function ($scope) {
 
 })
+.controller("LocationNewCtrl", function ($scope, $state, Location, FileUploader) {
+    $scope.locationTypes = {};
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
 
-;
+    }, function (error) {
+        console.log(error);
+    });
+  
+
+    $scope.location = {
+        Banner: "assets/global/img/locationImages/1.jpg",
+        Name: "Ozan Gölü",
+        Info: "Test",
+        Latitude: 40.716701507568359,
+        Longtitude: 40.716701507568359
+    }
+    $scope.fileUploadVisible = false;
+    $scope.uploader = new FileUploader();
+    $scope.uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+    $scope.addNewLocation = function () {
+        Location.Add($scope.location).then(function (data) {
+            $scope.fileUploadVisible = true;
+            console.log(data);
+            var id = data.data.Location_ID;
+            
+             $scope.uploader.url= "http://localhost:8054/api/Upload?locationID=" + id
+          
+
+        
+
+            
+        });
+    };
+})
+.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
+    $scope.locations = {};
+    $scope.users = {};
+    $scope.userTypes = {};
+    var userInfo = User.Info();
+    $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
+    $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+    $scope.nick = userInfo ? userInfo.name : "";
+    $scope.showAdminPanel = User.isAdmin();
+    var stateName = $state.current.name;
+    $scope.user = {
+        User_Name: "",
+        User_Password: "",
+        User_Email: ""
+    };
+
+    if (stateName == "admin.locations")
+        GetLocations();
+    if (stateName == "admin.users")
+        GetUsers();
+
+    User.GetUserTypes().then(function (data) {
+        $scope.userTypes = data.data;
+
+    }, function (error) {
+        console.log(error);
+    });
+    
+    function GetLocations() {
+        Location.GetLocations().then(function (data) {
+            $scope.locations = data.data;
+        }, function (e) {
+
+        });
+    }
+    function GetUsers() {
+
+        User.GetAll().then(function (data) {
+            $scope.users = data.data;
+        }, function (e) {
+
+        });
+    };
+
+
+    $scope.DeleteUser = function (id) {
+        User.Delete(id).then(function (data) {
+            $state.go("admin.users", {}, { reload: true });
+        }, function (e) {
+
+        });
+    }
+
+    
+
+    $scope.DeleteLocation = function (id) {
+        console.log(id);
+        Location.Delete(id).then(function (data) {
+            $state.go("admin.locations", {}, { reload: true });
+        }, function (e) {
+
+        });
+    }
+   
+   
+    $scope.open = function () {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/addnewuser.html',
+            animation: true,
+            scope: $scope,
+            size: 'lg',
+            windowClass: 'center-modal',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/global/css/login.min.css'
+                        ]
+                    });
+                }]
+            }
+        });
+    };
+    $scope.newLocation = function () {
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/addLocation.html',
+            animation: true,
+            scope: $scope,
+            size: 'lg',
+            windowClass: 'center-modal',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                             'assets/global/css/login.min.css',
+                              "/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
+                              "assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css",
+                             "/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+                        ]
+                    });
+                }]
+            }
+        });
+    };
+ 
+    $scope.addnewuser = function () {
+        console.log($scope.user);
+        User.Register($scope.user);
+    };
+
+
+})
+

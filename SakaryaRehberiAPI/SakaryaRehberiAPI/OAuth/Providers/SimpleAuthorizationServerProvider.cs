@@ -13,10 +13,10 @@ using System.Web.Http.Cors;
 namespace SakaryaRehberiAPI.OAuth.Providers
 {
 
-    public class SimpleAuthorizationServerProvider:OAuthAuthorizationServerProvider
+    public class SimpleAuthorizationServerProvider : OAuthAuthorizationServerProvider
     {
         DBContext db = new DBContext();
-        public override  System.Threading.Tasks.Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
+        public override System.Threading.Tasks.Task ValidateClientAuthentication(OAuthValidateClientAuthenticationContext context)
         {
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Methods", new[] { "POST" });
 
@@ -39,12 +39,24 @@ namespace SakaryaRehberiAPI.OAuth.Providers
 
 
             //context.OwinContext.Response.Headers.Add("Access-Control-Allow-Headers", new[] { "Content-Type" });
-            User user = db.Users.FirstOrDefault(u => u.User_Email.Equals(context.UserName) && u.User_Password.Equals(context.Password));
+            User _user = db.Users.FirstOrDefault(u => u.User_Email.Equals(context.UserName) && u.User_Password.Equals(context.Password));
+            var data = new
+            {
+                ID = _user.User_ID,
+                Email = _user.User_Email,
+                SignUpDate = _user.User_SignUpDate,
+                Type_ID = _user.UserType_ID,
+                Type_Name = _user.UserType.UserType_Name,
+                ImgPath = _user.User_ImgPath,
+                Name = _user.User_Name,
+                LikeCount = _user.UserLikes.Count,
+                CommentCount = _user.UserComments.Count
+            };
             // Kullanıcının access_token alabilmesi için gerekli validation işlemlerini yapıyoruz.
-            string json = JsonConvert.SerializeObject(user, Formatting.None);
+            string json = JsonConvert.SerializeObject(data, Formatting.None);
             Dictionary<string, string> values = JsonConvert.DeserializeObject<Dictionary<string, string>>(json);
             var props = new AuthenticationProperties(values);
-            if (user != null)
+            if (_user != null)
             {
                 var identity = new ClaimsIdentity(context.Options.AuthenticationType);
 
@@ -59,7 +71,7 @@ namespace SakaryaRehberiAPI.OAuth.Providers
             {
                 context.SetError("invalid_grant", "Kullanıcı adı veya şifre yanlış.");
             }
-            return  base.GrantResourceOwnerCredentials(context);
+            return base.GrantResourceOwnerCredentials(context);
         }
     }
 }
