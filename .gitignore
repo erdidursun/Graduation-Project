@@ -19,7 +19,9 @@
 *.sbr
 *.sdf
 SakaryaRehberiAPI/SakaryaRehberiAPI/obj*/
-
+SakaryaRehberiAPI/packages*/
+SakaryaRehberiAPI/.vs*/
+SakaryaRehberiAPI/.nuget*/
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Bb]in
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Dd]ebug*/
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Rr]elease*/
