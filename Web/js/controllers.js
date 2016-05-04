@@ -127,7 +127,8 @@
 
 
 })
-.controller("LocationsCtrl", function ($scope, $location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls) {
+.controller("LocationsCtrl", function ($scope, $location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+
     $scope.model = [];
 
     $scope.locations = [];
@@ -177,7 +178,7 @@
     $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
     $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
     $scope.nick = userInfo ? userInfo.name : "";
-    $scope.logo = "../assets/layouts/layout3/img/logo-default.jpg";
+    $scope.logo = "../assets/layouts/layout3/img/deneme.jpg";
     $scope.logout = function (provider) {
         AuthService.logout();
         $state.go("home", {}, { reload: true });
@@ -213,6 +214,7 @@
 
         AuthService.Login($scope.mail, md5.createHash($scope.pass));
     };
+
     $scope.socialLogin = function (provider) {
         AuthService.socialLogin(provider);
     };
@@ -221,22 +223,21 @@
 })
 .controller("RegisterCtrl", function ($scope, $state, User) {
 
-    $scope.test = "12345";
     $scope.master = "true";
     $scope.user = {
-        User_Email: "erdidursun09@hotmail.com",
-        User_Password: "12345",
-        User_Name: "sdfsdfsdfsdf",
         UserType_ID: 1
     };
+    
     $scope.register = function () {
-        User.Register($scope.user);
+        var user = angular.copy($scope.user);
+        User.Register(user);
     };
 
 })
 .controller("MenuCtrl", function ($scope) {
 
 })
+
 .controller("LocationNewCtrl", function ($scope, $state, Location, FileUploader) {
     $scope.locationTypes = {};
     Location.GetLocationTypes().then(function (data) {
@@ -364,6 +365,8 @@
             }
         });
     };
+   
+    $scope.user = {};
     $scope.newLocation = function () {
         var modalInstance = $uibModal.open(
         {
@@ -390,8 +393,9 @@
     };
  
     $scope.addnewuser = function () {
-        console.log($scope.user);
-        User.Register($scope.user);
+         var user = angular.copy($scope.user);
+        User.Register(user);
+
     };
 
 

@@ -79,14 +79,16 @@
                                     <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">{{location.Name}}</div>
                                     <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center">{{location.TypeName}}</div>
                                    <hr />
-                                     <div class="blog-post-meta text-center">
+                                    <div class="blog-post-meta text-center" >
                                         <i class="icon-like font-blue"></i>
                                         <a href="javascript:;">{{location.LikeCount}} Beğeni</a>
                                         <span style="margin-left:15px"></span>
                                         <i class="icon-bubble font-blue"></i>
                                         <a href="javascript:;">{{location.CommentCount}} Yorum</a>
-
-                                    </div>
+                                        
+                                        <a ng-click="open(location)" data-toggle="tab" class="btn btn-primary"> Yol Tarifi Al </a>
+                                           
+                                     </div>
 
                                 </div>
 
