@@ -51,7 +51,10 @@ body {
 height:50px;
 }
 .navbar-nav > li{
-    padding:0!important;
+    padding:0!important;    
+}
+.page-header {
+height:auto;
 }
 .navbar-nav{
     height:80px;
