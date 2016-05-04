@@ -2,6 +2,7 @@
 using SakaryaRehberiAPI.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -17,7 +18,7 @@ using System.Web.Http.Cors;
 namespace SakaryaRehberiAPI.Controllers
 {
 
-
+    [AllowAnonymous]
     public class APIController : ApiController
     {
 
@@ -43,7 +44,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         #region User
 
-        [AllowAnonymous]
+
         public HttpResponseMessage getTranslate(string text)
         {
             string from = "tr";
@@ -56,7 +57,7 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
+
         public HttpResponseMessage Register(RegisterModel model)
         {
 
@@ -85,7 +86,7 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, data);
         }
         [HttpGet]
-        [AllowAnonymous]
+
         public HttpResponseMessage Register()
         {
             return Request.CreateResponse(HttpStatusCode.OK, "anan");
@@ -93,7 +94,29 @@ namespace SakaryaRehberiAPI.Controllers
         #endregion
 
 
-        [AllowAnonymous]
+        [HttpPost]
+        public async Task<HttpResponseMessage> Upload(int locationID)
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+            foreach (var file in provider.Contents)
+            {
+                var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                var buffer = await file.ReadAsByteArrayAsync();
+                //Do whatever you want with filename and its binaray data.
+                string path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", "LocationImages", filename);
+                File.WriteAllBytes(path, buffer);
+                _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", "LocationImages", filename) });
+                _db.SaveChanges();
+            }
+
+            return Request.CreateResponse(HttpStatusCode.Created);
+
+        }
+
         [HttpPost]
         public HttpResponseMessage AddLocation(LocationNew loc)
         {
@@ -110,14 +133,13 @@ namespace SakaryaRehberiAPI.Controllers
                     _loc.LocationImages.Add(item);
                 }
             }
-          
             _loc.LocationType_ID = loc.Type_ID;
             _db.Locations.Add(_loc);
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, _loc);
         }
 
-        [AllowAnonymous]
+
         public HttpResponseMessage GetLocations(int page)
         {
             var list = from l in _db.Locations
@@ -138,7 +160,7 @@ namespace SakaryaRehberiAPI.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
-        [AllowAnonymous]
+
         public HttpResponseMessage GetLocationById(int id)
         {
             var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
@@ -151,13 +173,13 @@ namespace SakaryaRehberiAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");
 
         }
-        [AllowAnonymous]
+
         public HttpResponseMessage GetLocationTypes()
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
 
-        [AllowAnonymous]
+
         [HttpPost]
         public HttpResponseMessage SendComment(CommentModel comment)
         {
@@ -167,7 +189,7 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
 
-        [AllowAnonymous]
+
         [HttpGet]
         public HttpResponseMessage GetUsers(int count = 100)
         {
@@ -189,7 +211,7 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, user);
         }
 
-        [AllowAnonymous]
+
         [HttpGet]
         public HttpResponseMessage DeleteUser(int UserID)
         {
@@ -205,7 +227,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-        [AllowAnonymous]
+
         [HttpGet]
         public HttpResponseMessage DeleteLocation(int LocationID)
         {
@@ -221,7 +243,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-        [AllowAnonymous]
+
         public HttpResponseMessage GetUserTypes()
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
