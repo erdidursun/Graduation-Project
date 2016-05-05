@@ -1,11 +1,27 @@
 ﻿angular.module("sakaryarehberi")
-.service('User', function (FirebaseSession, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
+.service('User', function (FirebaseSession,$rootScope,AUTH_EVENTS, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
     var data = {};
     var User = {};
     var isAuthanthanced = false;
     User.isAdmin=function(){
         return isAuthanthanced;
     }
+    User.Login=function(mail,pass){
+        var data = $httpParamSerializerJQLike({
+            username: mail,
+            password: pass
+        });
+        var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (data) {
+                    Auth.setType("form")
+                    Auth.setToken(data.data.access_token);
+                    $ls.setObject(FirebaseSession.Data, data.data);
+                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data.data);
+
+                }, function (error) {
+                    console.log(error);
+                });
+    };
     User.Info = function () {
         var type = Auth.getType();
         if (type == 'social') {
