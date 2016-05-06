@@ -212,7 +212,7 @@
     $scope.pass = "1234567";
     $scope.login = function () {
 
-        AuthService.Login($scope.mail, md5.createHash($scope.pass));
+        User.Login($scope.mail, md5.createHash($scope.pass));
     };
 
     $scope.socialLogin = function (provider) {

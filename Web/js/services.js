@@ -146,23 +146,6 @@
         Auth.token = undefined;
         this.SocialLoginProvider.$unauth();
     };
-    authService.Login = function (mail, pass) {
-        var data = $httpParamSerializerJQLike({
-            username: mail,
-            password: pass,
-            grant_type: "password"
-        });
-        var func = $http.post("http://{apihost}/token", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                .then(function (data) {
-                    Auth.setType("form")
-                    Auth.setToken(data.data.access_token);
-                    $ls.setObject(FirebaseSession.Data, data.data);
-                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data.data);
-
-                }, function (error) {
-                    console.log(error);
-                });
-    };
     authService.socialLogin = function (provider, callback) {
         this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
             Auth.setType("social");

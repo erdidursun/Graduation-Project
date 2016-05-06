@@ -55,7 +55,17 @@ namespace SakaryaRehberiAPI.Controllers
             var json = c.DownloadString(uri);
             return Request.CreateResponse(HttpStatusCode.OK, json);
         }
+        [HttpPost]
+        public async Task<HttpResponseMessage> Login(LoginModel model)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.User_Email == model.Username && u.User_Password == model.Password);
+            if(user!=null)
+              return Request.CreateResponse(HttpStatusCode.OK, new { ID = user.User_ID ,Email=user.User_Email,Type_ID=user.UserType_ID,Image=user.User_ImgPath});
+            else
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
 
+
+        }
         [HttpPost]
 
         public HttpResponseMessage Register(RegisterModel model)

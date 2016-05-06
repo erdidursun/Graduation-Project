@@ -157,7 +157,6 @@
     amMoment.changeLocale('tr');
 
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
-        console.log(data.UserType_ID);
         if (data.Type_ID == 2)
             $state.go("admin", {}, { reload: true });
         else
