@@ -60,7 +60,14 @@ namespace SakaryaRehberiAPI.Controllers
         {
             var user = _db.Users.FirstOrDefault(u => u.User_Email == model.Username && u.User_Password == model.Password);
             if(user!=null)
-              return Request.CreateResponse(HttpStatusCode.OK, new { ID = user.User_ID ,Email=user.User_Email,Type_ID=user.UserType_ID,Image=user.User_ImgPath});
+              return Request.CreateResponse(HttpStatusCode.OK, 
+                  new {
+                      ID = user.User_ID ,
+                      Email=user.User_Email,
+                      Type_ID=user.UserType_ID,
+                      ImgPath = user.User_ImgPath,
+                      Name=user.User_Name
+                  });
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
 

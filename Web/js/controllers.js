@@ -4,7 +4,7 @@
 
 })
 
-.controller("LocationDetailCtrl", function ($scope, User, $state, Location, Auth, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
 
     var locationId = $stateParams.locationId;
@@ -127,7 +127,7 @@
 
 
 })
-.controller("LocationsCtrl", function ($scope, $location, $sce, Auth, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationsCtrl", function (Session, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     $scope.model = [];
 
@@ -172,16 +172,31 @@
 
 
     }
+    $scope.like = function (locationId) {
+        if (!Session.isAuthenticated()) {
+            console.log("33");
+            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+
+        }
+
+
+    }
+    
 })
-.controller("HeaderCtrl", function ($scope, $state, $uibModal, User, AuthService) {
-    var userInfo = User.Info();
-    $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
-    $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
-    $scope.nick = userInfo ? userInfo.name : "";
+.controller("HeaderCtrl", function ($scope, $state,$rootScope,AUTH_EVENTS, $uibModal, Session, AuthService) {
+    $scope.isLogged = false;
+
+    if (Session.isAuthenticated()) {
+        $scope.isLogged = true;
+        $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+        $scope.nick = Session.User.name;
+    }
+
     $scope.logo = "../assets/layouts/layout3/img/deneme.jpg";
+
     $scope.logout = function (provider) {
         AuthService.logout();
-        $state.go("home", {}, { reload: true });
+        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);   
     };
     $scope.open = function (size) {
         var modalInstance = $uibModal.open({
@@ -279,15 +294,19 @@
         });
     };
 })
-.controller("AdminMainCtrl", function ($scope, $state, Location, User, $uibModal, $ocLazyLoad) {
+.controller("AdminMainCtrl", function ($scope,Session, $state, Location, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
-    var userInfo = User.Info();
-    $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
-    $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
-    $scope.nick = userInfo ? userInfo.name : "";
-    $scope.showAdminPanel = User.isAdmin();
+    $scope.isLogged = false;
+
+    if (Session.isAdmin()) {
+        $scope.isLogged = true;
+        $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+        $scope.nick = Session.User.name;
+    }
+    else
+        $state.go("home.locations", {}, { reload: true });
     var stateName = $state.current.name;
     $scope.user = {
         User_Name: "",

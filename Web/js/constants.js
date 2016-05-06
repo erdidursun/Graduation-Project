@@ -6,6 +6,3 @@
     notAuthenticated: 'auth-not-authenticated',
     notAuthorized: 'auth-not-authorized'
 })
-.constant('FirebaseSession', {
-    Data: "firebase:session::sakaryarehberi"
-})

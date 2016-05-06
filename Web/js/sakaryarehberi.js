@@ -1,4 +1,4 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad','angularFileUpload', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularFileUpload', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
@@ -25,12 +25,14 @@
           .state('home', {
               url: "/",
               templateUrl: 'views/main.html',
-              controller: "MainCtrl"
+              controller: "MainCtrl",
+              cache: false
           })
            .state('home.login', {
                url: "login",
                templateUrl: 'views/partials/login.html',
                controller: 'LoginCtrl',
+               cache: false,
                resolve: {
                    deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                        return $ocLazyLoad.load({
@@ -45,6 +47,7 @@
            })
         .state('home.locations', {
             url: "anasayfa",
+            cache: false,
             templateUrl: 'views/partials/locations.html',
             controller: 'LocationsCtrl',
             resolve: {
@@ -61,14 +64,16 @@
         })
          .state('home.locationDetails', {
              url: "locationDetail/:locationId",
+             cache: false,
              templateUrl: 'views/partials/locationFull.html',
              controller: 'LocationDetailCtrl'
 
          })
         .state('admin.newLocation', {
             url: 'addLocation',
+            cache: false,
             templateUrl: 'views/admin-partials/addLocation.html',
-            controller:"LocationNewCtrl",
+            controller: "LocationNewCtrl",
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
                     return $ocLazyLoad.load({
@@ -82,10 +87,11 @@
                         ]
                     });
                 }]
-            }      
+            }
         })
           .state('home.forgot', {
               url: "forgot",
+              cache: false,
               templateUrl: 'views/partials/forgot.html',
               controller: 'LoginCtrl',
               resolve: {
@@ -102,6 +108,7 @@
           })
       .state('home.register', {
           url: "register",
+          cache: false,
           templateUrl: 'views/partials/register.html',
           controller: 'RegisterCtrl',
           resolve: {
@@ -118,6 +125,7 @@
       })
          .state('admin', {
              url: "/admin",
+             cache: false,
              templateUrl: 'views/adminmain.html',
              controller: "AdminMainCtrl",
              resolve: {
@@ -140,12 +148,14 @@
          })
     .state('admin.locations', {
         url: "/locations",
+        cache: false,
         templateUrl: 'views/admin-partials/locations.html',
         controller: "AdminMainCtrl",
-     
+
     })
         .state('admin.users', {
             url: "/users",
+            cache:false,
             templateUrl: 'views/admin-partials/users.html',
             controller: "AdminMainCtrl",
 
@@ -153,18 +163,27 @@
     ;
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope, $state, AUTH_EVENTS, AuthService, amMoment) {
+.run(function ($rootScope, $state, $ls, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
 
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
-        if (data.Type_ID == 2)
+        $ls.setObject("SessionData", data)
+
+        if (data.type_id == 2)
             $state.go("admin", {}, { reload: true });
         else
             $state.go("home.locations", {}, { reload: true });
 
     });
     $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        console.log(error);
+        swal({ title: "Giriş Başarısız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+
+
+    });
+    $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
+        $state.go("home.locations", {}, { reload: true });
+
+
 
     });
 })

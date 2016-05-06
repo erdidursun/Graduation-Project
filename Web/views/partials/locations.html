@@ -54,7 +54,6 @@
                                     {{type.LocationType_Name}}
                                     <div class="cbp-filter-counter"></div>
                                 </div>
-
                             </div>
                            
                         </div>
@@ -79,13 +78,11 @@
                                     <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">{{location.Name}}</div>
                                     <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center">{{location.TypeName}}</div>
                                    <hr />
-                                    <div class="blog-post-meta text-center" >
-                                        <i class="icon-like font-blue"></i>
-                                        <a href="javascript:;">{{location.LikeCount}} Beğeni</a>
-                                        <span style="margin-left:15px"></span>
-                                        <i class="icon-bubble font-blue"></i>
-                                        <a href="javascript:;">{{location.CommentCount}} Yorum</a>
-                                        
+                                    <div class="blog-post-meta text-center">
+                                       
+                                        <a class="font-green-jungle" ng-click="like(location.ID)"> <i class="fa fa-thumbs-up"> &nbsp;{{location.LikeCount}}</i> </a>
+                                        <span style="margin:5px"></span>
+                                        <a class="font-blue-steel" ng-click="comment(location.ID)"> <i class="fa fa-commenting-o">&nbsp;{{location.CommentCount}}</i> </a>                                 
                                            
                                      </div>
 
