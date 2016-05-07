@@ -22,6 +22,7 @@
     <link href="assets/global/plugins/uniform/css/uniform.default.css" rel="stylesheet" type="text/css" />
     <link href="assets/pages/css/blog.min.css" rel="stylesheet" type="text/css" />
     <link href="assets/global/plugins/bootstrap-switch/css/bootstrap-switch.min.css" rel="stylesheet" type="text/css" />
+
     <link id="ng_load_plugins_before" />
     <!-- END GLOBAL MANDATORY STYLES -->
     <!-- BEGIN THEME GLOBAL STYLES -->
@@ -55,12 +56,15 @@
     <!-- END CORE JQUERY PLUGINS -->
     <!-- BEGIN CORE ANGULARJS PLUGINS -->
 
-    <script src='//maps.googleapis.com/maps/api/js?sensor=false&language=tr-TR'></script>
-    <script src="assets/global/plugins/lodash.min.js"></script>
 
+    <script src="//maps.googleapis.com/maps/api/js?sensor=false&language=tr-TR" type="text/javascript"></script>
+
+    
     <script src="assets/global/plugins/angularjs/angular.min.js" type="text/javascript"></script>
+    <script src="assets/global/plugins/lodash.min.js"></script>
     <script src="assets/global/plugins/angular-simple-logger/dist/angular-simple-logger.js"></script>
     <script src="assets/global/plugins/angular-google-maps/dist/angular-google-maps.js"></script>
+
     <!-- Firebase -->
     <script src="assets/global/plugins/firebase/firebase.js"></script>
     <!-- AngularFire -->
@@ -101,7 +105,7 @@
     <script src="assets/layouts/layout3/scripts/layout.js" type="text/javascript"></script>
 
     <script type="text/ng-template" id="control.tpl.html">
-        <div class="btn-group" ng-controller="LocationDetailCtrl">
+        <div class="btn-group" ng-controller="MapBtnCtrl">
             <label class="btn btn-sm btn-default" style="margin-top:10px; margin-right:0; margin-left:5px;height:31px">{{filterDisplayName}}</label>
             <button type="button" class="btn btn-sm btn-default dropdown-toggle" style="margin-top:10px; margin-right:0;height:31px" data-toggle="dropdown" aria-expanded="true">
                 <i class="fa fa-angle-down"></i>

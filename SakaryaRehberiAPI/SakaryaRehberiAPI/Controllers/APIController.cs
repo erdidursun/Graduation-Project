@@ -59,15 +59,16 @@ namespace SakaryaRehberiAPI.Controllers
         public async Task<HttpResponseMessage> Login(LoginModel model)
         {
             var user = _db.Users.FirstOrDefault(u => u.User_Email == model.Username && u.User_Password == model.Password);
-            if(user!=null)
-              return Request.CreateResponse(HttpStatusCode.OK, 
-                  new {
-                      ID = user.User_ID ,
-                      Email=user.User_Email,
-                      Type_ID=user.UserType_ID,
-                      ImgPath = user.User_ImgPath,
-                      Name=user.User_Name
-                  });
+            if (user != null)
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new
+                    {
+                        ID = user.User_ID,
+                        Email = user.User_Email,
+                        Type_ID = user.UserType_ID,
+                        ImgPath = user.User_ImgPath,
+                        Name = user.User_Name
+                    });
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
 
@@ -155,36 +156,109 @@ namespace SakaryaRehberiAPI.Controllers
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, _loc);
         }
-
-
-        public HttpResponseMessage GetLocations(int page)
+        public object getLocationInfo(int id, int count = 1)
         {
-            var list = from l in _db.Locations
+            var list = (from location in _db.Locations
+                       where location.Location_ID == id || id == -1 
                        select new
                        {
-                           ID = l.Location_ID,
-                           Banner = l.Location_Banner,
-                           Name = l.Location_Name,
-                           Info = l.Location_Info,
-                           TypeId = l.LocationType_ID,
-                           ImageCount = l.LocationImages.Count,
-                           Latitude = l.Location_Latitude,
-                           Longtitude = l.Location_Latitude,
-                           TypeName = l.LocationType.LocationType_Name,
-                           CommentCount = l.UserComments.Count,
-                           LikeCount = l.UserLikes.Count
-                       };
+                           Images = from i in location.LocationImages
+                                            select new
+                                                {
 
+                                                    Image_ID = i.Location_ID,
+                                                    Info = i.LocationImage_Info,
+                                                    Path = i.LocationImage_Path
+                                                },
+                           Comments = from c in location.UserComments
+                                              select new
+                                              {
+
+                                                  UserName = c.User.User_Name,
+                                                  UserImgPath = c.User.User_ImgPath,
+                                                  Date = c.UserComment_Date,
+                                                  Comment = c.UserComment_Comment
+                                              },
+                           ID = location.Location_ID,
+                           Banner = location.Location_Banner,
+                           Name = location.Location_Name,
+                           Info = location.Location_Info,
+                           TypeId = location.LocationType_ID,
+                           ImageCount = location.LocationImages.Count,
+                           Latitude = location.Location_Latitude,
+                           Longtitude = location.Location_Latitude,
+                           TypeName = location.LocationType.LocationType_Name,
+                           CommentCount = location.UserComments.Count,
+                           LikeCount = location.UserLikes.Count
+                       }).Take(count);
+            return list;
+            //var images = from i in location.LocationImages
+            //             select new
+            //             {
+
+            //                 Image_ID = i.Location_ID,
+            //                 Info = i.LocationImage_Info,
+            //                 Path = i.LocationImage_Path
+            //             };
+            //return new
+            //{
+            //    ID = location.Location_ID,
+            //    Banner = location.Location_Banner,
+            //    Name = location.Location_Name,
+            //    Info = location.Location_Info,
+            //    TypeId = location.LocationType_ID,
+            //    ImageCount = location.LocationImages.Count,
+            //    LocationImages = images,
+            //    Latitude = location.Location_Latitude,
+            //    Longtitude = location.Location_Latitude,
+            //    TypeName = location.LocationType.LocationType_Name,
+            //    CommentCount = location.UserComments.Count,
+            //    LikeCount = location.UserLikes.Count
+            //};
+        }
+
+
+        public HttpResponseMessage GetLocations(int page = 1)
+        {
+            //var list = from location in _db.Locations
+            //           select new
+            //{
+            //    ID = location.Location_ID,
+            //    Banner = location.Location_Banner,
+            //    Name = location.Location_Name,
+            //    Info = location.Location_Info,
+            //    TypeId = location.LocationType_ID,
+            //    ImageCount = location.LocationImages.Count,
+            //    LocationImages = location.LocationImages.ToList(),
+            //    Latitude = location.Location_Latitude,
+            //    Longtitude = location.Location_Latitude,
+            //    TypeName = location.LocationType.LocationType_Name,
+            //    CommentCount = location.UserComments.Count,
+            //    LikeCount = location.UserLikes.Count
+            //}; ;
+            var list = getLocationInfo(-1, page * 9);
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         public HttpResponseMessage GetLocationById(int id)
         {
-            var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
+            //var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
+            //if (list != null)
+            //{
+            //    list.UserComments = list.UserComments.OrderBy(p => p.UserComment_Date).ToList(); ;
+
+            //    return Request.CreateResponse(HttpStatusCode.OK,
+            //          getLocationInfo(list)
+            //        );
+            //}
+            //else
+            //    return Request.CreateResponse(HttpStatusCode.NoContent, "");
+            var list = getLocationInfo(id);
             if (list != null)
             {
-                list.UserComments = list.UserComments.OrderBy(p => p.UserComment_Date).ToList(); ;
-                return Request.CreateResponse(HttpStatusCode.OK, list);
+
+                return Request.CreateResponse(HttpStatusCode.OK, list
+                    );
             }
             else
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");
