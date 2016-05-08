@@ -14,8 +14,5 @@ namespace SakaryaRehberiAPI.Models.ViewModels
         public string Info { get; set; }
         public int  Type_ID { get; set; }
         public string Banner { get; set; }
-
-        public List<LocationImage> Images { get; set; }
-
     }
 }

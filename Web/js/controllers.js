@@ -171,7 +171,6 @@
 
         Location.GetLocations(Coord).then(function (data) {
             console.log(data);
-
             angular.forEach(data.data, function (value, key) {
 
                 var loc = { name: value.Name, type: value.TypeName, id: value.ID };
@@ -197,7 +196,7 @@
             console.log(error);
         });     
     }, function (error) {
-        Location.GetLocations(Coord).then(function (data) {
+        Location.GetLocations().then(function (data) {
             console.log(data);
             angular.forEach(data.data, function (value, key) {
                 $scope.locations.push(value);
@@ -402,6 +401,7 @@
     });
     $scope.addNewLocation = function () {
         $scope.location.Info = $("#info").data('markdown').parseContent();
+        console.log($scope.location);
         Location.Add($scope.location).then(function (data) {
             $scope.location = data.data[0];
             $ls.setObject("Location", $scope.location);
@@ -549,6 +549,7 @@
 
     $scope.addnewuser = function () {
         var user = angular.copy($scope.user);
+        console.log(user);
         User.Register(user);
 
     };

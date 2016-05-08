@@ -181,7 +181,7 @@ namespace SakaryaRehberiAPI.Controllers
                             ImageCount = l.LocationImages.Count,
                             Latitude = l.Location_Latitude,
                             Longtitude = l.Location_Longtitude,
-                            TypeName = l.LocationType.LocationType_Name,
+                            TypeName = l.LocationType!=null?l.LocationType.LocationType_Name:"",
                             CommentCount = l.UserComments.Count,
                             LikeCount = l.UserLikes.Count,
                             DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0
@@ -201,14 +201,7 @@ namespace SakaryaRehberiAPI.Controllers
             _loc.Location_Info = loc.Info;
             _loc.Location_Name = loc.Name;
             _loc.Location_Latitude = loc.Latitude;
-            _loc.Location_Longtitude = loc.Longtitude;
-            if (loc.Images != null)
-            {
-                foreach (var item in loc.Images)
-                {
-                    _loc.LocationImages.Add(item);
-                }
-            }
+            _loc.Location_Longtitude = loc.Longtitude;          
             _loc.LocationType_ID = loc.Type_ID;
             _db.Locations.Add(_loc);
             _db.SaveChanges();

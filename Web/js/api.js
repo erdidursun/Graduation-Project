@@ -73,7 +73,15 @@
     var data = {};
     var Location = {};
     Location.GetLocations = function (Coord) {
-        var data = $httpParamSerializerJQLike(Coord)
+        var Coord1 = {
+            Latitude: -1,
+            Longtitude: -1
+        };
+        if(Coord)
+            var data = $httpParamSerializerJQLike(Coord)
+        else
+            var data = $httpParamSerializerJQLike(Coord1)
+
         var func = $http.post("http://{apihost}/API/GetLocations?page=1", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
@@ -82,6 +90,7 @@
         return func;
     }
     Location.GetLocationTypes = function () {
+
         var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth:false });
         return func;
     }
