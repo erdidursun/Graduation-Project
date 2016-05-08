@@ -103,7 +103,7 @@
 .controller("LocationDetailCtrl", function ($scope, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
- 
+
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data[0];
 
@@ -123,8 +123,8 @@
             controller: "MapCtrl",
             resolve: {
                 location: function () {
-                    
-                    return { Latitude: location.Latitude,Longtitude:location.Longtitude };
+
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude };
                 }
             },
             size: 'lg'
@@ -334,9 +334,10 @@
     });
     $scope.addNewLocation = function () {
         $scope.location.Info = $("#info").data('markdown').parseContent();
+        console.log($scope.location)
         Location.Add($scope.location).then(function (data) {
             $scope.fileUploadVisible = true;
-            console.log(data);
+
             var id = data.data.Location_ID;
 
             $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + id
