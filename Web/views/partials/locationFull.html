@@ -4,7 +4,7 @@
 
             <div class="blog-single-content bordered blog-container">
                 <div class="blog-single-head">
-                    <h1 class="blog-single-head-title">{{location.Location_Name}}</h1>
+                    <h1 class="blog-single-head-title">{{location.Name}}</h1>
                     <div class="blog-single-head-date">
 
                     </div>
@@ -20,8 +20,8 @@
                     </uib-carousel>
                 </div>
                 <div class="blog-single-desc">
-                    <p>
-                        {{location.Location_Info}}
+                    <p ng-bind-html="location.Info">
+
                     </p>
 
                 </div>
@@ -33,7 +33,7 @@
                     </ul>
                     <div class="blog-post-meta">
                         <i class="icon-bubble font-blue"></i>
-                        <a href="javascript:;">{{location.UserComments.length}} Yorum</a>
+                        <a href="javascript:;">{{location.CommentCount}} Yorum</a>
                     </div>                   
                 </div>
               
@@ -42,20 +42,20 @@
                     <!--<h3 class="sbold blog-comments-title">Yorumlar({{location.UserComments.length}})</h3>-->
 
                <div class="c-comment-list" style="max-height:310px;  overflow: auto;">
-                        <div class="media" ng-repeat="comment in location.UserComments">
-                            <div class="media-left">
-                                <a href="#">
-                                    <img class="media-object" alt="" ng-src="{{comment.User.User_ImgPath}}">
-                                </a>
-                            </div>
-                            <div class="media-body">
-                                <h4 class="media-heading">
-                                    <a href="#">{{comment.User.User_Name}}</a>
-                                    <span am-time-ago="comment.UserComment_Date" class="c-date"></span>
-                                </h4>
-                                {{comment.UserComment_Comment}}
-                            </div>
-                        </div>
+                   <div class="media" ng-repeat="comment in location.Comments">
+                       <div class="media-left">
+                           <a href="#">
+                               <img class="media-object" alt="" ng-src="{{comment.UserImgPath}}">
+                           </a>
+                       </div>
+                       <div class="media-body">
+                           <h4 class="media-heading">
+                               <a href="#">{{comment.UserName}}</a>
+                               <span am-time-ago="comment.Date" class="c-date"></span>
+                           </h4>
+                           {{comment.Comment}}
+                       </div>
+                   </div>
 
                     </div>
                     <h3 class="sbold blog-comments-title">Yorum Yap</h3>

@@ -15,6 +15,15 @@
           controller: "HeaderCtrl"
       }
   })
+
+    .directive('adminHeader', function () {
+        return {
+            restrict: 'E', //This menas that it will be used as an attribute and NOT as an element. I don't like creating custom HTML elements
+            replace: true,
+            templateUrl: "views/admin-partials/header.html",
+            controller: "AdminHeaderCtrl"
+        }
+    })
      .directive('slider', function () {
          return {
              restrict: 'E', //This menas that it will be used as an attribute and NOT as an element. I don't like creating custom HTML elements
@@ -31,6 +40,15 @@
              controller: "MenuCtrl"
          }
      })
+
+        .directive('adminMenu', function () {
+            return {
+                restrict: 'E', //This menas that it will be used as an attribute and NOT as an element. I don't like creating custom HTML elements
+                replace: true,
+                templateUrl: "views/admin-partials/menu.html",
+                controller: "MenuCtrl"
+            }
+        })
 .directive("repeatPassword", function () {
     return {
         require: "ngModel",
@@ -108,4 +126,5 @@
             }
         };
     }])
+
 ;

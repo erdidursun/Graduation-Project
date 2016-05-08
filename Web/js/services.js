@@ -30,7 +30,7 @@
         }
     }
 }])
-.factory('httpRequestInterceptor', ['$q', 'usSpinnerService', '$injector', 'Auth', 'HttpCache', '$timeout', function ($q, usSpinnerService, $injector, Auth, HttpCache, $timeout) {
+.factory('httpRequestInterceptor', ['$q', 'usSpinnerService', '$injector', 'HttpCache', '$timeout', function ($q, usSpinnerService, $injector, HttpCache, $timeout) {
 
     var interceptor = {
         request: function (config) {
@@ -47,7 +47,7 @@
                 //    config.headers.Authorization = 'Bearer ' + token;
                 //}
             };
-           
+
             if (config.cache == false) {
                 if (window.Settings.logingEnabled) console.log('Cache removed : ' + config.url);
                 try {
@@ -132,7 +132,7 @@
         }
     };
 })
-.factory('AuthService', function ($rootScope, AUTH_EVENTS, $http, Auth, $ls, $firebaseAuth, FirebaseSession, $httpParamSerializerJQLike) {
+.factory('AuthService', function ($rootScope, Session, AUTH_EVENTS, $http, $ls, $firebaseAuth, $httpParamSerializerJQLike) {
 
     var authService = {};
 
@@ -143,31 +143,12 @@
 
     authService.logout = function () {
         $ls.removeAll();
-        Auth.token = undefined;
+        Session.Destroy();
         this.SocialLoginProvider.$unauth();
-    };
-    authService.Login = function (mail, pass) {
-        var data = $httpParamSerializerJQLike({
-            username: mail,
-            password: pass,
-            grant_type: "password"
-        });
-        var func = $http.post("http://{apihost}/token", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
-                .then(function (data) {
-                    Auth.setType("form")
-                    Auth.setToken(data.data.access_token);
-                    $ls.setObject(FirebaseSession.Data, data.data);
-                    $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, data.data);
-
-                }, function (error) {
-                    console.log(error);
-                });
     };
     authService.socialLogin = function (provider, callback) {
         this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-            Auth.setType("social");
-            Auth.setType(authData["" + authData.provider + ""].accessToken);
-
+            Session.Create("social", authData)
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, authData);
 
         }).catch(function (error) {
@@ -178,22 +159,58 @@
 
     return authService;
 })
-.service('Auth', function ($ls) {
-    var Auth = {};
+.service("Session", function ($ls, $rootScope, AUTH_EVENTS) {
 
-    Auth.setToken = function (token) {
-        $ls.set("token", token)
+    var data = {};
+    var Session = {};
+    Session.User = $ls.getObject("SessionData");
+    Session.Create = function (type, data) {
+        this.data = data;
+        if (data) {
+            if (type == 'social') {
+
+                var provider = data["" + data.provider + ""];
+                Session.User = {
+                    id: provider.id,
+                    name: provider.displayName,
+                    access_token: provider.accessToken,
+                    profileImageURL: provider.profileImageURL
+                };
+                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
+            }
+            else if (type == 'form') {
+                Session.User = {
+                    id: data.ID,
+                    name: data.Name,
+                    access_token: data.access_token,
+                    profileImageURL: data.ImgPath,
+                    type_id: data.Type_ID
+                };
+
+                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
+            }
+            else {
+                Session.User = null;
+                $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
+            }
+        }
+        else {
+            Session.User = null;
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
+        }
     }
-    Auth.getToken = function () {
-        return $ls.get("token");
-    };
-    Auth.setType = function (type) {
-        $ls.set("AuthType", type)
-    };
-    Auth.getType = function () {
-       return $ls.get("AuthType")
-    };
-    return Auth;
+    Session.Destroy = function () {
+        User = null;
+        data = null;
+        $ls.removeAll();
+    }
+    Session.isAuthenticated = function () {
+        return Session.User ? true : false;
+    }
+    Session.isAdmin = function () {
+        return Session.isAuthenticated() ? Session.User.type_id == 2 ? true : false : false;
+    }
+    return Session;
 })
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');

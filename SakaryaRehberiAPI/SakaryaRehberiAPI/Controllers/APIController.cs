@@ -6,13 +6,10 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Security.Claims;
-using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Http;
-using System.Web.Http.Cors;
 
 
 namespace SakaryaRehberiAPI.Controllers
@@ -24,23 +21,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         DBContext _db = new DBContext();
 
-        #region utilities
-        private static string ComputeHash(string hashedPassword, string message)
-        {
 
-            var key = Encoding.UTF8.GetBytes(hashedPassword.ToUpper());
-            string hashString;
-
-            using (var hmac = new HMACSHA256(key))
-            {
-                var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
-                hashString = Convert.ToBase64String(hash);
-            }
-
-            return hashString;
-        }
-
-        #endregion
 
         #region User
 
@@ -55,7 +36,25 @@ namespace SakaryaRehberiAPI.Controllers
             var json = c.DownloadString(uri);
             return Request.CreateResponse(HttpStatusCode.OK, json);
         }
+        [HttpPost]
+        public async Task<HttpResponseMessage> Login(LoginModel model)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.User_Email == model.Username && u.User_Password == model.Password);
+            if (user != null)
+                return Request.CreateResponse(HttpStatusCode.OK,
+                    new
+                    {
+                        ID = user.User_ID,
+                        Email = user.User_Email,
+                        Type_ID = user.UserType_ID,
+                        ImgPath = user.User_ImgPath,
+                        Name = user.User_Name
+                    });
+            else
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
 
+
+        }
         [HttpPost]
 
         public HttpResponseMessage Register(RegisterModel model)
@@ -95,6 +94,7 @@ namespace SakaryaRehberiAPI.Controllers
 
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<HttpResponseMessage> Upload(int locationID)
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -138,36 +138,62 @@ namespace SakaryaRehberiAPI.Controllers
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, _loc);
         }
-
-
-        public HttpResponseMessage GetLocations(int page)
+        public object getLocationInfo(int id, int count = 1)
         {
-            var list = from l in _db.Locations
+            var list = (from location in _db.Locations
+                       where location.Location_ID == id || id == -1 
                        select new
                        {
-                           ID = l.Location_ID,
-                           Banner = l.Location_Banner,
-                           Name = l.Location_Name,
-                           Info = l.Location_Info,
-                           TypeId = l.LocationType_ID,
-                           ImageCount = l.LocationImages.Count,
-                           Latitude = l.Location_Latitude,
-                           Longtitude = l.Location_Latitude,
-                           TypeName = l.LocationType.LocationType_Name,
-                           CommentCount = l.UserComments.Count,
-                           LikeCount = l.UserLikes.Count
-                       };
+                           Images = from i in location.LocationImages
+                                            select new
+                                                {
 
+                                                    Image_ID = i.Location_ID,
+                                                    Info = i.LocationImage_Info,
+                                                    Path = i.LocationImage_Path
+                                                },
+                           Comments = from c in location.UserComments
+                                              select new
+                                              {
+
+                                                  UserName = c.User.User_Name,
+                                                  UserImgPath = c.User.User_ImgPath,
+                                                  Date = c.UserComment_Date,
+                                                  Comment = c.UserComment_Comment
+                                              },
+                           ID = location.Location_ID,
+                           Banner = location.Location_Banner,
+                           Name = location.Location_Name,
+                           Info = location.Location_Info,
+                           TypeId = location.LocationType_ID,
+                           ImageCount = location.LocationImages.Count,
+                           Latitude = location.Location_Latitude,
+                           Longtitude = location.Location_Longtitude,
+                           TypeName = location.LocationType.LocationType_Name,
+                           CommentCount = location.UserComments.Count,
+                           LikeCount = location.UserLikes.Count                        
+                       }).Take(count);
+            return list;
+           
+        }
+
+
+        public HttpResponseMessage GetLocations(int page = 1)
+        {
+         
+            var list = getLocationInfo(-1, page * 90);
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         public HttpResponseMessage GetLocationById(int id)
         {
-            var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
+           
+            var list = getLocationInfo(id);
             if (list != null)
             {
-                list.UserComments = list.UserComments.OrderBy(p => p.UserComment_Date).ToList(); ;
-                return Request.CreateResponse(HttpStatusCode.OK, list);
+
+                return Request.CreateResponse(HttpStatusCode.OK, list
+                    );
             }
             else
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");

@@ -1,46 +1,25 @@
 ﻿angular.module("sakaryarehberi")
-.service('User', function (FirebaseSession, $ls, $timeout, Auth, $http, $httpParamSerializerJQLike, md5) {
-    var data = {};
+.service('User', function (Session,$rootScope, AUTH_EVENTS, $ls, $timeout,  $http, $httpParamSerializerJQLike, md5) {
     var User = {};
-    var isAuthanthanced = false;
-    User.isAdmin=function(){
-        return isAuthanthanced;
-    }
-    User.Info = function () {
-        var type = Auth.getType();
-        if (type == 'social') {
-            data = $ls.getObject(FirebaseSession.Data);
-            isAuthanthanced = data ? true : false;
-            if (data) {
-                var provider = data["" + data.provider + ""];
-                return {
-                    id: provider.id,
-                    name: provider.displayName,
-                    access_token: provider.accessToken,
-                    profileImageURL: provider.profileImageURL,
-                    isAuthanthanced: isAuthanthanced
-                };
-            }
-            else
-                return {};
-        }
-        else if (type == 'form') {
-            data = $ls.getObject(FirebaseSession.Data);
-            if (data) {
-                return {
-                    id: data.ID,
-                    name: data.Name,
-                    access_token: data.access_token,
-                    profileImageURL: data.ImgPath,
-                    isAuthanthanced: data ? true : false
-                };
-            }
 
-            else
-                return {};
-        }
+    User.Login=function(mail,pass){
+        var data = $httpParamSerializerJQLike({
+            username: mail,
+            password: pass
+        });
+        var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (data) {
+                    if (data)
+                        Session.Create("form", data.data);
+                    else
+                        Session.Create("form", null);
 
-    }
+
+                }, function (error) {
+                    Session.Create("form", null);
+
+                });
+    };
 
     User.Register = function (user) {
         user.User_Password = md5.createHash(user.User_Password);
