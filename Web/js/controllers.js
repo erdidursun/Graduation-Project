@@ -178,7 +178,7 @@
     $scope.isLogged = userInfo ? userInfo.isAuthanthanced : false;
     $scope.profileImg = userInfo && userInfo.profileImageURL ? userInfo.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
     $scope.nick = userInfo ? userInfo.name : "";
-    $scope.logo = "../assets/layouts/layout3/img/deneme.jpg";
+    $scope.logo = "../assets/layouts/layout3/img/logo-default.png";
     $scope.logout = function (provider) {
         AuthService.logout();
         $state.go("home", {}, { reload: true });
