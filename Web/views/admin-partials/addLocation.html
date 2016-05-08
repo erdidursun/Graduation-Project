@@ -1,139 +1,248 @@
-﻿    <div class="row" ng-show="!fileUploadVisible">
-        <div class="col-md-10 col-xs-12 col-lg-10 col-md-offset-1 margin-top-40 ">
-            <form class="register-form" name="form" novalidate>
-                <h3 class=" font-green">
-                    Yeni Bir Mekan Ekle
-                </h3>
-                <p class="hint">  </p>
-                <div class="form-group">
-                    <!--<label class="control-label visible-ie8 visible-ie9">Ad Soyad</label>-->
-                    <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Yer İsmi" name="name" ng-minlength="3"
-                           required ng-model="location.Name" />
-
-                    <div ng-show="form.$submitted || form.name.$touched">
-                        <p ng-show="form.name.$error.required" class="alert alert-info">Yer Adını Doldurunuz</p>
-                        <p ng-show="form.username.$error.minlength" class="alert alert-danger">Yer Adı 3 karakterden az olamaz</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <select class="form-control" name="select" ng-model="location.Type_ID">
-                        <option value="">Mekan Tipi...</option>
-                        <option ng-repeat="type in locationTypes " value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
-
-                    </select>
-                </div>
-                <div class="form-group">
-                    <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="5"
-                           required ng-model="location.Latitude" />
-                    <div ng-show="form.$submitted || form.enlem.$touched">
-                        <p ng-show="form.enlem.$error.required" class="alert alert-info">Enlem  Doldurunuz</p>
-                        <p ng-show="form.enlem.$error.minlength" class="alert alert-danger">ENLEM 3 karakterden az olamaz</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
-                           required ng-model="location.Longtitude" />
-                    <div ng-show="form.$submitted || form.boylam.$touched">
-                        <p ng-show="form.boylam.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
-                        <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <textarea name="content" id="info" placeholder="Yer açıklaması" data-provide="markdown" rows="10" required ></textarea>
-                    <div ng-show="form.$submitted || form.info.$touched">
-                        <p ng-show="form.info.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
-                        <p ng-show="form.info.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
-                    </div>
-                </div>
-                <div class="form-actions">
-                    <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addNewLocation()">Ekle</button>
-                </div>
-            </form>
+﻿<div class="portlet light " id="form_wizard_1">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class=" icon-layers font-red"></i>
+            <span class="caption-subject font-red bold uppercase">
+                Mekan Oluştur
+                <span class="step-title"> 1.Adım </span>
+            </span>
         </div>
 
     </div>
-    <div class="row margin-top-40 " ng-show="fileUploadVisible">
+    <div class="portlet-body form">
+        <div class="form-wizard">
+            <div class="form-body">
+                <ul class="nav nav-pills nav-justified steps">
+                    <li ng-class="step==1?'active':''">
+                        <a  data-toggle="tab" class="step">
+                            <span class="number"> 1 </span>
+                            <span class="desc">
+                                <i class="fa fa-check"></i> Mekan Bilgileri
+                            </span>
+                        </a>
+                    </li>
+                    <li ng-class="step==2?'active':''">
+                        <a  data-toggle="tab" class="step">
+                            <span class="number"> 2</span>
+                            <span class="desc">
+                                <i class="fa fa-check"></i> Mekan Banner
+                            </span>
+                        </a>
+                    </li>
+                    <li ng-class="step==3?'active':''">
+                        <a  data-toggle="tab" class="step">
+                            <span class="number">3 </span>
+                            <span class="desc">
+                                <i class="fa fa-check"></i> Mekan Fotoğraflar
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+                <div id="bar" class="progress progress-striped" role="progressbar">
+                    <div class="progress-bar progress-bar-success" style="width:{{width}}%"> </div>
+                </div>
+                <div class="tab-content">                  
+                    <div ng-class="step==1?'tab-pane active':'tab-pane'" id=" tab1">
+                        <h3 class="block">Mekan Bilgilerini Giriniz</h3>
+                        <div class="form-group">
+                            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Yer İsmi" name="name" ng-minlength="3"
+                                   required ng-model="location.Name" />
 
-        <div class="col-md-3">
-
-            <h3>{{location.Name|uppercase}} Mekanına resim ekle</h3>
-            <!-- Example: nv-file-select="" uploader="{Object}" options="{Object}" filters="{String}" -->
-            <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
-
-        </div>
-
-        <div class="col-md-9" style="margin-bottom: 40px">
-            <p>Toplam: {{ uploader.queue.length }} Resim Seçildi</p>
-
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th width="50%">Fotoğraf Adı</th>
-                        <th ng-show="uploader.isHTML5">Boyutu</th>
-                        <th ng-show="uploader.isHTML5">Durumu</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr ng-repeat="item in uploader.queue">
-                        <td>
-                            <strong>{{ item.file.name }}</strong>
-
-                            <!-- Image preview -->
-                            <!--auto height-->
-                            <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
-                            <!--auto width-->
-                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
-                            <!--fixed width and height -->
-                            <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
-                        </td>
-                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
-                        <td ng-show="uploader.isHTML5">
-                            <div class="progress" style="margin-bottom: 0;">
-                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                            <div ng-show="form.$submitted || form.name.$touched">
+                                <p ng-show="form.name.$error.required" class="alert alert-info">Yer Adını Doldurunuz</p>
+                                <p ng-show="form.username.$error.minlength" class="alert alert-danger">Yer Adı 3 karakterden az olamaz</p>
                             </div>
-                        </td>
-                        <td class="text-center">
-                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
-                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
-                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
-                        </td>
-                        <td nowrap>
-                            <button type="button" class="btn btn-success btn-xs" ng-click="item.upload()" ng-disabled="item.isReady || item.isUploading || item.isSuccess">
-                                <span class="glyphicon glyphicon-upload"></span> Upload
-                            </button>
-                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
-                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
-                            </button>
-                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
-                                <span class="glyphicon glyphicon-trash"></span> Remove
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+                        </div>
+                        <div class="form-group">
+                            <select class="form-control" name="select" ng-model="location.Type_ID">
+                                <option value="">Mekan Tipi...</option>
+                                <option ng-repeat="type in locationTypes " value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
 
-            <div>
-                <div>
-                    Queue progress:
-                    <div class="progress" style="">
-                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="5"
+                                   required ng-model="location.Latitude" />
+                            <div ng-show="form.$submitted || form.enlem.$touched">
+                                <p ng-show="form.enlem.$error.required" class="alert alert-info">Enlem  Doldurunuz</p>
+                                <p ng-show="form.enlem.$error.minlength" class="alert alert-danger">ENLEM 3 karakterden az olamaz</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
+                                   required ng-model="location.Longtitude" />
+                            <div ng-show="form.$submitted || form.boylam.$touched">
+                                <p ng-show="form.boylam.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
+                                <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <textarea name="content" id="info" placeholder="Yer açıklaması" data-provide="markdown" rows="10" required></textarea>
+                            <div ng-show="form.$submitted || form.info.$touched">
+                                <p ng-show="form.info.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
+                                <p ng-show="form.info.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addNewLocation()">Ekle</button>
+                        </div>
+                    </div>
+                    <div ng-class="step==2?'tab-pane active':'tab-pane'" id="tab2">
+                        <h3 class="block">{{location.Name|uppercase}} Mekanına Banner ekle</h3>
+                        <div class="form-group">
+                            <input type="file" nv-file-select="" uploader="uploader2"/><br />
+
+                        </div>
+                        <div class="form-group">
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">Fotoğraf Adı</th>
+                                        <th ng-show="uploader2.isHTML5">Boyutu</th>
+                                        <th ng-show="uploader2.isHTML5">Durumu</th>
+                                        <th>Status</th>
+                                        <th>İşlemler</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in uploader2.queue">
+                                        <td>
+                                            <strong>{{ item.file.name }}</strong>
+
+                                            <!-- Image preview -->
+                                            <!--auto height-->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                            <!--auto width-->
+                                            <div ng-show="uploader2.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+                                            <!--fixed width and height -->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                                        </td>
+                                        <td ng-show="uploader2.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                        <td ng-show="uploader2.isHTML5">
+                                            <div class="progress" style="margin-bottom: 0;">
+                                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                        </td>
+                                        <td nowrap>                                         
+                                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                <span class="glyphicon glyphicon-ban-circle"></span> İptal Et
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                <span class="glyphicon glyphicon-trash"></span> Sil
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>
+                                <div>
+                                    Kuyruk Durumu:
+                                    <div class="progress" style="">
+                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader2.progress + '%' }"></div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success btn-s" ng-click="uploader2.uploadAll()" ng-disabled="!uploader2.getNotUploadedItems().length">
+                                    <span class="glyphicon glyphicon-upload"></span> Hepsini Yükle
+                                </button>
+                                <button type="button" class="btn btn-warning btn-s" ng-click="uploader2.cancelAll()" ng-disabled="!uploader2.isUploading">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Hepsini İptal Et
+                                </button>
+                                <button type="button" class="btn btn-danger btn-s" ng-click="uploader2.clearQueue()" ng-disabled="!uploader2.queue.length">
+                                    <span class="glyphicon glyphicon-trash"></span> Hepsini Sil
+                                </button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                    <div ng-class="step==3?'tab-pane active':'tab-pane'" id="tab3">
+                        <h3 class="block">{{location.Name|uppercase}} Mekanına resim ekle</h3>
+                        <div class="form-group">
+                            <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
+
+                        </div>
+                        <div class="form-group">
+                            <p>Toplam: {{ uploader.queue.length }} Resim Seçildi</p>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">Fotoğraf Adı</th>
+                                        <th ng-show="uploader.isHTML5">Boyutu</th>
+                                        <th ng-show="uploader.isHTML5">Durumu</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="item in uploader.queue">
+                                        <td>
+                                            <strong>{{ item.file.name }}</strong>
+
+                                            <!-- Image preview -->
+                                            <!--auto height-->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100 }"></div>-->
+                                            <!--auto width-->
+                                            <div ng-show="uploader.isHTML5" ng-thumb="{ file: item._file, height: 100 }"></div>
+                                            <!--fixed width and height -->
+                                            <!--<div ng-thumb="{ file: item.file, width: 100, height: 100 }"></div>-->
+                                        </td>
+                                        <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                        <td ng-show="uploader.isHTML5">
+                                            <div class="progress" style="margin-bottom: 0;">
+                                                <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">
+                                            <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                            <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                            <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                        </td>
+                                        <td nowrap>                                        
+                                            <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
+                                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel
+                                            </button>
+                                            <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                                <span class="glyphicon glyphicon-trash"></span> Remove
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div>
+                                <div>
+                                    Queue progress:
+                                    <div class="progress" style="">
+                                        <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
+                                    <span class="glyphicon glyphicon-upload"></span> Upload all
+                                </button>
+                                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                                </button>
+                                <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                                    <span class="glyphicon glyphicon-trash"></span> Remove all
+                                </button>
+                            </div>
+
+                        </div>
+
+
                     </div>
                 </div>
-                <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-                    <span class="glyphicon glyphicon-upload"></span> Upload all
-                </button>
-                <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-                    <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
-                </button>
-                <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-                    <span class="glyphicon glyphicon-trash"></span> Remove all
-                </button>
             </div>
-
         </div>
-
     </div>
 
-
+</div>

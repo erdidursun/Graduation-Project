@@ -95,25 +95,36 @@ namespace SakaryaRehberiAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> Upload(int locationID)
+        public async Task<HttpResponseMessage> Upload(int locationID,bool isBanner=false)
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);
+            var location=_db.Locations.FirstOrDefault(u=> u.Location_ID==locationID);
+            if(location==null)   
+                return Request.CreateResponse(HttpStatusCode.Forbidden,locationID);
+            string DirName = "LocationImages";
+            if (isBanner)
+                DirName = "LocationBannerImages";
+            string path = "";
             foreach (var file in provider.Contents)
             {
-                var filename = file.Headers.ContentDisposition.FileName.Trim('\"');
+                var ext = Path.GetExtension(file.Headers.ContentDisposition.FileName.Trim('\"'));
+                var filename = Path.GetRandomFileName().Split('.').First() + ext;
                 var buffer = await file.ReadAsByteArrayAsync();
-                //Do whatever you want with filename and its binaray data.
-                string path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", "LocationImages", filename);
+                path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", DirName, filename);
                 File.WriteAllBytes(path, buffer);
-                _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", "LocationImages", filename) });
+                if(!isBanner)
+                    _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", DirName, filename) });
+                else
+                   location.Location_Banner=  Path.Combine("Images", DirName, filename);
+
                 _db.SaveChanges();
             }
 
-            return Request.CreateResponse(HttpStatusCode.Created);
+            return Request.CreateResponse(HttpStatusCode.OK);
 
         }
 
@@ -136,7 +147,7 @@ namespace SakaryaRehberiAPI.Controllers
             _loc.LocationType_ID = loc.Type_ID;
             _db.Locations.Add(_loc);
             _db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK, _loc);
+            return Request.CreateResponse(HttpStatusCode.OK, getLocationInfo(_loc.Location_ID));
         }
         public object getLocationInfo(int id, int count = 1)
         {
@@ -173,68 +184,19 @@ namespace SakaryaRehberiAPI.Controllers
                            CommentCount = location.UserComments.Count,
                            LikeCount = location.UserLikes.Count                        
                        }).Take(count);
-            return list;
-            //var images = from i in location.LocationImages
-            //             select new
-            //             {
-
-            //                 Image_ID = i.Location_ID,
-            //                 Info = i.LocationImage_Info,
-            //                 Path = i.LocationImage_Path
-            //             };
-            //return new
-            //{
-            //    ID = location.Location_ID,
-            //    Banner = location.Location_Banner,
-            //    Name = location.Location_Name,
-            //    Info = location.Location_Info,
-            //    TypeId = location.LocationType_ID,
-            //    ImageCount = location.LocationImages.Count,
-            //    LocationImages = images,
-            //    Latitude = location.Location_Latitude,
-            //    Longtitude = location.Location_Latitude,
-            //    TypeName = location.LocationType.LocationType_Name,
-            //    CommentCount = location.UserComments.Count,
-            //    LikeCount = location.UserLikes.Count
-            //};
+            return list;          
         }
 
 
         public HttpResponseMessage GetLocations(int page = 1)
-        {
-            //var list = from location in _db.Locations
-            //           select new
-            //{
-            //    ID = location.Location_ID,
-            //    Banner = location.Location_Banner,
-            //    Name = location.Location_Name,
-            //    Info = location.Location_Info,
-            //    TypeId = location.LocationType_ID,
-            //    ImageCount = location.LocationImages.Count,
-            //    LocationImages = location.LocationImages.ToList(),
-            //    Latitude = location.Location_Latitude,
-            //    Longtitude = location.Location_Latitude,
-            //    TypeName = location.LocationType.LocationType_Name,
-            //    CommentCount = location.UserComments.Count,
-            //    LikeCount = location.UserLikes.Count
-            //}; ;
+        {     
+         
             var list = getLocationInfo(-1, page * 90);
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         public HttpResponseMessage GetLocationById(int id)
-        {
-            //var list = _db.Locations.Where(p => p.Location_ID == id).FirstOrDefault();
-            //if (list != null)
-            //{
-            //    list.UserComments = list.UserComments.OrderBy(p => p.UserComment_Date).ToList(); ;
-
-            //    return Request.CreateResponse(HttpStatusCode.OK,
-            //          getLocationInfo(list)
-            //        );
-            //}
-            //else
-            //    return Request.CreateResponse(HttpStatusCode.NoContent, "");
+        {          
             var list = getLocationInfo(id);
             if (list != null)
             {

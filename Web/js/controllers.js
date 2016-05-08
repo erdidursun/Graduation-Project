@@ -290,41 +290,31 @@
 
 })
 
-.controller("LocationNewCtrl", function ($scope, $state, Location, FileUploader, $ocLazyLoad) {
+.controller("LocationNewCtrl", function ($scope,$ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
+    $ocLazyLoad.load({
+        files: [
+            'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css',
+            'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css',
+            'assets/global/plugins/bootstrap-summernote/summernote.css',
+            'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js',
+            'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js',
+            'assets/global/plugins/bootstrap-markdown/lib/markdown.js',
+            'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js',
+            'assets/global/plugins/bootstrap-summernote/summernote.min.js'
+        ],
+        cache: true
+    });
     Location.GetLocationTypes().then(function (data) {
-        $scope.locationTypes = data.data;
-        $ocLazyLoad.load({
-            files: [
-                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css',
-                'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css',
-                'assets/global/plugins/bootstrap-summernote/summernote.css',
-                'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js',
-                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js',
-                'assets/global/plugins/bootstrap-markdown/lib/markdown.js',
-                'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js',
-
-                //'assets/global/plugins/bootstrap-markdown/locale/bootstrap-markdown.tr.js',
-
-                'assets/global/plugins/bootstrap-summernote/summernote.min.js'
-            ],
-            cache: true
-        });
+        $scope.locationTypes = data.data;   
 
     }, function (error) {
         console.log(error);
-    });
-
-
-    $scope.location = {
-        Banner: "assets/global/img/locationImages/1.jpg",
-        Name: "Ozan Gölü",
-        Info: "Test",
-        Latitude: 40.716701507568359,
-        Longtitude: 40.716701507568359
-    }
-    $scope.fileUploadVisible = false;
+    });    
+    $scope.totalStep = 3;
+    $scope.step = 1;
     $scope.uploader = new FileUploader();
+    $scope.uploader2 = new FileUploader();
     $scope.uploader.filters.push({
         name: 'imageFilter',
         fn: function (item /*{File|FileLikeObject}*/, options) {
@@ -332,22 +322,62 @@
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
+    $scope.uploader2.filters.push({
+        name: 'imageFilter',
+        fn: function (item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+    $scope.location = {
+        Banner: "assets/global/img/locationImages/1.jpg",
+        Name: "Ozan Gölü",
+        Info: "Test",
+        Latitude: 40.716701507568359,
+        Longtitude: 40.716701507568359
+    }
+    var location = $ls.getObject("Location");
+
+    if (location) {
+        $scope.step = $ls.get("Step");
+        $scope.location = location;
+        console.log($scope.location.ID);
+        $scope.uploader2.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
+        $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID;
+
+    }
+    $scope.width = ($scope.step / $scope.totalStep) * 100;
+
+    $scope.$watch('step', function () {
+        $scope.width = ($scope.step / $scope.totalStep) * 100;
+    });  
     $scope.addNewLocation = function () {
         $scope.location.Info = $("#info").data('markdown').parseContent();
-        console.log($scope.location)
         Location.Add($scope.location).then(function (data) {
-            $scope.fileUploadVisible = true;
-
-            var id = data.data.Location_ID;
-
-            $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + id
-
-
-
-
+            $scope.location = data.data[0];
+            $ls.setObject("Location", $scope.location);
+            $ls.set("Step", 2);
+            $scope.step = 2;
+            var id = $scope.location.ID;
+            $scope.uploader2.url = "http://localhost:8054/api/Upload?locationID=" + id + "&isBanner=true";
+            $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + id;
 
         });
     };
+    $scope.uploader2.onCompleteAll = function (fileItem, response, status, headers) {
+        $scope.step = 3;
+        $ls.remove("Location");
+
+        $ls.set("Step", $scope.step);
+
+    };
+    $scope.uploader.onCompleteAll = function (fileItem, response, status, headers) {
+    
+        swal({ title: "Başarılı", text: "Mekan Başarıyla Eklendi", type: "success", confirmButtonText: "Tamam" });
+        $state.go("admin.users", {}, { reload: true });
+
+    };
+   
 })
 .controller("AdminMainCtrl", function ($scope, Session, $state, Location, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};

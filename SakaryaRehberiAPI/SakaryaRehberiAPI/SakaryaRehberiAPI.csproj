@@ -149,6 +149,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\" />
+    <Folder Include="Images\LocationBannerImages\" />
     <Folder Include="Images\LocationImages\" />
     <Folder Include="Scripts\" />
   </ItemGroup>

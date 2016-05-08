@@ -22,5 +22,14 @@ namespace SakaryaRehberiAPI
          
 
         }
+        protected void Application_EndRequest()
+        {
+            if (Context.Response.StatusCode == 405 && Context.Request.HttpMethod == "OPTIONS")
+            {
+                Response.Clear();
+                Response.StatusCode = 200;
+                Response.End();
+            }
+        }
     }
 }
