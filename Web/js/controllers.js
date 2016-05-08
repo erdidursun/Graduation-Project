@@ -220,6 +220,8 @@
     }
 
 })
+
+
 .controller("HeaderCtrl", function ($scope, $state, $rootScope, AUTH_EVENTS, $uibModal, Session, AuthService) {
     $scope.isLogged = false;
 
@@ -229,7 +231,6 @@
         $scope.nick = Session.User.name;
     }
 
-    $scope.logo = "../assets/layouts/layout3/img/deneme.jpg";
 
     $scope.logout = function (provider) {
         AuthService.logout();
@@ -379,6 +380,8 @@
     };
    
 })
+
+
 .controller("AdminMainCtrl", function ($scope, Session, $state, Location, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
@@ -505,3 +508,7 @@
 
 })
 
+.controller("AdminHeaderCtrl", function() {
+
+
+})

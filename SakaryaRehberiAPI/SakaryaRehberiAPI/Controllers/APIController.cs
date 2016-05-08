@@ -95,16 +95,16 @@ namespace SakaryaRehberiAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        public async Task<HttpResponseMessage> Upload(int locationID,bool isBanner=false)
+        public async Task<HttpResponseMessage> Upload(int locationID, bool isBanner = false)
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
 
             var provider = new MultipartMemoryStreamProvider();
             await Request.Content.ReadAsMultipartAsync(provider);
-            var location=_db.Locations.FirstOrDefault(u=> u.Location_ID==locationID);
-            if(location==null)   
-                return Request.CreateResponse(HttpStatusCode.Forbidden,locationID);
+            var location = _db.Locations.FirstOrDefault(u => u.Location_ID == locationID);
+            if (location == null)
+                return Request.CreateResponse(HttpStatusCode.Forbidden, locationID);
             string DirName = "LocationImages";
             if (isBanner)
                 DirName = "LocationBannerImages";
@@ -116,10 +116,10 @@ namespace SakaryaRehberiAPI.Controllers
                 var buffer = await file.ReadAsByteArrayAsync();
                 path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", DirName, filename);
                 File.WriteAllBytes(path, buffer);
-                if(!isBanner)
+                if (!isBanner)
                     _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", DirName, filename) });
                 else
-                   location.Location_Banner=  Path.Combine("Images", DirName, filename);
+                    location.Location_Banner = Path.Combine("Images", DirName, filename);
 
                 _db.SaveChanges();
             }
@@ -152,51 +152,52 @@ namespace SakaryaRehberiAPI.Controllers
         public object getLocationInfo(int id, int count = 1)
         {
             var list = (from location in _db.Locations
-                       where location.Location_ID == id || id == -1 
-                       select new
-                       {
-                           Images = from i in location.LocationImages
-                                            select new
-                                                {
+                        where location.Location_ID == id || id == -1
+                        select new
+                        {
+                            Images = from i in location.LocationImages
+                                     select new
+                                         {
 
-                                                    Image_ID = i.Location_ID,
-                                                    Info = i.LocationImage_Info,
-                                                    Path = i.LocationImage_Path
-                                                },
-                           Comments = from c in location.UserComments
-                                              select new
-                                              {
+                                             Image_ID = i.Location_ID,
+                                             Info = i.LocationImage_Info,
+                                             Path = i.LocationImage_Path
+                                         },
+                            Comments = from c in location.UserComments
+                                       select new
+                                       {
 
-                                                  UserName = c.User.User_Name,
-                                                  UserImgPath = c.User.User_ImgPath,
-                                                  Date = c.UserComment_Date,
-                                                  Comment = c.UserComment_Comment
-                                              },
-                           ID = location.Location_ID,
-                           Banner = location.Location_Banner,
-                           Name = location.Location_Name,
-                           Info = location.Location_Info,
-                           TypeId = location.LocationType_ID,
-                           ImageCount = location.LocationImages.Count,
-                           Latitude = location.Location_Latitude,
-                           Longtitude = location.Location_Longtitude,
-                           TypeName = location.LocationType.LocationType_Name,
-                           CommentCount = location.UserComments.Count,
-                           LikeCount = location.UserLikes.Count                        
-                       }).Take(count);
-            return list;          
+                                           UserName = c.User.User_Name,
+                                           UserImgPath = c.User.User_ImgPath,
+                                           Date = c.UserComment_Date,
+                                           Comment = c.UserComment_Comment
+                                       },
+                            ID = location.Location_ID,
+                            Banner = location.Location_Banner,
+                            Name = location.Location_Name,
+                            Info = location.Location_Info,
+                            TypeId = location.LocationType_ID,
+                            ImageCount = location.LocationImages.Count,
+                            Latitude = location.Location_Latitude,
+                            Longtitude = location.Location_Longtitude,
+                            TypeName = location.LocationType.LocationType_Name,
+                            CommentCount = location.UserComments.Count,
+                            LikeCount = location.UserLikes.Count
+                        }).Take(count);
+            return list;
+
         }
 
 
         public HttpResponseMessage GetLocations(int page = 1)
-        {     
-         
+        {
             var list = getLocationInfo(-1, page * 90);
             return Request.CreateResponse(HttpStatusCode.OK, list);
         }
 
         public HttpResponseMessage GetLocationById(int id)
-        {          
+        {
+
             var list = getLocationInfo(id);
             if (list != null)
             {

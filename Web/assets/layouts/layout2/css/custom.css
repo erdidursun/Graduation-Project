@@ -1,1 +1,3 @@
-/* here you can put your own css to customize and override the theme */
+.page-header.navbar .page-logo .logo-default {
+    margin: 4px -6px 0;
+}
