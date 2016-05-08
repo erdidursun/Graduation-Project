@@ -72,8 +72,9 @@
 .service('Location', function ($http, $httpParamSerializerJQLike) {
     var data = {};
     var Location = {};
-    Location.GetLocations = function () {
-        var func = $http.get("http://{apihost}/API/GetLocations?page=1", { RequireAuth: false });
+    Location.GetLocations = function (Coord) {
+        var data = $httpParamSerializerJQLike(Coord)
+        var func = $http.post("http://{apihost}/API/GetLocations?page=1", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
     Location.GetLocationById = function (id) {
@@ -84,7 +85,7 @@
         var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth:false });
         return func;
     }
-
+ 
     Location.Delete = function (id) {
         var data = {
             LocationID:id

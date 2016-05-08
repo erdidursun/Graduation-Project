@@ -69,7 +69,6 @@
                                             <div class="cbp-l-caption-alignCenter">
                                                 <div class="cbp-l-caption-body">
                                                     <a ui-sref="home.locationDetails({locationId: location.ID   })" class=" cbp-singlepage cbp-l-caption-buttonleft btn red uppercase btn red uppercase" rel="nofollow">Detay</a>
-                                                    <!--<a href="{{location.Banner}}" class="cbp-lightbox cbp-l-caption-buttonRight btn red uppercase btn red uppercase" data-title="{{location.Name}}">Büyük Ekran</a>-->
                                                 </div>
                                             </div>
                                         </div>
@@ -77,13 +76,35 @@
                                     <div class="cbp-l-grid-projects-title uppercase text-center uppercase text-center">{{location.Name}}</div>
                                     <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center">{{location.TypeName}}</div>
                                     <hr />
-                                    <div class="blog-post-meta text-center">
+                                    <div class="btn-group btn-group-solid" style="width:100%">
+                                        <button type="button" class="btn btn-sm green-dark" ng-if="location.DistanceToUser>0" style="width:25%">
+                                            <i class=" fa fa-location-arrow">
+                                            </i> &nbsp;{{location.DistanceToUser|number:1}} km
+                                        </button>
+                                        <button type="button" class="btn btn-sm blue" ng-click="like(location.ID)" style="width:20%">
+                                            <i class="fa fa-thumbs-o-up"></i> &nbsp;{{location.LikeCount}}
+                                        </button>
+                                        <button type="button" class="btn btn-sm yellow" ng-click="comment(location.ID)" style="width:20%">
+                                            <i class=" fa fa-commenting-o">
+                                            </i> &nbsp;{{location.CommentCount}}
+                                        </button>
 
-                                        <a class="font-green-jungle" ng-click="like(location.ID)"> <i class="fa fa-thumbs-up"> &nbsp;{{location.LikeCount}}</i> </a>
-                                        <span style="margin:5px"></span>
-                                        <a class="font-blue-steel" ng-click="comment(location.ID)"> <i class="fa fa-commenting-o">&nbsp;{{location.CommentCount}}</i> </a>
-                                        <a ng-click="openMap(location)" data-toggle="tab" class="btn btn-primary pull-right"> Yol Tarifi Al </a>
+                                        <button type="button" class="btn btn-sm purple" ng-click="openMap(location)" style="width:35%">
+                                            <i class=" fa fa-map-marker">
+                                            </i> Yol Tarifi
+                                        </button>
                                     </div>
+                                    <!--<div class="blog-post-meta text-center">
+
+                                        <a class="font-green-jungle btn" ng-click="like(location.ID)"> <i class="fa fa-thumbs-up"> &nbsp;{{location.LikeCount}}</i> </a>
+                                        <span style="margin:5px"></span>
+                                        <a class="font-blue-steel btn btn-block" ng-click="comment(location.ID)"> <i class="fa fa-commenting-o">&nbsp;{{location.CommentCount}}</i> </a>
+                                        <span class="bg-green-meadow bg-font-green-meadow btn pull-left" ng-if="location.DistanceToUser>0">{{location.DistanceToUser|number:0}} km</span>
+
+                                        <a ng-click="openMap(location)" data-toggle="tab" class="btn btn-primary pull-right"> Yol Tarifi Al </a>
+
+
+                                    </div>-->
 
                                 </div>
 

@@ -100,7 +100,7 @@
 
 })
 
-.controller("LocationDetailCtrl", function ($scope, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
 
@@ -108,7 +108,7 @@
         $scope.location = data.data[0];
 
         angular.forEach($scope.location.Images, function (value) {
-            $scope.slides.push({ image: "http://" + Settings.apiHostUrl + "/" + value.Path, text: value.Info });
+            $scope.slides.push({ image: value.Path, text: value.Info });
         });
     })
     $scope.slides = [];
@@ -134,10 +134,10 @@
     $scope.like = function (location) {
 
     }
-
+    $scope.isVisible = Session.isAuthenticated();
     $scope.sendComment = function () {
-        $scope.comment.UserId = User.Info().id;
-        $scope.comment.LocationId = $scope.location.Location_ID;
+        $scope.comment.UserId = Session.User.id;
+        $scope.comment.LocationId = $scope.location.ID;
 
         User.SendComment($scope.comment).then(function (data) {
             console.log(data);
@@ -159,18 +159,66 @@
     }, function (error) {
         console.log(error);
     });
-    Location.GetLocations().then(function (data) {
-        angular.forEach(data.data, function (value, key) {
-            $scope.locations.push(value);
-            $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
-        });
-        $ocLazyLoad.load({
-            files: ['assets/pages/scripts/portfolio-1.js'],
-            cache: false
-        });
+    var Coord = {
+        Latitude: -1,
+        Longtitude: -1
+    };
+    navigator.geolocation.getCurrentPosition(function (location) {
+
+        Coord.Latitude = location.coords.latitude;
+
+        Coord.Longtitude = location.coords.longitude;
+
+        Location.GetLocations(Coord).then(function (data) {
+            console.log(data);
+
+            angular.forEach(data.data, function (value, key) {
+
+                var loc = { name: value.Name, type: value.TypeName, id: value.ID };
+
+                if (value.DistanceToUser > 0) {
+                    var t=(value.DistanceToUser / 1000);
+                    console.log(t);
+                    value.DistanceToUser=t;
+                    loc.DistanceToUser = t;
+
+                }
+                console.log(loc.DistanceToUser)
+                $scope.model.push(loc);
+                $scope.locations.push(value);
+
+            });
+            $ocLazyLoad.load({
+                files: ['assets/pages/scripts/portfolio-1.js'],
+                cache: false
+            });
+
+        },function (error) {
+            console.log(error);
+        });     
     }, function (error) {
-        console.log(error);
-    });;
+        Location.GetLocations(Coord).then(function (data) {
+            console.log(data);
+            angular.forEach(data.data, function (value, key) {
+                $scope.locations.push(value);
+                $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
+            });
+            $ocLazyLoad.load({
+                files: ['assets/pages/scripts/portfolio-1.js'],
+                cache: false
+            });
+
+        }, function (error) {
+            console.log(error);
+        });
+    });
+
+
+
+
+
+
+
 
     $scope.open = function (locationId) {
         var modalInstance = $uibModal.open(
@@ -227,7 +275,7 @@
 
     if (Session.isAuthenticated()) {
         $scope.isLogged = true;
-        $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+        $scope.profileImg = Session.User.profileImageURL;
         $scope.nick = Session.User.name;
     }
 
@@ -291,7 +339,7 @@
 
 })
 
-.controller("LocationNewCtrl", function ($scope,$ls, $state, Location, FileUploader, $ocLazyLoad) {
+.controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
     $ocLazyLoad.load({
         files: [
@@ -307,11 +355,11 @@
         cache: true
     });
     Location.GetLocationTypes().then(function (data) {
-        $scope.locationTypes = data.data;   
+        $scope.locationTypes = data.data;
 
     }, function (error) {
         console.log(error);
-    });    
+    });
     $scope.totalStep = 3;
     $scope.step = 1;
     $scope.uploader = new FileUploader();
@@ -351,7 +399,7 @@
 
     $scope.$watch('step', function () {
         $scope.width = ($scope.step / $scope.totalStep) * 100;
-    });  
+    });
     $scope.addNewLocation = function () {
         $scope.location.Info = $("#info").data('markdown').parseContent();
         Location.Add($scope.location).then(function (data) {
@@ -373,12 +421,12 @@
 
     };
     $scope.uploader.onCompleteAll = function (fileItem, response, status, headers) {
-    
+
         swal({ title: "Başarılı", text: "Mekan Başarıyla Eklendi", type: "success", confirmButtonText: "Tamam" });
         $state.go("admin.users", {}, { reload: true });
 
     };
-   
+
 })
 
 
@@ -508,7 +556,7 @@
 
 })
 
-.controller("AdminHeaderCtrl", function() {
+.controller("AdminHeaderCtrl", function () {
 
 
 })

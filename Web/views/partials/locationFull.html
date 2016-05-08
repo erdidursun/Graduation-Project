@@ -32,14 +32,13 @@
                         </li>
                     </ul>
                     <div class="blog-post-meta">
-                        <i class="icon-bubble font-blue"></i>
-                        <a href="javascript:;">{{location.CommentCount}} Yorum</a>
+                    <h3 class="sbold blog-comments-title">Yorumlar({{location.CommentCount}})</h3>
+
                     </div>                   
                 </div>
               
-                <div class="blog-comments">
+                <div class="blog-comments" style="width:80%">
                   
-                    <!--<h3 class="sbold blog-comments-title">Yorumlar({{location.UserComments.length}})</h3>-->
 
                <div class="c-comment-list" style="max-height:310px;  overflow: auto;">
                    <div class="media" ng-repeat="comment in location.Comments">
@@ -58,15 +57,18 @@
                    </div>
 
                     </div>
-                    <h3 class="sbold blog-comments-title">Yorum Yap</h3>
-                    <form action="#">
-                        <div class="form-group">
-                            <textarea rows="8" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
-                        </div>
-                        <div class="form-group">
-                            <button type="button" class="btn blue uppercase btn-md sbold btn-block" ng-click="sendComment()">Gönder</button>
-                        </div>
-                    </form>
+                    <div ng-if="isVisible">
+                        <h3 class="sbold blog-comments-title">Yorum Yap</h3>
+                        <form action="#">
+                            <div class="form-group">
+                                <textarea rows="8" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn blue uppercase btn-md sbold btn-block" ng-click="sendComment()">Gönder</button>
+                            </div>
+                        </form>
+                    </div>
+                 
                 </div>
             </div>
         </div>
