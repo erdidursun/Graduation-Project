@@ -48,4 +48,43 @@
         }], templateUrl: "views/common/my-tabs.html"
     }
 })
- .directive("myTab", function () { return { require: "^myTabs", restrict: "E", transclude: !0, scope: { title: "@" }, link: function (n, e, t, o) { o.addTab(n) }, templateUrl: "views/common/my-tab.html" } })
+.directive("myTab", function () {
+     return {
+         require: "^myTabs",
+         restrict: "E",
+         transclude: !0,
+         scope: { title: "@" },
+         link: function (n, e, t, o) {
+             o.addTab(n)
+         },
+         templateUrl: "views/common/my-tab.html"
+     }
+ })
+.directive("showHideContainer", function () {
+    return {
+        scope: {},
+        controller: ["$scope", "$element", "$attrs", function (n, e, t) {
+            n.show = !1, n.toggleType = function (e) {
+                e.stopPropagation();
+                e.preventDefault();
+                n.show = !n.show;
+                n.$broadcast("toggle-type", n.show)
+            }
+        }],
+        templateUrl: "views/common/show-hide-password.html",
+        restrict: "A",
+        replace: !1,
+        transclude: !0
+    }
+})
+.directive("showHideInput", function () {
+    return {
+        scope: {},
+        link: function (n, e, t) {
+            n.$on("toggle-type", function (n, t) {
+                { var o = e[0]; o.getAttribute("type") } t || o.setAttribute("type", "password"), t && o.setAttribute("type", "text")
+            })
+        },
+        require: "^showHideContainer", restrict: "A", replace: !1, transclude: !1
+    }
+})
