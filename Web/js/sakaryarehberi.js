@@ -127,7 +127,7 @@
           }
       })
          .state('admin', {
-             url: "admin",
+             url: "/admin",
              cache: false,
              templateUrl: 'views/adminmain.html',
              controller: "AdminMainCtrl",
@@ -150,14 +150,14 @@
              }
          })
     .state('admin.locations', {
-        url: "locations",
+        url: "/locations",
         cache: false,
         templateUrl: 'views/admin-partials/locations.html',
         controller: "AdminMainCtrl",
 
     })
         .state('admin.users', {
-            url: "users",
+            url: "/users",
             cache:false,
             templateUrl: 'views/admin-partials/users.html',
             controller: "AdminMainCtrl",
