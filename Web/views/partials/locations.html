@@ -77,19 +77,19 @@
                                     <div class="cbp-l-grid-projects-desc uppercase text-center uppercase text-center">{{location.TypeName}}</div>
                                     <hr />
                                     <div class="btn-group btn-group-solid" style="width:100%">
-                                        <button type="button" class="btn btn-sm green-dark" ng-if="location.DistanceToUser>0" style="width:25%">
+                                        <button type="button" class="btn btn-sm green-dark" ng-if="location.DistanceToUser>0" style="width:auto">
                                             <i class=" fa fa-location-arrow">
                                             </i> &nbsp;{{location.DistanceToUser|number:1}} km
                                         </button>
-                                        <button type="button" class="btn btn-sm blue" ng-click="like(location.ID)" style="width:20%">
+                                        <button type="button" class="btn btn-sm blue" ng-click="like(location.ID)" style="width:auto">
                                             <i class="fa fa-thumbs-o-up"></i> &nbsp;{{location.LikeCount}}
                                         </button>
-                                        <button type="button" class="btn btn-sm yellow" ng-click="comment(location.ID)" style="width:20%">
+                                        <button type="button" class="btn btn-sm yellow" ng-click="comment(location.ID)" style="width:auto">
                                             <i class=" fa fa-commenting-o">
                                             </i> &nbsp;{{location.CommentCount}}
                                         </button>
 
-                                        <button type="button" class="btn btn-sm purple" ng-click="openMap(location)" style="width:35%">
+                                        <button type="button" class="btn btn-sm purple" ng-click="openMap(location)" style="width:auto">
                                             <i class=" fa fa-map-marker">
                                             </i> Yol Tarifi
                                         </button>

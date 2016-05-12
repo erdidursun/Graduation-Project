@@ -77,6 +77,7 @@
             Latitude: -1,
             Longtitude: -1
         };
+        console.log(Coord);
         if(Coord)
             var data = $httpParamSerializerJQLike(Coord)
         else

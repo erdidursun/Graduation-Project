@@ -31,23 +31,23 @@
               controller: "MainCtrl",
               cache: false
           })
-           .state('home.login', {
-               url: "login",
-               templateUrl: 'views/partials/login.html',
-               controller: 'LoginCtrl',
-               cache: false,
-               resolve: {
-                   deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                       return $ocLazyLoad.load({
-                           name: 'sakaryarehberi',
-                           insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                           files: [
-                               'assets/global/css/login.min.css'
-                           ]
-                       });
-                   }]
-               }
-           })
+          .state('home.login', {
+              url: "login",
+              templateUrl: 'views/partials/login.html',
+              controller: 'LoginCtrl',
+              cache: false,
+              resolve: {
+                  deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                      return $ocLazyLoad.load({
+                          name: 'sakaryarehberi',
+                          insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                          files: [
+                              'assets/global/css/login.min.css'
+                          ]
+                      });
+                  }]
+              }
+          })
         .state('home.locations', {
             url: "anasayfa",
             cache: false,
@@ -158,10 +158,27 @@
     })
         .state('admin.users', {
             url: "/users",
-            cache:false,
+            cache: false,
             templateUrl: 'views/admin-partials/users.html',
             controller: "AdminMainCtrl",
 
+        })
+        .state('home.account', {
+            url: "user/:userId",
+            templateUrl: 'views/partials/account.html',
+            controller: 'AccountCtrl',
+            cache: false,
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/pages/css/profile.css'
+                        ]
+                    });
+                }]
+            }
         })
     ;
     $urlRouterProvider.otherwise("/anasayfa");

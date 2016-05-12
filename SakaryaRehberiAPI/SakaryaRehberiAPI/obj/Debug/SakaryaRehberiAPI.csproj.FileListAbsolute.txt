@@ -214,8 +214,8 @@ D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.Razor.x
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.xml
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Deployment.xml
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\bin\System.Web.WebPages.Razor.xml
-D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.Migrations.a1.resources
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csproj.GenerateResource.Cache
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.dll
 D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.pdb
+D:\Graduation-Project\SakaryaRehberiAPI\SakaryaRehberiAPI\obj\Debug\SakaryaRehberiAPI.csprojResolveAssemblyReference.cache

@@ -212,13 +212,6 @@
         });
     });
 
-
-
-
-
-
-
-
     $scope.open = function (locationId) {
         var modalInstance = $uibModal.open(
         {
@@ -267,8 +260,6 @@
     }
 
 })
-
-
 .controller("HeaderCtrl", function ($scope, $state, $rootScope, AUTH_EVENTS, $uibModal, Session, AuthService) {
     $scope.isLogged = false;
 
@@ -276,6 +267,7 @@
         $scope.isLogged = true;
         $scope.profileImg = Session.User.profileImageURL;
         $scope.nick = Session.User.name;
+        $scope.userID=Session.User.id;
     }
 
 
@@ -560,4 +552,12 @@
 .controller("AdminHeaderCtrl", function () {
 
 
+})
+.controller("AccountCtrl", function ($scope, $stateParams,Session) {
+    var userId = $stateParams.userId;
+    if (userId == Session.User.id)
+        alert("gogogogo");
+    $scope.profileImg = Session.User.profileImageURL;
+    $scope.nick = Session.User.name;
+    $scope.typename = Session.User.type_name;
 })

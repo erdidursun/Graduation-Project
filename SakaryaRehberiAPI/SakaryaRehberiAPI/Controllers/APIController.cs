@@ -33,9 +33,6 @@ namespace SakaryaRehberiAPI.Controllers
 
 
         DBContext _db = new DBContext();
-
-
-
         #region User
 
         [HttpPost]
@@ -58,7 +55,8 @@ namespace SakaryaRehberiAPI.Controllers
                         Email = user.User_Email,
                         Type_ID = user.UserType_ID,
                         ImgPath = Path.Combine(GetHostName(), user.User_ImgPath),
-                        Name = user.User_Name
+                        Name = user.User_Name,
+                        TypeName=user.UserType.UserType_Name
                     });
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");

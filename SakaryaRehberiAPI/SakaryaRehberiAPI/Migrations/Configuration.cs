@@ -26,11 +26,11 @@ namespace SakaryaRehberiAPI.Migrations
             context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 1, LocationImage_Info = "Resim 1", LocationImage_Path = "Images/locationImages/1.jpg" });
             context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 2, LocationImage_Info = "Resim 2", LocationImage_Path = "Images/locationImages/2.jpg" });
             context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 3, LocationImage_Info = "Resim 3", LocationImage_Path = "Images/locationImages/3.jpg" });
-            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 3, LocationImage_Info = "Resim 4", LocationImage_Path = "Images/locationImages/4.jpg" });
-            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 1, LocationImage_Info = "Resim 1", LocationImage_Path = "Images/locationImages/1.jpg" });
-            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 2, LocationImage_Info = "Resim 2", LocationImage_Path = "Images/locationImages/2.jpg" });
-            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 3, LocationImage_Info = "Resim 3", LocationImage_Path = "Images/locationImages/3.jpg" });
-            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 3, LocationImage_Info = "Resim 4", LocationImage_Path = "Images/locationImages/4.jpg" });
+            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 1, LocationImage_ID = 4, LocationImage_Info = "Resim 4", LocationImage_Path = "Images/locationImages/4.jpg" });
+            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 5, LocationImage_Info = "Resim 1", LocationImage_Path = "Images/locationImages/1.jpg" });
+            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 6, LocationImage_Info = "Resim 2", LocationImage_Path = "Images/locationImages/2.jpg" });
+            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 7, LocationImage_Info = "Resim 3", LocationImage_Path = "Images/locationImages/3.jpg" });
+            context.LocationImages.AddOrUpdate(new Models.LocationImage() { Location_ID = 2, LocationImage_ID = 8, LocationImage_Info = "Resim 4", LocationImage_Path = "Images/locationImages/4.jpg" });
 
             context.SaveChanges();
         }
