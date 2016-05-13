@@ -90,8 +90,71 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, "anan");
         }
+       
+
+        [HttpGet]
+        public HttpResponseMessage GetUsers(int count = 100)
+        {
+            var user = from u in _db.Users
+                       select new
+                       {
+                           ID = u.User_ID,
+                           Email = u.User_Email,
+                           SignUpDate = u.User_SignUpDate,
+                           Type_ID = u.UserType_ID,
+                           Type_Name = u.UserType.UserType_Name,
+                           ImgPath = u.User_ImgPath,
+                           Name = u.User_Name,
+                           LikeCount = u.UserLikes.Count,
+                           CommentCount = u.UserComments.Count
+                       };
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, user);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DeleteUser(int UserID)
+        {
+            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (user != null)
+            {
+                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
+        public HttpResponseMessage GetUserTypes()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
+
+        }
+
+        public HttpResponseMessage UpdateUser(User user, int UserID)
+        {
+            var olduser =_db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (olduser != null)
+            {
+                olduser.User_Email = user.User_Email;
+                olduser.User_ImgPath = user.User_ImgPath;
+                olduser.User_Name = user.User_Name;
+
+                _db.Users.Add(olduser);
+                _db.SaveChanges();
+           
+            return Request.CreateResponse(HttpStatusCode.OK, "");
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
         #endregion
 
+        #region location
 
         [HttpPost]
         [AllowAnonymous]
@@ -124,7 +187,7 @@ namespace SakaryaRehberiAPI.Controllers
                 _db.SaveChanges();
             }
 
-            return Request.CreateResponse(HttpStatusCode.OK);
+            return Request.CreateResponse(HttpStatusCode.OK,"fotoğraf yüklendi");
 
         }
 
@@ -149,6 +212,8 @@ namespace SakaryaRehberiAPI.Controllers
             _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, getLocationInfo(_loc.Location_ID));
         }
+
+
         public object getLocationInfo(int id, int count = 1)
         {
             var list = (from location in _db.Locations
@@ -225,45 +290,6 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, Comment);
         }
 
-
-        [HttpGet]
-        public HttpResponseMessage GetUsers(int count = 100)
-        {
-            var user = from u in _db.Users
-                       select new
-                       {
-                           ID = u.User_ID,
-                           Email = u.User_Email,
-                           SignUpDate = u.User_SignUpDate,
-                           Type_ID = u.UserType_ID,
-                           Type_Name = u.UserType.UserType_Name,
-                           ImgPath = u.User_ImgPath,
-                           Name = u.User_Name,
-                           LikeCount = u.UserLikes.Count,
-                           CommentCount = u.UserComments.Count
-                       };
-
-
-            return Request.CreateResponse(HttpStatusCode.OK, user);
-        }
-
-
-        [HttpGet]
-        public HttpResponseMessage DeleteUser(int UserID)
-        {
-            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
-            if (user != null)
-            {
-                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
-                _db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, "success");
-
-            }
-            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
-
-        }
-
-
         [HttpGet]
         public HttpResponseMessage DeleteLocation(int LocationID)
         {
@@ -279,14 +305,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-
-        public HttpResponseMessage GetUserTypes()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
-
-        }
-
-
+        #endregion
 
 
     }

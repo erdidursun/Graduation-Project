@@ -158,7 +158,7 @@
     })
         .state('admin.users', {
             url: "/users",
-            cache:false,
+            cache: false,
             templateUrl: 'views/admin-partials/users.html',
             controller: "AdminMainCtrl",
 

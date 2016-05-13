@@ -1,0 +1,476 @@
+﻿n.put("views/app/bookmarks.html",'
+
+
+
+
+				'),n.put("views/app/forms.html",'
+<ion-view class="forms-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>Forms</span> </ion-nav-title>
+    <ion-content>
+        <ul class="list">
+            <div class="item item-divider">Inline Labels</div>
+            <label class="item item-input">
+                <span class="input-label">First Name</span>
+                <input type="text">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Last Name</span>
+                <input type="text">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Email</span>
+                <input type="email">
+            </label>
+            <div class="item item-divider">Floating Labels</div>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Telephone</span>
+                <input type="tel" placeholder="Your phone">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Number</span>
+                <input type="number" placeholder="Some number">
+            </label>
+            <div class="item item-divider">Stacked Labels</div>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Birth date</span>
+                <input type="date">
+            </label>
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Month</span>
+                <input type="month">
+            </label>
+            <div class="item item-divider">Placeholder Labels</div>
+            <label class="item item-input">
+                <textarea placeholder="Description"></textarea>
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Your password">
+            </label>
+            <div class="item item-divider">Inset Inputs</div>
+            <div class="item item-input-inset">
+                <label class="item-input-wrapper">
+                    <input type="text" placeholder="Search...">
+                </label>
+                <button class="button button-small"> Submit </button>
+            </div>
+        </ul>
+    </ion-content>
+</ion-view>'),n.put("views/app/profile.html",'
+<ion-view class="profile-view">
+    <ion-nav-title> <span>Profile</span> </ion-nav-title>
+    <ion-content>
+        <div class="top-content row">
+            <div class="profile-container">
+                <div class="user-image-container">
+                    <pre-img ratio="_1_1" helper-class="rounded-image"> <img class="user-image" ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg" spinner-on-load> </pre-img>
+                </div>
+                <div class="user-name">Brynn Evans</div>
+                <div class="user-twitter">@brynn</div>
+            </div>
+            <div class="user-background-image-outer">
+                <div multi-bg="[https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg]"></div>
+            </div>
+        </div>
+        <div class="bottom-content">
+            <div class="user-bio">
+                <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/settings.html",'
+<ion-view class="settings-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>Settings</span> </ion-nav-title>
+    <ion-content>
+        <ul class="list">
+            <div class="item item-divider">TOGGLE</div>
+            <ion-toggle ng-model="airplaneMode" toggle-class="toggle-assertive">Airplane Mode</ion-toggle>
+            <ion-toggle ng-model="wifi" toggle-class="toggle-positive">Wi-Fi</ion-toggle>
+            <ion-toggle ng-model="bluetooth" toggle-class="toggle-calm">Bluetooth</ion-toggle>
+            <ion-toggle ng-model="personalHotspot" toggle-class="toggle-dark">Personal Hotspot</ion-toggle>
+            <div class="item item-divider">CHECKBOXES</div>
+            <ion-checkbox ng-model="checkOpt1">Option 1</ion-checkbox>
+            <ion-checkbox ng-model="checkOpt2">Option 2</ion-checkbox>
+            <ion-checkbox ng-model="checkOpt3">Option 3</ion-checkbox>
+            <div class="item item-divider">RADIO</div>
+            <ion-radio ng-model="radioChoice" ng-value="A">Choose A</ion-radio>
+            <ion-radio ng-model="radioChoice" ng-value="B">Choose B</ion-radio>
+            <ion-radio ng-model="radioChoice" ng-value="C">Choose C</ion-radio>
+            <div class="item item-divider">RANGES</div>
+            <div class="range">
+                <i class="icon ion-volume-low"></i>
+                <input type="range" name="volume"> <i class="icon ion-volume-high"></i>
+            </div>
+            <div class="item range range-positive">
+                <i class="icon ion-ios-sunny-outline"></i>
+                <input type="range" name="volume" min="0" max="100" value="33"> <i class="icon ion-ios-sunny"></i>
+            </div>
+            <div class="item item-divider"></div>
+            <button class="button button-block button-assertive" ng-click="showLogOutMenu()"> Logout </button>
+        </ul>
+    </ion-content>
+</ion-view>'),n.put("views/app/side-menu.html",'
+<ion-side-menus enable-menu-with-back-views="false">
+    <ion-side-menu-content class="post-size-14px">
+        <ion-nav-bar class="bar app-top-bar">
+            <ion-nav-back-button> </ion-nav-back-button>
+            <ion-nav-buttons side="left">
+                <button class="button button-icon button-clear ion-navicon" menu-toggle="left"> </button>
+            </ion-nav-buttons>
+        </ion-nav-bar>
+        <ion-nav-view name="menuContent"></ion-nav-view>
+    </ion-side-menu-content>
+    <ion-side-menu side="left" class="main-menu" expose-aside-when="large">
+        <ion-content>
+            <ion-list>
+                <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
+                    <div class="user-image-container">
+                        <pre-img ratio="_1_1" helper-class="rounded-image"> <img class="user-image" ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg" spinner-on-load> </pre-img>
+                    </div>
+                    <h2 class="greeting">Hi Brynn</h2>
+                    <p class="message">Welcome back</p>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.bookmarks">
+                    <i class="icon ion-bookmark"></i>
+                    <h2 class="menu-text">Saved for later</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.feeds-categories">
+                    <i class="icon ion-radio-waves"></i>
+                    <h2 class="menu-text">Feeds</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.wordpress">
+                    <i class="icon ion-social-wordpress"></i>
+                    <h2 class="menu-text">Wordpress</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.layouts">
+                    <i class="icon ion-wand"></i>
+                    <h2 class="menu-text">Layouts</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.miscellaneous">
+                    <i class="icon ion-asterisk"></i>
+                    <h2 class="menu-text">Miscellaneous</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.forms">
+                    <i class="icon ion-document"></i>
+                    <h2 class="menu-text">Forms</h2>
+                </ion-item>
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.settings">
+                    <i class="icon ion-gear-a"></i>
+                    <h2 class="menu-text">Settings</h2>
+                </ion-item>
+            </ion-list>
+        </ion-content>
+    </ion-side-menu>
+</ion-side-menus>'), n.put("views/auth/auth.html",'
+<ion-nav-view class="auth-outer">
+    <div multi-bg="[img/bg-gif.gif]"></div>
+    <!-- <div multi-bg="[img/bg-img.jpg]"></div> -->
+</ion-nav-view>'),n.put("views/auth/forgot-password.html",'
+<ion-view class="forgot-password-view auth-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-center">
+                <div class="card forgot-password-container">
+                    <form name="forgot_password_form" class="" novalidate>
+                        <div class="item item-body">
+                            <label class="item item-input">
+                                <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                            </label>
+                        </div>
+                        <div class="item item-body bottom-content">
+                            <button type="submit" class="button button-positive button-block" ng-click="recoverPassword()" ng-disabled="forgot_password_form.$invalid"> Recover it </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="alternative-actions"> <a class="log-in button button-small button-clear button-light" ui-sref="auth.login">            Log In          </a> <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">            Sign Up          </a> </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/auth/login.html",'
+<ion-view class="login-view auth-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-center">
+                <div class="card login-container" content-tabs tabsdata=\ 'tabsdata>
+                    <form name="login_form" class="" novalidate ng-cloak>
+                        <my-tabs>
+                            <my-tab title="Email">
+                                <div class="list">
+                                    <label class="item item-input">
+                                        <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                                    </label>
+                                    <label class="item item-input" show-hide-container>
+                                        <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
+                                    </label>
+                                </div>
+                            </my-tab>
+                            <my-tab title="Phone">
+                                <div class="list">
+                                    <label class="item item-input">
+                                        <input type="text" placeholder="Phone number" name="user_phone" ng-model="user.phone" required>
+                                    </label>
+                                    <label class="item item-input" show-hide-container>
+                                        <input type="password" placeholder="PIN" name="user_pin" ng-model="user.pin" required valid-pin="user.pin" show-hide-input>
+                                    </label>
+                                </div>
+                            </my-tab>
+                        </my-tabs>
+                        <div class="item item-body bottom-content">
+                            <button type="submit" class="button button-positive button-block" ng-click="doLogIn()" ng-disabled="(selected_tab==Email) ? (login_form.user_email.$invalid || login_form.user_password.$invalid) : ((selected_tab==Phone) ? (login_form.user_phone.$invalid || login_form.user_pin.$invalid) : false)"> Log In </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="alternative-actions"> <a class="forgot-password button button-small button-clear button-light" ui-sref="auth.forgot-password">            Forgot Password?          </a> <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">            Sign Up          </a> </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/auth/signup.html",'
+<ion-view class="signup-view auth-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-center">
+                <div class="card sign-up-container">
+                    <form name="signup_form" class="" novalidate>
+                        <div class="item item-body">
+                            <label class="item item-input">
+                                <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                            </label>
+                            <label class="item item-input" show-hide-container>
+                                <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
+                            </label>
+                        </div>
+                        <div class="item item-body bottom-content">
+                            <button type="submit" class="button button-assertive button-block" ng-click="doSignUp()" ng-disabled="signup_form.$invalid"> Sign Up </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="alternative-actions"> <a class="log-in button button-small button-clear button-light" ui-sref="auth.login">            Log In          </a> </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/auth/walkthrough.html",'
+<ion-view class="walkthrough-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="top-content row">
+            <div class="col col-center"> <img ng-src="img/logo.png"> </div>
+        </div>
+        <div class="bottom-content row">
+            <div class="col col-center"> <a class="login button button-block button-stable" ui-sref="auth.login">          Log In        </a> <a class="sign-up button button-block button-stable" ui-sref="auth.signup">          Sign Up        </a> </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/common/ionic-youtube-video.html",'
+<youtube-video video-id="videoId" player="yt_video" player-vars="playerVars"></youtube-video>'),n.put("views/common/multi-bg.html",'
+<div class="multi-bg-outer" ng-class="{ finish-loading: loaded }">
+    <img bg class="multi-bg {{ helperClass }}" ng-src="{{ bg_img }}" /> <span class="bg-overlay"></span>
+    <ion-spinner ng-show="!loaded" class="spinner-on-load"></ion-spinner>
+    <!-- <span ng-show="!loaded" class="spinner-on-load ion-load-c"></span> -->
+    <ng-transclude></ng-transclude>
+</div>'),n.put("views/common/my-tab.html",'
+<div class="tab-content ng-cloak ng-hide" ng-cloak ng-show="selected" ng-transclude></div>'),n.put("views/common/my-tabs.html",'
+<div class="item item-divider card-heding">
+    <div class="tabs-striped">
+        <div class="tabs"> <a ng-repeat="tab in tabs" ng-click="select(tab)" ng-class="{ active: tab.selected }" class="tab-item">{{tab.title}}</a> </div>
+    </div>
+</div>
+<div class="item item-body">
+    <div class="tabs-content" ng-transclude></div>
+</div>'),n.put("views/common/pre-img.html",'
+<div class="pre-img {{ratio}} {{ helperClass }}" ng-class="{ finish-loading: loaded }">
+    <ion-spinner ng-show="!loaded" class="spinner-on-load"></ion-spinner>
+    <!-- <span ng-show="!loaded" class="spinner-on-load ion-load-c"></span> -->
+    <ng-transclude></ng-transclude>
+</div>'),n.put("views/common/show-hide-password.html",'
+<div class="show-hide-input" ng-transclude></div><a class="toggle-view-anchor" on-touch="toggleType($event)">	<span class="ion-eye-disabled" ng-show="show"></span>	<span class="ion-eye" ng-show="!show"></span></a>'),n.put("views/app/feeds/category-feeds.html",'
+<ion-view class="category-feeds-view">
+    <ion-nav-title> <span>{{categoryTitle}} feeds</span> </ion-nav-title>
+    <ion-content>
+        <div class="list category-feeds"> <a ng-repeat="source in category_sources" class="item item-icon-right" ui-sref="app.feed-entries({categoryId: categoryId, sourceId: (source.title | slugify)})">        <div class="thumbnail-outer">          <pre-img ratio="_1_1" helper-class="">            <img class="thumbnail" ng-src="{{source.image}}" spinner-on-load>          </pre-img>        </div>        <div>          <span class="title">{{source.title}}</span>          <p class="description">{{source.description}}</p>        </div>        <i class="icon ion-arrow-right-c"></i>      </a> </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/feeds/feed-entries.html",'
+<ion-view class="feed-entries-view">
+    <ion-nav-title> <span>{{sourceTitle}}</span> </ion-nav-title>
+    <ion-content>
+        <!-- Refresh to get the new posts -->
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"> </ion-refresher>
+        <div class="entries-list">
+            <div ng-repeat="entry in feed.entries" class="list card entry-item">
+                <div class="entry-heading item item-text-wrap">
+                    <h2 class="entry-title" ng-bind-html="entry.title | rawHtml"></h2>
+                    <p class="entry-author"> Published <span>{{ entry.publishedDate | parseDate | amTimeAgo }}</span> </p>
+                </div>
+                <div class="entry-content item item-text-wrap">
+                    <p class="entry-excerpt" dynamic-anchor-fix ng-bind-html="entry.contentSnippet | rawHtml"></p>
+                    <div class="entry-actions row">
+                        <div class="actions col col-center col-66">
+                            <a class="button button-icon icon ion-bookmark" ng-click="bookmarkPost(entry)"></a>
+                        </div>
+                        <div class="read-more col col-center col-33" dynamic-anchor-fix> <a class="button button-small button-block button-assertive" ng-href="{{entry.link}}">                Read more              </a> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/feeds/feeds-categories.html",'
+<ion-view class="feeds-categories-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>Feeds Categories</span> </ion-nav-title>
+    <ion-content>
+        <div class="row categories-list">
+            <div ng-repeat="category in feeds_categories" class="col col-50"> <a class="feed-category" ui-sref="app.category-feeds({categoryId: (category.title | slugify)})">          <pre-img ratio="_1_1" helper-class="square-image">            <img class="category-image" ng-src="{{category.image}}" spinner-on-load>          </pre-img>          <div class="category-bg"></div>          <span class="category-title">{{category.title}}</span>        </a> </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/layouts/layouts.html",'
+<ion-view class="layouts-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>Layouts</span> </ion-nav-title>
+    <ion-content>
+        <div class="list layouts-functionalities"> <a class="item item-icon-left item-icon-right" ui-sref="app.tinder-cards">        <i class="icon ion-happy-outline"></i>        <div>          <span class="title">Tinder Cards</span>          <p class="description">Awesome Tinder Cards</p>        </div>        <i class="icon ion-arrow-right-c"></i>      </a> <a class="item item-icon-left item-icon-right" ui-sref="app.slider">        <i class="icon ion-arrow-swap"></i>        <div>          <span class="title">Slider</span>          <p class="description">Example of sliding cards</p>        </div>        <i class="icon ion-arrow-right-c"></i>      </a> </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/layouts/slider.html",'
+<ion-view class="slider-view">
+    <ion-nav-title> <span>Slider</span> </ion-nav-title>
+    <ion-content scroll="false">
+        <ion-slide-box show-pager="true">
+            <ion-slide ng-repeat="i in [1,2,3,4,5]">
+                <div class="list card">
+                    <div class="item item-image"> <img ng-src="http://lorempixel.com/300/200/nature?v={{i}}"> </div>
+                    <div class="item item-body">
+                        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                    </div>
+                </div>
+            </ion-slide>
+        </ion-slide-box>
+    </ion-content>
+</ion-view>'),n.put("views/app/layouts/tinder-cards.html",'
+<ion-view class="tinder-cards-view">
+    <ion-nav-title> <span>Tinder Cards</span> </ion-nav-title>
+    <ion-content scroll="false">
+        <td-cards>
+            <td-card id="td-card" ng-repeat="card in cards" on-transition-left="transitionLeft(card)" on-transition-right="transitionRight(card)" on-transition-out="transitionOut(card)" on-destroy="cardDestroyed($index)" on-swipe-left="cardSwipedLeft($index)" on-swipe-right="cardSwipedRight($index)" on-partial-swipe="cardPartialSwipe(amt)">
+                <div class="image">
+                    <div class="no-text overlayBox">
+                        <div class="noBox boxed"> Nope </div>
+                    </div> <img ng-src="{{card.image}}">
+                    <div class="yes-text overlayBox">
+                        <div class="yesBox boxed"> Yes </div>
+                    </div>
+                </div>
+                <div class="title"> {{card.name}} </div>
+            </td-card>
+        </td-cards>
+    </ion-content>
+</ion-view>'),n.put("views/app/miscellaneous/image-picker.html",'
+<ion-view class="image-picker-view">
+    <ion-nav-title> <span>Image picker</span> </ion-nav-title>
+    <ion-content class="padding">
+        <button class="button button-block button-dark" ng-click="selImages()"> Select Images </button>
+        <button ng-show="images.length > 0" class="button button-block button-stable" ng-click="shareAll()"> Share All </button>
+        <div class="list card" ng-repeat="img in images">
+            <div class="item item-image"> <img ng-src="{{img}}"> </div>
+            <div class="item tabs tabs-secondary tabs-icon-left"> <a class="tab-item image-option" href="#" ng-click="shareImage(img)">          <i class="icon ion-share"></i>          Share        </a> <a class="tab-item assertive image-option" href="#" ng-click="removeImage(img)">          <i class="icon ion-trash-a assertive"></i>          Remove        </a> </div>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/miscellaneous/maps.html",'
+<ion-view class="maps-view">
+    <ion-nav-title> <span>Maps</span> </ion-nav-title>
+    <ion-content scroll="false">
+        <div class="mapWrap" data-tap-disabled="true">
+            <div class="row center-map-action">
+                <div class="col">
+                    <div class="list">
+                        <div class="item item-input-inset">
+                            <a class="button button-icon icon ion-pinpoint" ng-click="centerOnMe()"></a>
+                            <label class="item-input-wrapper">
+                                <input type="text" placeholder="My Location" disabled ng-model="my_location">
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <map center="{{center_position.lat}},{{center_position.lng}}" zoom="15">
+                <marker position="{{current_position.lat}},{{current_position.lng}}" title="Hello Marker" visible="true"> </marker>
+                <info-window id="1" position="{{info_position.lat}},{{info_position.lng}}" visible="true">
+                    <div ng-non-bindable="">
+                        <b>The best restaurant</b>
+                        <br> This is html so you can put whatever
+                        <br> you want such as images and <a href="">links</a>
+                        <br> <img style=" border-radius: 24px;" src="http://lorempixel.com/50/50/food/?v=1"></img> <img style=" border-radius: 24px;" src="http://lorempixel.com/50/50/food/?v=2"></img> <img style=" border-radius: 24px;" src="http://lorempixel.com/50/50/food/?v=3"></img>
+                    </div>
+                </info-window>
+            </map>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/miscellaneous/miscellaneous.html",'
+<ion-view class="miscellaneous-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>Miscellaneous</span> </ion-nav-title>
+    <ion-content>
+        <div class="list miscellaneous-functionalities">
+            <div dynamic-anchor-fix> <a class="item item-icon-left item-icon-right" href="http://www.ionicthemes.com">          <i class="icon ion-ios-browsers-outline"></i>          <div>            <span class="title">In App Browser</span>            <p class="description">Show web browser view with external links</p>          </div>          <i class="icon ion-arrow-right-c"></i>        </a> </div> <a class="item item-icon-left item-icon-right" ui-sref="app.maps">        <i class="icon ion-map"></i>        <div>          <span class="title">Maps & GeoLocation</span>          <p class="description">Show map & access users current location</p>        </div>        <i class="icon ion-arrow-right-c"></i>      </a> <a class="item item-icon-left item-icon-right" ui-sref="app.image-picker">        <i class="icon ion-images"></i>        <div>          <span class="title">Image Picker</span>          <p class="description">Select and share images from your phone</p>        </div>        <i class="icon ion-arrow-right-c"></i>      </a> <a class="item item-icon-left item-icon-right" href="#" ng-controller="AdsCtrl" ng-click="manageAdMob()">        <i class="icon ion-social-usd-outline"></i>        <div>          <span class="title">AdMob</span>          <p class="description">Show Google AdMob mobile ads</p>        </div>      </a> <a class="item item-icon-left item-icon-right" href="#" ng-controller="AdsCtrl" ng-click="manageiAd()">        <i class="icon ion-social-usd-outline"></i>        <div>          <span class="title">iAd</span>          <p class="description">Show Apple iAd mobile ads</p>        </div>      </a> <a class="item item-icon-left item-icon-right" href="#" ng-controller="RateApp" ng-click="rateApp()">        <i class="icon ion-ios-star-half"></i>        <div>          <span class="title">Rate the app</span>          <p class="description">Rate this app in Google and Apple stores</p>        </div>      </a> <a class="item item-icon-left item-icon-right" href="#" ng-controller="SendMailCtrl" ng-click="sendMail()">        <i class="icon ion-email"></i>        <div>          <span class="title">Send email</span>          <p class="description">Access your phone native email sender provider</p>        </div>      </a>
+        </div>
+    </ion-content>
+</ion-view>'),n.put("views/app/wordpress/wordpress.html",'
+<ion-view class="wordpress-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title> <span>WordPress</span> </ion-nav-title>
+    <ion-content>
+        <!-- Refresh to get the new posts -->
+        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()"> </ion-refresher>
+        <div class="posts-list">
+            <div ng-repeat="post in posts" class="list card post-item">
+                <div class="post-heading item item-text-wrap">
+                    <h2 class="post-title" ng-bind-html="post.title | rawHtml"></h2>
+                    <p class="post-author"> By <span>{{post.author.nickname}}</span> <span am-time-ago="post.date"></span> </p>
+                </div>
+                <div class="post-content item item-text-wrap" post-content>
+                    <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="post.content | rawHtml"></p>
+                    <div class="post-actions row">
+                        <div class="actions col col-center col-66">
+                            <a class="button button-icon icon ion-bookmark" ng-click="bookmarkPost(post)"></a>
+                        </div>
+                        <div class="read-more col col-center col-33"> <a ui-sref="app.post({postId: post.id})" class="button button-small button-block button-assertive">                Read more              </a> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Infinit scroll -->
+        <ion-infinite-scroll ng-if="moreDataCanBeLoaded()" on-infinite="loadMoreData()" distance="1%" icon="ion-loading-c"> </ion-infinite-scroll>
+    </ion-content>
+</ion-view>'),n.put("views/app/wordpress/wordpress_post.html",'
+<ion-view class="post-view">
+    <ion-content>
+        <div class="post-heading item item-text-wrap">
+            <h1 class="post-title">{{post.title}}</h1>
+            <p class="post-author"> By <span>{{post.author.nickname}}</span> <span am-time-ago="post.date"></span> </p>
+        </div>
+        <div class="post-content item item-text-wrap" post-content>
+            <p class="post-text" dynamic-anchor-fix ng-bind-html="post.content | rawHtml"></p>
+        </div>
+        <div class="post-tags item item-text-wrap"> <span class="post-tag button button-small button-outline button-stable" ng-repeat="category in post.categories">{{category.title}}</span> </div>
+    </ion-content>
+    <ion-footer-bar class="post-footer bar bar-footer bar-dark">
+        <div class="row">
+            <div class="col col-20 col-center"> <a class="button button-icon icon icon-right ion-plus" bigger-text=".post-view .post-text">A</a> </div>
+            <div class="col col-20 col-center"> <a class="button button-icon icon icon-right ion-minus" smaller-text=".post-view .post-text">A</a> </div>
+            <div class="col col-20 col-offset-20 col-center">
+                <a class="button button-icon icon ion-heart"></a>
+            </div>
+            <div class="col col-20 col-center">
+                <a class="button button-icon icon ion-android-share-alt" ng-click="sharePost(post.url)"></a>
+            </div>
+        </div>
+    </ion-footer-bar>
+</ion-view>')}]),angular.module("your_app_name.config",[]).constant("WORDPRESS_API_URL","https://wordpress.startapplabs.com/blog/api/").constant("GCM_SENDER_ID","574597432927");

@@ -439,6 +439,15 @@
         });
     }
 
+    $scope.UpdateUser = function (id) {
+        User.Update(id).then(function (data) {
+            $state.go("admin.users", {}, { reload: true });
+        }, function (e) {
+
+        });
+    }
+
+
 
 
     $scope.DeleteLocation = function (id) {
@@ -449,6 +458,7 @@
 
         });
     }
+
 
 
     $scope.open = function () {
