@@ -1,10 +1,7 @@
-angular.module('sakaryarehberi.appSettings',[])
-.factory("Settings",function() {
-   var fireBaseAppName="sakaryarehberi";
-   return {
-     FIREBASEAPPNAME:fireBaseAppName,
-     FireBaseUrl: "https://"+fireBaseAppName+".firebaseio.com",
-     LsHostKey:"firebase:host:"+fireBaseAppName+".firebaseio.com",
-     LsAuthDataKey:"firebase:session::"+ fireBaseAppName
-   }
- });
+
+var Settings = {
+    //apiHostUrl: "tommycarter-001-site1.itempurl.com",
+    apiHostUrl: "localhost:8054",
+    apiHostUrl: "192.168.2.56:8054",
+    logingEnabled: false
+}
