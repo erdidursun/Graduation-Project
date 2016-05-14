@@ -1,8 +1,52 @@
-angular.module('sakaryarehberi.controllers', ['sakaryarehberi.services'])
+angular.module('sakaryarehberi.controllers',[])
 
-.controller('DashCtrl', function ($scope, $location) {
+.controller('AuthCtrl', function ($scope) {
 
 })
+
+.controller('LoginCtrl', function ($scope) {
+
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 .controller('externalLoginCtrl', function ($scope, Auth) {
   // Auth.$onAuth(function(authData) {

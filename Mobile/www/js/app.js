@@ -5,10 +5,8 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('sakaryarehberi', ['ionic', 'sakaryarehberi.controllers', 'sakaryarehberi.services','firebase'])
-
-
-      .run(function ($ionicPlatform) {
+angular.module('sakaryarehberi', ['ionic', 'sakaryarehberi.controllers', 'underscore', 'sakaryarehberi.services', 'sakaryarehberi.directives', 'firebase'])
+ .run(function ($ionicPlatform, $rootScope,$timeout,$ionicConfig) {
           $ionicPlatform.ready(function () {
               // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
               // for form inputs)
@@ -22,63 +20,47 @@ angular.module('sakaryarehberi', ['ionic', 'sakaryarehberi.controllers', 'sakary
                   StatusBar.styleDefault();
               }
           });
+          $rootScope.$on("$stateChangeStart", function (n, e, t, s, a) {
+              if (e.name.indexOf("auth.walkthrough") > -1)
+                  $timeout(function () {
+                      $ionicConfig.views.transition("android");
+                      $ionicConfig.views.swipeBackEnabled(false);
+                      console.log("setting transition to android and disabling swipe back");
+                  }, 0)
+          });
+          $rootScope.$on("$stateChangeSuccess", function (n, e, t, i, s) {
+              if (e.name.indexOf("app.feeds-categories") > -1)
+                  $ionicConfig.views.transition("platform");
+              if (ionic.Platform.isIOS())
+                  $ionicConfig.views.swipeBackEnabled(true);
+              console.log("enabling swipe back and restoring transition to platform default");
+              $ionicConfig.views.transition()
+          });
       })
-.config(function ($stateProvider, $urlRouterProvider,$httpProvider) {
-     $httpProvider.defaults.useXDomain = true;
-     delete $httpProvider.defaults.headers.common['X-Requested-With'];
-    // Ionic uses AngularUI Router which uses the concept of states
-    // Learn more here: https://github.com/angular-ui/ui-router
-    // Set up the various states which the app can be in.
-    // Each state's controller can be found in controllers.js
+.config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+    $httpProvider.defaults.useXDomain = true;
+    delete $httpProvider.defaults.headers.common['X-Requested-With'];
+
     $stateProvider
-
-    // setup an abstract state for the tabs directive
-      .state('tab', {
-          url: '/tab',
-          abstract: true,
-          templateUrl: 'templates/tabs.html'
-      })
-
-     .state('login', {
-         url: "/login",
-         cache: false,
-         templateUrl: "templates/login.html",
-         controller: 'externalLoginCtrl'
-     })
-
-    .state('tab.dash', {
-        url: '/dash',
-        cache: false,
-        views: {
-            'tab-dash': {
-                templateUrl: 'templates/tab-dash.html',
-                controller: 'DashCtrl'
-            }
-        }
+    .state("auth", {
+        url: "/auth",
+        templateUrl: "views/auth/auth.html",
+        abstract: true,
+        controller: "AuthCtrl"
     })
 
-  
-      .state('tab.chat-detail', {
-          url: '/chats/:chatId',
-          views: {
-              'tab-chats': {
-                  templateUrl: 'templates/chat-detail.html',
-                  controller: 'ChatDetailCtrl'
-              }
-          }
-      })
+    .state("auth.walkthrough", {
+        url: "/walkthrough",
+        templateUrl: "views/auth/walkthrough.html"
+    })
+    .state("auth.login", {
+        url: "/login",
+        templateUrl: "views/auth/login.html",
+        controller: "LoginCtrl"
+    })
 
-    .state('tab.account', {
-        url: '/account',
-        views: {
-            'tab-account': {
-                templateUrl: 'templates/tab-account.html',
-                controller: 'AccountCtrl'
-            }
-        }
-    });
+    ;
 
-    // if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/tab/dash');
+    $urlRouterProvider.otherwise("/auth/walkthrough");
 
 });
