@@ -59,7 +59,7 @@
         return func;
     }
 
-    User.Update = function (user,id) {
+    User.Update = function (user, id) {
         var data = {
             UserID: id
         }
@@ -88,7 +88,8 @@
             Latitude: -1,
             Longtitude: -1
         };
-        if(Coord)
+        console.log(Coord);
+        if (Coord)
             var data = $httpParamSerializerJQLike(Coord)
         else
             var data = $httpParamSerializerJQLike(Coord1)
@@ -101,15 +102,15 @@
         return func;
     }
     Location.GetLocationTypes = function () {
-<<<<<<< HEAD
-        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth: false });
-=======
 
-        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth:false });
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
+        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth: false });
+
+
+        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth: false });
+
         return func;
     }
- 
+
     Location.Delete = function (id) {
         var data = {
             LocationID: id

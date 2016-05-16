@@ -1,0 +1,61 @@
+﻿<ion-view class="feeds-categories-view">
+    <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+    </ion-nav-buttons>
+    <ion-nav-title>
+        <span>Feeds Categories</span>
+    </ion-nav-title>
+    <ion-content>
+        <ion-card ng-repeat="location in locations">
+
+            <!--<ion-item>
+                <ion-avatar item-left>
+                    <img src="img/marty-avatar.png">
+                </ion-avatar>
+                <h2>Marty McFly</h2>
+                <p>November 5, 1955</p>
+            </ion-item>-->
+            <pre-img ratio="_1_1" helper-class="square-image">
+                <img  ng-src="{{location.Banner}}" spinner-on-load>
+            </pre-img>
+
+            <ion-card-content>
+                <p>Wait a minute. Wait a minute, Doc. Uhhh... Are you telling me that you built a time machine... out of a DeLorean?! Whoa. This is heavy.</p>
+            </ion-card-content>
+
+            <ion-row no-padding="">
+                <ion-col>
+                    <button clear="" danger="" small="" class="disable-hover button button-clear button-small button-icon-left button-clear-danger">
+                        <span class="button-inner">
+                            <ion-icon name="star" role="img" class="ion-ios-star" aria-label="star"></ion-icon>
+                            Favorite
+                        </span><ion-button-effect></ion-button-effect>
+                    </button>
+                </ion-col>
+                <ion-col text-center="">
+                    <button clear="" danger="" small="" class="disable-hover button button-clear button-small button-icon-left button-clear-danger">
+                        <span class="button-inner">
+                            <ion-icon name="musical-notes" role="img" class="ion-ios-musical-notes" aria-label="musical notes"></ion-icon>
+                            Listen
+                        </span><ion-button-effect></ion-button-effect>
+                    </button>
+                </ion-col>
+                <ion-col text-right="">
+                    <button clear="" danger="" small="" class="disable-hover button button-clear button-small button-icon-left button-clear-danger">
+                        <span class="button-inner">
+                            <ion-icon name="share-alt" role="img" class="ion-ios-share-alt" aria-label="share alt"></ion-icon>
+                            Share
+                        </span><ion-button-effect></ion-button-effect>
+                    </button>
+                </ion-col>
+            </ion-row>
+
+        </ion-card>
+    </ion-content>
+</ion-view>
+
+
+
+
+
+

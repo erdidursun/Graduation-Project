@@ -33,9 +33,6 @@ namespace SakaryaRehberiAPI.Controllers
 
 
         DBContext _db = new DBContext();
-
-
-
         #region User
 
         [HttpPost]
@@ -58,7 +55,8 @@ namespace SakaryaRehberiAPI.Controllers
                         Email = user.User_Email,
                         Type_ID = user.UserType_ID,
                         ImgPath = Path.Combine(GetHostName(), user.User_ImgPath),
-                        Name = user.User_Name
+                        Name = user.User_Name,
+                        TypeName=user.UserType.UserType_Name
                     });
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
@@ -100,7 +98,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, "anan");
         }
-<<<<<<< HEAD
+
        
 
         [HttpGet]
@@ -164,71 +162,17 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         #endregion
-=======
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
-
-        #region location
-
-        public HttpResponseMessage GetUserTypes()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
-
-        }
-        [HttpGet]
-        public HttpResponseMessage GetUsers(int count = 100)
-        {
-            var user = from u in _db.Users
-                       select new
-                       {
-                           ID = u.User_ID,
-                           Email = u.User_Email,
-                           SignUpDate = u.User_SignUpDate,
-                           Type_ID = u.UserType_ID,
-                           Type_Name = u.UserType.UserType_Name,
-                           ImgPath = u.User_ImgPath,
-                           Name = u.User_Name,
-                           LikeCount = u.UserLikes.Count,
-                           CommentCount = u.UserComments.Count
-                       };
-
-<<<<<<< HEAD
-            return Request.CreateResponse(HttpStatusCode.OK,"fotoğraf yüklendi");
-=======
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
-
-            return Request.CreateResponse(HttpStatusCode.OK, user);
-        }
-
-        [HttpGet]
-        public HttpResponseMessage DeleteUser(int UserID)
-        {
-            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
-            if (user != null)
-            {
-                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
-                _db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, "success");
-
-            }
-            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
-
-        }
 
 
-<<<<<<< HEAD
-        public object getLocationInfo(int id, int count = 1)
-=======
-        #endregion
 
         #region Locations
 
         public object getLocationInfo(Coordinat coord, int id, int count = 1)
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
         {
             var hostName = GetHostName();
             var list = (from location in _db.Locations
                         where location.Location_ID == id || id == -1
-                        select location).AsEnumerable().Select(
+                        select location).AsEnumerable<Location>().Select(
                         l => new
                         {
                             Images = from i in l.LocationImages
@@ -259,7 +203,7 @@ namespace SakaryaRehberiAPI.Controllers
                             TypeName = l.LocationType!=null?l.LocationType.LocationType_Name:"",
                             CommentCount = l.UserComments.Count,
                             LikeCount = l.UserLikes.Count,
-                            DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0
+                            DistanceToUser =0
                            
                         }).OrderBy(u=> u.DistanceToUser).Take(count);
 
@@ -316,12 +260,6 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
 
-
-<<<<<<< HEAD
-        [HttpGet]
-        public HttpResponseMessage DeleteLocation(int LocationID)
-=======
-
         public int GetDistance(double lat1, double long1, double lat2, double long2)
         {
             var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
@@ -329,7 +267,7 @@ namespace SakaryaRehberiAPI.Controllers
             var json = c.DownloadString(url);
             RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
             return a.rows.First().elements.First().distance.value;
-
+            
         }
         [HttpGet]
         public HttpResponseMessage DeleteLocation(int LocationID)
@@ -353,7 +291,6 @@ namespace SakaryaRehberiAPI.Controllers
         [HttpPost]
         [AllowAnonymous]
         public async Task<HttpResponseMessage> Upload(int locationID, bool isBanner = false)
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
         {
             if (!Request.Content.IsMimeMultipartContent())
                 throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
@@ -386,11 +323,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-<<<<<<< HEAD
-        #endregion
-=======
 
-    }
     public class Distance
     {
         public string text { get; set; }
@@ -414,7 +347,6 @@ namespace SakaryaRehberiAPI.Controllers
     {
         public List<Element> elements { get; set; }
     }
->>>>>>> 3292f2f18f50838f0204945330981b4e67a5d063
 
     public class RootObject
     {
@@ -429,5 +361,4 @@ namespace SakaryaRehberiAPI.Controllers
         public double Longtitude { get; set; }
 
     }
-
-}
+    }}

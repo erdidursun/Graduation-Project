@@ -166,6 +166,7 @@
     Session.User = $ls.getObject("SessionData");
     Session.Create = function (type, data) {
         this.data = data;
+        console.log(data);
         if (data) {
             if (type == 'social') {
 
@@ -184,7 +185,8 @@
                     name: data.Name,
                     access_token: data.access_token,
                     profileImageURL: data.ImgPath,
-                    type_id: data.Type_ID
+                    type_id: data.Type_ID,
+                    type_name:data.TypeName
                 };
 
                 $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
