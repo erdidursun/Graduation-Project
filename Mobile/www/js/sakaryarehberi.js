@@ -127,11 +127,22 @@ angular.module('sakaryarehberi', [
             'menuContent': {
                 templateUrl: "views/app/locations/home.html",
                 controller: 'HomeCtrl',
-                cache:false
+                cache: false
             }
         }
-      
+
     })
+    .state('app.details', {
+        url: "/details/:locationId",
+        views: {
+            'menuContent': {
+                templateUrl: "views/app/locations/details.html",
+                controller: 'DetailCtrl',
+                cache: false
+            }
+        }
+    })
+
     //MISCELLANEOUS
     .state('app.miscellaneous', {
         url: "/miscellaneous",

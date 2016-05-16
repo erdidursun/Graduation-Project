@@ -3,6 +3,7 @@ using SakaryaRehberiAPI.Models;
 using SakaryaRehberiAPI.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Core.Objects.DataClasses;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -19,6 +20,8 @@ namespace SakaryaRehberiAPI.Controllers
     [AllowAnonymous]
     public class APIController : ApiController
     {
+
+
         Coordinat coord = new Coordinat() { Latitude = -1, Longtitude = -1 };
         public HttpResponseMessage getTranslate(string text)
         {
@@ -56,7 +59,7 @@ namespace SakaryaRehberiAPI.Controllers
                         Type_ID = user.UserType_ID,
                         ImgPath = Path.Combine(GetHostName(), user.User_ImgPath),
                         Name = user.User_Name,
-                        TypeName=user.UserType.UserType_Name
+                        TypeName = user.UserType.UserType_Name
                     });
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
@@ -172,42 +175,43 @@ namespace SakaryaRehberiAPI.Controllers
             var hostName = GetHostName();
             var list = (from location in _db.Locations
                         where location.Location_ID == id || id == -1
-                        select location).AsEnumerable<Location>().Select(
-                        l => new
-                        {
-                            Images = from i in l.LocationImages
-                                     select new
-                                     {
+                        select location).ToList();
+            var result = list.AsEnumerable<Location>().Select(
+                   l => new
+                   {
+                       Images = from i in l.LocationImages
+                                select new
+                                {
 
-                                         LocationID = i.Location_ID,
-                                         Info = i.LocationImage_Info,
-                                         Path = Path.Combine(hostName, i.LocationImage_Path)
-                                     },
-                            Comments = from c in l.UserComments
-                                       select new
-                                       {
+                                    LocationID = i.Location_ID,
+                                    Info = i.LocationImage_Info,
+                                    Path = Path.Combine(hostName, i.LocationImage_Path)
+                                },
+                       Comments = from c in l.UserComments
+                                  select new
+                                  {
 
-                                           UserName = c.User.User_Name,
-                                           UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
-                                           Date = c.UserComment_Date,
-                                           Comment = c.UserComment_Comment
-                                       },
-                            ID = l.Location_ID,
-                            Banner = Path.Combine(hostName, l.Location_Banner),
-                            Name = l.Location_Name,
-                            Info = l.Location_Info,
-                            TypeId = l.LocationType_ID,
-                            ImageCount = l.LocationImages.Count,
-                            Latitude = l.Location_Latitude,
-                            Longtitude = l.Location_Longtitude,
-                            TypeName = l.LocationType!=null?l.LocationType.LocationType_Name:"",
-                            CommentCount = l.UserComments.Count,
-                            LikeCount = l.UserLikes.Count,
-                            DistanceToUser =0
-                           
-                        }).OrderBy(u=> u.DistanceToUser).Take(count);
+                                      UserName = c.User.User_Name,
+                                      UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
+                                      Date = c.UserComment_Date,
+                                      Comment = c.UserComment_Comment
+                                  },
+                       ID = l.Location_ID,
+                       Banner = Path.Combine(hostName, l.Location_Banner),
+                       Name = l.Location_Name,
+                       Info = l.Location_Info,
+                       TypeId = l.LocationType_ID,
+                       ImageCount = l.LocationImages.Count,
+                       Latitude = l.Location_Latitude,
+                       Longtitude = l.Location_Longtitude,
+                       TypeName = l.LocationType != null ? l.LocationType.LocationType_Name : "",
+                       CommentCount = l.UserComments.Count,
+                       LikeCount = l.UserLikes.Count,
+                       DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0
 
-            return list;
+                   }).OrderBy(u => u.DistanceToUser).Take(count);
+
+            return result;
 
         }
 
@@ -220,24 +224,34 @@ namespace SakaryaRehberiAPI.Controllers
             _loc.Location_Info = loc.Info;
             _loc.Location_Name = loc.Name;
             _loc.Location_Latitude = loc.Latitude;
-            _loc.Location_Longtitude = loc.Longtitude;          
+            _loc.Location_Longtitude = loc.Longtitude;
             _loc.LocationType_ID = loc.Type_ID;
             _db.Locations.Add(_loc);
             _db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK, getLocationInfo(coord,_loc.Location_ID));
+            return Request.CreateResponse(HttpStatusCode.OK, getLocationInfo(coord, _loc.Location_ID));
         }
 
         [HttpPost]
         public HttpResponseMessage GetLocations(Coordinat coordinat, int page = 1)
         {
-            var list = getLocationInfo(coordinat, -1,page * 90);
-            return Request.CreateResponse(HttpStatusCode.OK, list);
+            try
+            {
+                var list = getLocationInfo(coordinat, -1, page * 90);
+                return Request.CreateResponse(HttpStatusCode.OK, list);
+            }
+            catch (Exception e)
+            {
+
+                return Request.CreateResponse(HttpStatusCode.InternalServerError, e.InnerException);
+
+            }
+
         }
 
         public HttpResponseMessage GetLocationById(int id)
         {
 
-            var list = getLocationInfo(coord,id);
+            var list = getLocationInfo(coord, id);
             if (list != null)
             {
 

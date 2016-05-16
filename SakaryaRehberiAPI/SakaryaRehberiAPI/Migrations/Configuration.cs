@@ -22,7 +22,7 @@ namespace SakaryaRehberiAPI.Migrations
           
             context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 1, LocationType_Name = "Tarihi" });
             context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 2, LocationType_Name = "Doðal Güzellik" });
-            context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 2, LocationType_Name = "Müze" });
+            context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 3, LocationType_Name = "Müze" });
 
             context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 1, Location_Name = "Sülüklü Göl", LocationType_ID = 2, Location_Info = "Test", Location_Latitude = 40.7167f, Location_Longtitude = 30.25f, Location_Banner = "Images/locationBannerImages/1_suluklu.jpg" });
             context.Locations.AddOrUpdate(new Models.Location() { Location_ID = 2, Location_Name = "Maden Deresi Þelalesi", LocationType_ID = 2, Location_Info = "Test", Location_Latitude = 40.838412f, Location_Longtitude = 30.467250f, Location_Banner = "Images/locationBannerImages/1_maden.jpg" });
