@@ -44,9 +44,12 @@ angular.module('sakaryarehberi')
     $scope.user = {};
 })
 
-.controller('HomeCtrl', function (Session, $scope, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
+.controller('HomeCtrl', function (Session,$ionicSlideBoxDelegate, $scope, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
-    $ionicLoading.show({ template: '<ion-spinner icon="bubbles"></ion-spinner><br/>Yükleniyor!' })
+    
+    $scope.like = function () {
+        alert("xd");
+    };
         $scope.locations = [];
         $scope.locationTypes = [];
         Location.GetLocationTypes().then(function (data) {
@@ -55,10 +58,15 @@ angular.module('sakaryarehberi')
         }, function (error) {
             console.log(error);
         });
+        $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Konumunuz Aranıyor.!' })
+
         CurrrentLocation.get(function (Coord) {
             console.log(Coord);
             Location.GetLocations(Coord).then(function (data) {
                 console.log(data);
+                $ionicLoading.hide();
+                $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.!' })
+
                 angular.forEach(data.data, function (value, key) {
                     var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
@@ -92,7 +100,116 @@ angular.module('sakaryarehberi')
         });
 
     })
+.controller('DetailCtrl', function (Session,$ionicModal , $scope, $ionicSlideBoxDelegate,CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
+    $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Yükleniyor!' })
+    var locationId = $stateParams.locationId;
+    var slides = [];
+    Location.GetLocationById(locationId).then(function (data) {
+        $scope.location = data.data[0];
+
+        angular.forEach($scope.location.Images, function (value) {
+            slides.push({ image: value.Path, text: value.Info });
+        });
+        $scope.slides = slides;
+        $ionicLoading.hide();
+        $timeout(function () {
+            $ionicSlideBoxDelegate.update();
+        }, 50);
+    })
+    $scope.slides = [];
+    $scope.comment = {};
+    $scope.myInterval = 5000;
+
+    $scope.open = function () {
+        $ionicModal.fromTemplateUrl('views/app/locations/directions.html', {
+            scope: $scope,
+            animation: 'slide-in-left'
+         
+        }).then(function (modal) {
+       
+            $scope.modal = modal;
+            modal.show();
+        });
+    };
+
+    $scope.like = function (location) {
+
+    }
+    $scope.isVisible = Session.isAuthenticated();
+    $scope.sendComment = function () {
+        $scope.comment.UserId = Session.User.id;
+        $scope.comment.LocationId = $scope.location.ID;
+
+        User.SendComment($scope.comment).then(function (data) {
+            console.log(data);
+            $state.go("home.locationDetails", { locationId: locationId }, { reload: true });
+        });
+    }
+})
+.controller('DirectionCtrl', function ($scope,CurrrentLocation, $timeout) {
+    $scope.latitude= $scope.location.Latitude,
+    $scope.longitude=$scope.location.Longtitude
+    var directionsDisplay = new google.maps.DirectionsRenderer();
+    var directionsService = new google.maps.DirectionsService();
+    var geocoder = new google.maps.Geocoder();
+
+    $scope.$on('mapInitialized', function (event, map) {
+        $scope.map = map;
+        $scope.getDirections("car");
+
+    });
+
+    $scope.getDirections = function (type) {
+        CurrrentLocation.get(function (Coord) {
+            console.log(Coord);
+            console.log($scope.location.Latitude);
+
+            $scope.directions = {
+                origin: new google.maps.LatLng(Coord.Latitude, Coord.Longitude),
+                destination: new google.maps.LatLng($scope.location.Latitude, $scope.location.Longtitude),
+                showList: false
+            }
+            var request = {
+                origin: $scope.directions.origin,
+                destination: $scope.directions.destination,
+                travelMode: google.maps.DirectionsTravelMode.DRIVING
+            };
+            if (type == 'car') {
+                request.travelMode = google.maps.DirectionsTravelMode.DRIVING;
+                $scope.filterDisplayName = "Araçla";
+            }
+            else if (type == 'bicyle') {
+                request.travelMode = google.maps.DirectionsTravelMode.BICYCLING;
+                $scope.filterDisplayName = "Bisikletle";
+
+            }
+            else if (type == 'walk') {
+                request.travelMode = google.maps.DirectionsTravelMode.WALKING;
+                $scope.filterDisplayName = "Yürüyerek";
+
+            }
+            $timeout(function () {
+
+                directionsService.route(request, function (response, status) {
+                    console.log(response);
+                    if (status === google.maps.DirectionsStatus.OK) {
+                        $scope.marker = {};
+                        directionsDisplay.setDirections(response);
+                        directionsDisplay.setMap($scope.map);
+                        directionsDisplay.setPanel(document.getElementById('directionsList'));
+                        $scope.directions.showList = true;
+                    } else {
+                        $scope.filterDisplayName = "Yol Tarifi"
+
+                        swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+                    }
+                });
+            }, 500);
+        })
+
+    };  
+    })
 
 
 
