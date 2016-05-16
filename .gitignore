@@ -18,7 +18,9 @@
 *.lib
 *.sbr
 *.sdf
-Mobile/node_modules*/
+Mobile/node_modules/
+Mobile/platforms/
+Mobile/plugins/
 SakaryaRehberiAPI/SakaryaRehberiAPI/obj*/
 SakaryaRehberiAPI/packages*/
 SakaryaRehberiAPI/.vs*/
