@@ -152,8 +152,14 @@
         $scope.comment.LocationId = $scope.location.ID;
 
         User.SendComment($scope.comment).then(function (data) {
-            console.log(data);
-            $state.go("home.locationDetails", { locationId: locationId }, { reload: true });
+            var newComment = {
+                Comment: data.data.UserComment_Comment,
+                Date: data.data.UserComment_Date,
+                UserImgPath: Session.User.profileImageURL,
+                UserName: Session.User.name
+            }
+            $scope.location.Comments.push(newComment);
+            $scope.comment.Comment = "";
         });
     }
 
