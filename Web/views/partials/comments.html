@@ -1,0 +1,71 @@
+﻿<div class="modal-header">
+    <div class="portlet box green-dark">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-gift"></i>Yorumlar({{location.CommentCount}})
+            </div>
+       </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="blog-single-foot">
+        <div class="blog-post-meta">
+            <div class="blog-comments" style="width:100%; ">
+                <div class="c-comment-list" style="max-height:310px;overflow:auto; ">
+                    <div class="media" ng-repeat="comment in location.Comments">
+                        <div class="media-left">
+                            <a href="#">
+                                <img class="media-object" alt="" ng-src="{{comment.UserImgPath}}">
+                            </a>
+                        </div>
+                        <div class="media-body " style=" width:100%; height:100%">
+                            <span class="ng-binding caption-subject bold uppercase">
+                                <a href="#">{{comment.UserName}}</a>
+                            </span>
+                            <span am-time-ago="comment.Date" class="c-date caption-helper caption font-grey-silver"></span>
+
+                            <div class="media-middle" style=" max-height:100%; max-width:100px; ">
+                                <span>    {{comment.Comment}}</span>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div ng-if="isVisible">
+                <div class="portlet box green-dark margin-top-20 " style="margin-bottom:10px">
+
+                    <div class="portlet-title">
+                        <div class="caption">
+                            <i class="fa fa-gift"></i>Yorum Yap
+                        </div>
+
+                    </div>
+
+                    <!--<h3 class="sbold blog-comments-title">Yorum Yap</h3>-->
+                </div>
+                <form action="#">
+                    <div class="form-group">
+                        <textarea rows="5" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square">;</textarea>
+                    </div>
+
+
+                    <div class="form-group">
+                        <button type="button" class="btn blue uppercase btn-md sbold btn-block" ng-click="sendComment()">Gönder</button>
+                    </div>
+                </form>
+
+
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div class="modal-footer">    
+    <button class="btn btn-warning" type="button" ng-click="close()">Cancel</button>
+</div>

@@ -1,4 +1,13 @@
-﻿<div class="modal-body">
+﻿<div class="modal-header">
+    <div class="portlet box green-dark">
+        <div class="portlet-title">
+            <div class="caption">
+               {{location.Name}}
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
     <div class="row">
         <div class="col-lg-6">
             <ui-gmap-google-map control="map.control" events="map.events" center="map.center" zoom="map.zoom" options="map.options">
@@ -13,4 +22,7 @@
             </div>
         </div>
     </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="close()">Kapat</button>
 </div>

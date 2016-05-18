@@ -17,7 +17,7 @@
     }
 })
 
-.controller("MapCtrl", function ($scope, $rootScope, location, uiGmapIsReady, $timeout) {
+.controller("MapCtrl", function ($scope, $rootScope, location,$modalInstance, uiGmapIsReady, $timeout) {
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
@@ -97,7 +97,9 @@
 
     };
 
-
+    $scope.close = function () {
+        $modalInstance.close();
+    };
 })
 
 .controller("LocationDetailCtrl", function ($scope, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
@@ -112,7 +114,15 @@
         });
     })
     $scope.slides = [];
-    $scope.comment = {};
+
+
+    $scope.comment = { 
+
+
+
+    };
+
+
     $scope.myInterval = 5000;
 
     $scope.open = function (location) {
@@ -124,7 +134,7 @@
             resolve: {
                 location: function () {
 
-                    return { Latitude: location.Latitude, Longtitude: location.Longtitude };
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude,Name:location.Name };
                 }
             },
             size: 'lg'
@@ -135,6 +145,8 @@
 
     }
     $scope.isVisible = Session.isAuthenticated();
+
+
     $scope.sendComment = function () {
         $scope.comment.UserId = Session.User.id;
         $scope.comment.LocationId = $scope.location.ID;
@@ -226,6 +238,27 @@
             }
         });
     };
+
+    $scope.openComment = function (location) {
+
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/partials/comments.html',
+            animation: true,
+            controller: "CommentModalCtrl",
+            size: 'm',
+            backdrop: 'static',
+            keyboard: false,
+            resolve: {
+                location: function () {
+                    return location;
+                }
+            }
+        });
+    };
+
+
+
     $scope.openMap = function (location) {
         console.log(location);
         var modalInstance = $uibModal.open(
@@ -233,11 +266,13 @@
             templateUrl: 'views/partials/map.html',
             animation: true,
             controller: "MapCtrl",
+            backdrop: 'static',
+            keyboard: false,
             windowClass: 'center-modal',
           
             resolve: {
                 location: function () {
-                    return { Latitude: location.Latitude, Longtitude: location.Longtitude };
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude, Name: location.Name };
                 }
             },
             size: 'lg'
@@ -249,6 +284,7 @@
 
 
     }
+
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
             console.log("33");
@@ -275,6 +311,8 @@
         AuthService.logout();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
     };
+
+    //Location Detail 
     $scope.open = function (size) {
         var modalInstance = $uibModal.open({
             animation: $scope.animationsEnabled,
@@ -563,6 +601,7 @@
 
 
 })
+
 .controller("AccountCtrl", function ($scope, $stateParams,Session) {
     var userId = $stateParams.userId;
     if (userId == Session.User.id)
@@ -571,3 +610,31 @@
     $scope.nick = Session.User.name;
     $scope.typename = Session.User.type_name;
 })
+
+.controller("CommentModalCtrl", function ($scope, User, location, $modalInstance, Session) {
+    $scope.isVisible = Session.isAuthenticated();
+    $scope.comment = {};
+    $scope.location = location;
+    $scope.sendComment = function () {
+        $scope.comment.UserId = Session.User.id;
+        $scope.comment.LocationId = $scope.location.ID;
+
+        User.SendComment($scope.comment).then(function (data) {
+            console.log(data);
+            var newComment = {
+                Comment: data.data.UserComment_Comment,
+                Date: data.data.UserComment_Date,
+                UserImgPath:Session.User.profileImageURL,
+                UserName: Session.User.name
+            }
+            $scope.location.Comments.push(newComment);
+            $scope.comment.Comment = "";
+        });
+    }
+    $scope.close = function () {
+        $modalInstance.close();
+    };
+  
+
+})
+
