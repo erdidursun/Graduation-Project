@@ -234,7 +234,7 @@
             animation: true,
             controller: "MapCtrl",
             windowClass: 'center-modal',
-
+          
             resolve: {
                 location: function () {
                     return { Latitude: location.Latitude, Longtitude: location.Longtitude };

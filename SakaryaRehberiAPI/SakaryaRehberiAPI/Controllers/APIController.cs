@@ -21,20 +21,8 @@ namespace SakaryaRehberiAPI.Controllers
     public class APIController : ApiController
     {
 
-
         Coordinat coord = new Coordinat() { Latitude = -1, Longtitude = -1 };
-        public HttpResponseMessage getTranslate(string text)
-        {
-            string from = "tr";
-            string to = "en";
-            String key = "trnsl.1.1.20160404T133544Z.118307a783fa4264.b8bb47bd147e5440f61f898c192922f3e47b93a2";
-            String uri = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=" + key + "&text=" + text + "&lang=" + from + "-" + to + "&format=text";
-            WebClient c = new WebClient();
-            var json = c.DownloadString(uri);
-            return Request.CreateResponse(HttpStatusCode.OK, json);
-        }
-
-
+     
         DBContext _db = new DBContext();
         #region User
 
@@ -102,7 +90,7 @@ namespace SakaryaRehberiAPI.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, "anan");
         }
 
-       
+
 
         [HttpGet]
         public HttpResponseMessage GetUsers(int count = 100)
@@ -148,7 +136,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         public HttpResponseMessage UpdateUser(User user, int UserID)
         {
-            var olduser =_db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            var olduser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
             if (olduser != null)
             {
                 olduser.User_Email = user.User_Email;
@@ -157,8 +145,8 @@ namespace SakaryaRehberiAPI.Controllers
 
                 _db.Users.Add(olduser);
                 _db.SaveChanges();
-           
-            return Request.CreateResponse(HttpStatusCode.OK, "");
+
+                return Request.CreateResponse(HttpStatusCode.OK, "");
             }
             return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
 
@@ -272,16 +260,29 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
+        public HttpResponseMessage AddLocationType(string name)
+        {
+            LocationType _type = new LocationType();
+            _type.LocationType_Name = name;
+             _db.LocationTypes.Add(_type);
+             _db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK, _type);
 
+        }
 
         public int GetDistance(double lat1, double long1, double lat2, double long2)
         {
-            var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
-            WebClient c = new WebClient();
-            var json = c.DownloadString(url);
-            RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
-            return a.rows.First().elements.First().distance.value;
-            
+            if (lat1 > 0 && long1 > 0 && lat2 > 0 && lat2 > 0)
+            {
+                var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
+                WebClient c = new WebClient();
+                var json = c.DownloadString(url);
+                RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
+                return a.rows.First().elements.First().distance.value;
+            }
+            else return 0;
+
+
         }
         [HttpGet]
         public HttpResponseMessage DeleteLocation(int LocationID)
@@ -338,41 +339,42 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
 
-    public class Distance
-    {
-        public string text { get; set; }
-        public int value { get; set; }
-    }
+        public class Distance
+        {
+            public string text { get; set; }
+            public int value { get; set; }
+        }
 
-    public class Duration
-    {
-        public string text { get; set; }
-        public int value { get; set; }
-    }
+        public class Duration
+        {
+            public string text { get; set; }
+            public int value { get; set; }
+        }
 
-    public class Element
-    {
-        public Distance distance { get; set; }
-        public Duration duration { get; set; }
-        public string status { get; set; }
-    }
+        public class Element
+        {
+            public Distance distance { get; set; }
+            public Duration duration { get; set; }
+            public string status { get; set; }
+        }
 
-    public class Row
-    {
-        public List<Element> elements { get; set; }
-    }
+        public class Row
+        {
+            public List<Element> elements { get; set; }
+        }
 
-    public class RootObject
-    {
-        public List<string> destination_addresses { get; set; }
-        public List<string> origin_addresses { get; set; }
-        public List<Row> rows { get; set; }
-        public string status { get; set; }
-    }
-    public class Coordinat
-    {
-        public double Latitude { get; set; }
-        public double Longtitude { get; set; }
+        public class RootObject
+        {
+            public List<string> destination_addresses { get; set; }
+            public List<string> origin_addresses { get; set; }
+            public List<Row> rows { get; set; }
+            public string status { get; set; }
+        }
+        public class Coordinat
+        {
+            public double Latitude { get; set; }
+            public double Longtitude { get; set; }
 
+        }
     }
-    }}
+}
