@@ -2,12 +2,12 @@
     <div class="modal" >
         <div class="mapWrap" data-tap-disabled="true" style="height:400px">
             <div class="col">
-                <map center="{{latitude}},{{longitude}}" zoom="10" style="height:300px;">
+                <map center="{{latitude}},{{longitude}}" zoom="10" options="options" style="height:300px;">
                     <info-window id="1" position="{{latitude}},{{longitude}}" visible="true">
                         <div ng-non-bindable="">
                             <b>{{location.Name}}</b><br>
                             {{location.Info}} <br>
-                            <img ng-repeat="image in location.Images" style="border-radius: 24px;" ng-src="{{image.Path}}" height="50" width="50"></img>
+                            <img ng-repeat="image in location.Images" style="border-radius: 24px;" ng-src="{{image.Path}}" height="50" width="50" />
 
                         </div>
                     </info-window>
@@ -17,7 +17,7 @@
 
         </div>
         <div class="row">
-            <div id="directionsList" ng-show="directions.showList" class="panel panel-primary"></div>
+            <div id="directionsList" ng-if="showList" class="panel panel-primary"></div>
          
         </div>
     </div>

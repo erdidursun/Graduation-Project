@@ -337,6 +337,7 @@ angular.module('sakaryarehberi')
 
     CurrentLocation.get = function (successCB, errorCB) {
         function success(location) {
+            console.log(location);
             Coord.Latitude = location.coords.latitude;
             Coord.Longtitude = location.coords.longitude;
             successCB(Coord);
