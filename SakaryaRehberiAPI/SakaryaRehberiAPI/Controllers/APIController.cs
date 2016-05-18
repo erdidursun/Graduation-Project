@@ -165,42 +165,52 @@ namespace SakaryaRehberiAPI.Controllers
             var list = (from location in _db.Locations
                         where location.Location_ID == id || id == -1
                         select location).ToList();
-            var result = list.AsEnumerable<Location>().Select(
-                   l => new
-                   {
-                       Images = from i in l.LocationImages
-                                select new
-                                {
+            try
+            {
+                var result = list.AsEnumerable().Select(
+                                   l => new
+                                   {
+                                       Images = from i in l.LocationImages
+                                                select new
+                                                {
 
-                                    LocationID = i.Location_ID,
-                                    Info = i.LocationImage_Info,
-                                    Path = Path.Combine(hostName, i.LocationImage_Path)
-                                },
-                       Comments = from c in l.UserComments
-                                  select new
-                                  {
+                                                    LocationID = i.Location_ID,
+                                                    Info = i.LocationImage_Info,
+                                                    Path = Path.Combine(hostName, i.LocationImage_Path)
+                                                },
+                                       Comments = from c in l.UserComments
+                                                  select new
+                                                  {
 
-                                      UserName = c.User.User_Name,
-                                      UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
-                                      Date = c.UserComment_Date,
-                                      Comment = c.UserComment_Comment
-                                  },
-                       ID = l.Location_ID,
-                       Banner = Path.Combine(hostName, l.Location_Banner),
-                       Name = l.Location_Name,
-                       Info = l.Location_Info,
-                       TypeId = l.LocationType_ID,
-                       ImageCount = l.LocationImages.Count,
-                       Latitude = l.Location_Latitude,
-                       Longtitude = l.Location_Longtitude,
-                       TypeName = l.LocationType != null ? l.LocationType.LocationType_Name : "",
-                       CommentCount = l.UserComments.Count,
-                       LikeCount = l.UserLikes.Count,
-                       DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0
+                                                      UserName = c.User.User_Name,
+                                                      UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
+                                                      Date = c.UserComment_Date,
+                                                      Comment = c.UserComment_Comment
+                                                  },
+                                       ID = l.Location_ID,
+                                       Banner = Path.Combine(hostName, l.Location_Banner),
+                                       Name = l.Location_Name,
+                                       Info = l.Location_Info,
+                                       TypeId = l.LocationType_ID,
+                                       ImageCount = l.LocationImages.Count,
+                                       Latitude = l.Location_Latitude,
+                                       Longtitude = l.Location_Longtitude,
+                                       TypeName = l.LocationType != null ? l.LocationType.LocationType_Name : "",
+                                       CommentCount = l.UserComments.Count,
+                                       LikeCount = l.UserLikes.Count,
+                                       DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0
 
-                   }).OrderBy(u => u.DistanceToUser).Take(count);
+                                   }).OrderBy(u => u.DistanceToUser).Take(count);
+                return result;
 
-            return result;
+            }
+            catch (Exception ex)
+            {
+                
+                throw ex;
+            }
+            
+
 
         }
 
