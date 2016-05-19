@@ -615,10 +615,18 @@
 .controller("AccountCtrl", function ($scope, $stateParams,Session) {
     var userId = $stateParams.userId;
     if (userId == Session.User.id)
-        alert("gogogogo");
+        //alert("gogogogo");
     $scope.profileImg = Session.User.profileImageURL;
     $scope.nick = Session.User.name;
     $scope.typename = Session.User.type_name;
+
+    $scope.go = function () {
+
+        $scope.msg = 'clicked';
+    }
+
+    
+
 })
 
 .controller("CommentModalCtrl", function ($scope, User, location, $modalInstance, Session) {
@@ -646,4 +654,3 @@
   
 
 })
-
