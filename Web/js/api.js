@@ -125,5 +125,10 @@
         return func;
 
     }
-    return Location;
+
+    Location.AddLocationType = function (data) {
+        var func = $http.get("http://{apihost}/API/AddLocationType?name=" + data);
+        return func;
+    }
+        return Location;
 })

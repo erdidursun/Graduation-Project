@@ -147,12 +147,16 @@ angular.module('sakaryarehberi')
         });
     }
 })
-.controller('DirectionCtrl', function ($scope,CurrrentLocation, $timeout) {
+.controller('DirectionCtrl', function ($scope, CurrrentLocation, $timeout) {
+
     $scope.latitude= $scope.location.Latitude,
     $scope.longitude=$scope.location.Longtitude
-    var directionsDisplay = new google.maps.DirectionsRenderer();
-    var directionsService = new google.maps.DirectionsService();
-    var geocoder = new google.maps.Geocoder();
+    $scope.options = {
+        scrollwheel: false,
+        disableDoubleClickZoom: true,
+        fullscreenControl: true,
+        tilt: 40,
+    };
 
     $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
@@ -162,17 +166,13 @@ angular.module('sakaryarehberi')
 
     $scope.getDirections = function (type) {
         CurrrentLocation.get(function (Coord) {
-            console.log(Coord);
-            console.log($scope.location.Latitude);
-
-            $scope.directions = {
-                origin: new google.maps.LatLng(Coord.Latitude, Coord.Longitude),
-                destination: new google.maps.LatLng($scope.location.Latitude, $scope.location.Longtitude),
-                showList: false
-            }
+            var directionsDisplay = new google.maps.DirectionsRenderer();
+            var directionsService = new google.maps.DirectionsService();          
+            $scope.showList = false;
+           
             var request = {
-                origin: $scope.directions.origin,
-                destination: $scope.directions.destination,
+                origin: new google.maps.LatLng(Coord.Latitude, Coord.Longtitude),
+                destination: new google.maps.LatLng($scope.latitude, $scope.longitude),
                 travelMode: google.maps.DirectionsTravelMode.DRIVING
             };
             if (type == 'car') {
@@ -190,22 +190,21 @@ angular.module('sakaryarehberi')
 
             }
             $timeout(function () {
-
+                console.log(request);
                 directionsService.route(request, function (response, status) {
-                    console.log(response);
                     if (status === google.maps.DirectionsStatus.OK) {
                         $scope.marker = {};
                         directionsDisplay.setDirections(response);
                         directionsDisplay.setMap($scope.map);
                         directionsDisplay.setPanel(document.getElementById('directionsList'));
-                        $scope.directions.showList = true;
+                        $scope.showList = true;
                     } else {
                         $scope.filterDisplayName = "Yol Tarifi"
 
                         swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
                     }
                 });
-            }, 500);
+            }, 1500);
         })
 
     };  

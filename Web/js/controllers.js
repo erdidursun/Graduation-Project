@@ -17,7 +17,7 @@
     }
 })
 
-.controller("MapCtrl", function ($scope, $rootScope, location, uiGmapIsReady, $timeout) {
+.controller("MapCtrl", function ($scope, $rootScope, location,$modalInstance, uiGmapIsReady, $timeout) {
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
@@ -97,7 +97,9 @@
 
     };
 
-
+    $scope.close = function () {
+        $modalInstance.close();
+    };
 })
 
 .controller("LocationDetailCtrl", function ($scope, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
@@ -132,7 +134,7 @@
             resolve: {
                 location: function () {
 
-                    return { Latitude: location.Latitude, Longtitude: location.Longtitude };
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude,Name:location.Name };
                 }
             },
             size: 'lg'
@@ -150,8 +152,14 @@
         $scope.comment.LocationId = $scope.location.ID;
 
         User.SendComment($scope.comment).then(function (data) {
-            console.log(data);
-            $state.go("home.locationDetails", { locationId: locationId }, { reload: true });
+            var newComment = {
+                Comment: data.data.UserComment_Comment,
+                Date: data.data.UserComment_Date,
+                UserImgPath: Session.User.profileImageURL,
+                UserName: Session.User.name
+            }
+            $scope.location.Comments.push(newComment);
+            $scope.comment.Comment = "";
         });
     }
 
@@ -238,12 +246,15 @@
     };
 
     $scope.openComment = function (location) {
+
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/partials/comments.html',
             animation: true,
             controller: "CommentModalCtrl",
             size: 'm',
+            backdrop: 'static',
+            keyboard: false,
             resolve: {
                 location: function () {
                     return location;
@@ -261,11 +272,13 @@
             templateUrl: 'views/partials/map.html',
             animation: true,
             controller: "MapCtrl",
+            backdrop: 'static',
+            keyboard: false,
             windowClass: 'center-modal',
-
+          
             resolve: {
                 location: function () {
-                    return { Latitude: location.Latitude, Longtitude: location.Longtitude };
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude, Name: location.Name };
                 }
             },
             size: 'lg'
@@ -598,13 +611,21 @@
 .controller("AccountCtrl", function ($scope, $stateParams,Session) {
     var userId = $stateParams.userId;
     if (userId == Session.User.id)
-        alert("gogogogo");
+        //alert("gogogogo");
     $scope.profileImg = Session.User.profileImageURL;
     $scope.nick = Session.User.name;
     $scope.typename = Session.User.type_name;
+
+    $scope.go = function () {
+
+        $scope.msg = 'clicked';
+    }
+
+    
+
 })
 
-.controller("CommentModalCtrl", function ($scope, User, location, Session) {
+.controller("CommentModalCtrl", function ($scope, User, location, $modalInstance, Session) {
     $scope.isVisible = Session.isAuthenticated();
     $scope.comment = {};
     $scope.location = location;
@@ -624,6 +645,9 @@
             $scope.comment.Comment = "";
         });
     }
+    $scope.close = function () {
+        $modalInstance.close();
+    };
+  
 
 })
-

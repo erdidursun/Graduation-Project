@@ -128,6 +128,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\" />
+    <Folder Include="Images\LocationBannerImages\" />
+    <Folder Include="Images\LocationImages\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -158,18 +160,6 @@
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
-    <Content Include="Images\LocationBannerImages\1_maden.jpg" />
-    <Content Include="Images\LocationBannerImages\1_poyrazlar.jpg" />
-    <Content Include="Images\LocationBannerImages\1_suluklu.jpg" />
-    <Content Include="Images\LocationImages\maden2.jpg" />
-    <Content Include="Images\LocationImages\maden3.jpg" />
-    <Content Include="Images\LocationImages\maden4.jpg" />
-    <Content Include="Images\LocationImages\poyrazlar2.jpg" />
-    <Content Include="Images\LocationImages\poyrazlar3.JPG" />
-    <Content Include="Images\LocationImages\poyrazlar4.jpg" />
-    <Content Include="Images\LocationImages\suluklu2.jpg" />
-    <Content Include="Images\LocationImages\suluklu3.jpg" />
-    <Content Include="Images\LocationImages\suluklu4.jpg" />
     <Content Include="Images\UserImages\avatar5.jpg" />
     <Content Include="Images\UserImages\avatar7.jpg" />
     <Content Include="packages.config" />
@@ -183,6 +173,7 @@
     <Content Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
+    <None Include="Properties\PublishProfiles\webdeploy.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

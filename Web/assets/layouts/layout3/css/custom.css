@@ -42,26 +42,29 @@ body {
     border-color: red;
 }
 
-.nav > li > a:hover, .nav > li > a:focus{
-        background-color: transparent; 
-
-
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: transparent;
 }
+
 .nav > li > a > img {
-height:50px;
+    height: 50px;
 }
-.navbar-nav > li{
-    padding:0!important;    
+
+.navbar-nav > li {
+    padding: 0 !important;
 }
+
 .page-header {
-height:auto;
+    height: auto;
 }
-.navbar-nav{
-    height:80px;
+
+.navbar-nav {
+    height: 80px;
 }
- .mt-overlay-6 img {
-        height: 400px;
-    }
+
+.mt-overlay-6 img {
+    height: 400px;
+}
 
 .ui-select-bootstrap .ui-select-choices-row.active > a {
     background-color: #26C281;
@@ -81,21 +84,32 @@ height:auto;
         margin-left: 5px;
     }
 
-  .mt-overlay-6 img {
+    .mt-overlay-6 img {
         height: 300px;
     }
 }
+
 .portfolio-content .cbp-l-filters-button .cbp-filter-item.cbp-filter-item-active {
-background-color:#36918b!important;
+    background-color: #36918b !important;
 }
+
 .center-modal {
     position: fixed;
     top: 10%;
     left: 18.5%;
-    z-index: 1050; 
+    overflow: hidden;
     margin-left: -10%;
+    z-index: 9999
 }
-.page-sidebar .page-sidebar-menu {
 
-        margin-top: 70px;
+.page-sidebar .page-sidebar-menu {
+    margin-top: 70px;
+}
+.modal {
+    z-index: 10050 !important;
+}
+
+.modal-open {
+    overflow: hidden!important;
+    position: relative;
 }
