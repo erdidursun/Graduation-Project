@@ -14,7 +14,7 @@
             <div class="form-body">
                 <ul class="nav nav-pills nav-justified steps">
                     <li ng-class="step==1?'active':''">
-                        <a  data-toggle="tab" class="step">
+                        <a data-toggle="tab" class="step">
                             <span class="number"> 1 </span>
                             <span class="desc">
                                 <i class="fa fa-check"></i> Mekan Bilgileri
@@ -22,7 +22,7 @@
                         </a>
                     </li>
                     <li ng-class="step==2?'active':''">
-                        <a  data-toggle="tab" class="step">
+                        <a data-toggle="tab" class="step">
                             <span class="number"> 2</span>
                             <span class="desc">
                                 <i class="fa fa-check"></i> Mekan Banner
@@ -30,7 +30,7 @@
                         </a>
                     </li>
                     <li ng-class="step==3?'active':''">
-                        <a  data-toggle="tab" class="step">
+                        <a data-toggle="tab" class="step">
                             <span class="number">3 </span>
                             <span class="desc">
                                 <i class="fa fa-check"></i> Mekan Fotoğraflar
@@ -41,7 +41,7 @@
                 <div id="bar" class="progress progress-striped" role="progressbar">
                     <div class="progress-bar progress-bar-success" style="width:{{width}}%"> </div>
                 </div>
-                <div class="tab-content">                  
+                <div class="tab-content">
                     <div ng-class="step==1?'tab-pane active':'tab-pane'" id=" tab1">
                         <h3 class="block">Mekan Bilgilerini Giriniz</h3>
                         <div class="form-group">
@@ -77,7 +77,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea name="content" id="info" placeholder="Yer açıklaması" data-provide="markdown" rows="10" required></textarea>
+                            <textarea name="content" id="info" placeholder="Yer açıklaması" data-provide="markdown" rows="10" required style="width:100%;"></textarea>
                             <div ng-show="form.$submitted || form.info.$touched">
                                 <p ng-show="form.info.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
                                 <p ng-show="form.info.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
@@ -90,7 +90,7 @@
                     <div ng-class="step==2?'tab-pane active':'tab-pane'" id="tab2">
                         <h3 class="block">{{location.Name|uppercase}} Mekanına Banner ekle</h3>
                         <div class="form-group">
-                            <input type="file" nv-file-select="" uploader="uploader2"/><br />
+                            <input type="file" nv-file-select="" uploader="uploader2" /><br />
 
                         </div>
                         <div class="form-group">
@@ -129,7 +129,7 @@
                                             <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
                                             <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                                         </td>
-                                        <td nowrap>                                         
+                                        <td nowrap>
                                             <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
                                                 <span class="glyphicon glyphicon-ban-circle"></span> İptal Et
                                             </button>
@@ -206,7 +206,7 @@
                                             <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
                                             <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
                                         </td>
-                                        <td nowrap>                                        
+                                        <td nowrap>
                                             <button type="button" class="btn btn-warning btn-xs" ng-click="item.cancel()" ng-disabled="!item.isUploading">
                                                 <span class="glyphicon glyphicon-ban-circle"></span> Cancel
                                             </button>

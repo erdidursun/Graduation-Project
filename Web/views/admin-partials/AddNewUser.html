@@ -1,13 +1,17 @@
-﻿
-<div class="row">
-    <div class="col-md-6 col-xs-12 col-lg-4 col-md-offset-4 margin-top-20 ">
-        <form class="register-form" name="form" novalidate>
-            <h3 class=" font-green">
-               Yeni Bir Kullanıcı Ekle
-            </h3>
-            <p class="hint">  </p>
+﻿<div class="modal-header  margin-top-10 ">
+    <div class="portlet box green-dark">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-user"></i>Yeni Kullanıcı Ekle
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="blog-single-foot">
+        <div class="blog-post-meta">
+
             <div class="form-group">
-                <!--<label class="control-label visible-ie8 visible-ie9">Ad Soyad</label>-->
                 <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Ad Soyad" name="username" ng-minlength="6"
                        required ng-model="user.User_Name" />
 
@@ -17,8 +21,8 @@
                     <p ng-show="form.username.$error.minlength" class="alert alert-danger">Ad-Soyad  Çok Kısa</p>
                 </div>
             </div>
+
             <div class="form-group">
-                <!--<label class="control-label visible-ie8 visible-ie9">Email Adress</label>-->
                 <input class="form-control placeholder-no-fix" type="email" required autocomplete="off" id="register_email" placeholder="Email Adres" name="email" ng-model="user.User_Email" />
 
                 <div ng-show="form.$submitted || form.email.$touched">
@@ -30,7 +34,6 @@
             </div>
 
             <div class="form-group">
-                <!--<label class="control-label visible-ie8 visible-ie9">Password</label>-->
                 <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Şifre" name="password" data-ng-model="user.User_Password" />
                 <div ng-show="form.$submitted || form.password.$touched">
                     <p ng-show="form.password.$error.required" class="alert alert-info">Şifre Alanını Doldurunuz</p>
@@ -39,25 +42,29 @@
             </div>
 
             <div class="form-group">
-                <!--<label class="control-label visible-ie8 visible-ie9">Tekrar Şifre :</label>-->
                 <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Tekrar Şifre" name="rpassword" ng-model="rpass" />
                 <p ng-show="rpass!=user.User_Password" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
-
             </div>
 
             <div class="form-group">
 
-                    <select class="form-control" name="select" ng-model="user.UserType_ID">
-                        <option value="">Kullanıcı Tipi...</option>
-                        <option ng-repeat="type in userTypes " value="{{type.UserType_ID}}">{{type.UserType_Name}}</option>
-                         
-                    </select>
+                <select class="form-control" name="select" ng-model="user.UserType_ID">
+                    <option value="">Kullanıcı Tipi...</option>
+                    <option ng-repeat="type in userTypes " value="{{type.UserType_ID}}">{{type.UserType_Name}}</option>
+
+                </select>
             </div>
 
-            <div class="form-actions">
-                <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addnewuser()">Ekle</button>
-            </div>
-        </form>
+        </div>
+
     </div>
+
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase " ng-click="addnewuser()">Ekle</button>
+
+    <button class="btn red btn-primary" type="button" ng-click="close()">Kapat</button>
 
 </div>

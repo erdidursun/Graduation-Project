@@ -373,7 +373,6 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
-
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
     $ocLazyLoad.load({
@@ -465,12 +464,13 @@
 
 })
 
-
 .controller("AdminMainCtrl", function ($scope, Session, $state, Location, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
     $scope.isLogged = false;
+    $scope.user = {};
+
 
     if (Session.isAdmin()) {
         $scope.isLogged = true;
@@ -505,6 +505,7 @@
 
         });
     }
+
     function GetUsers() {
 
         User.GetAll().then(function (data) {
@@ -531,9 +532,6 @@
         });
     }
 
-
-
-
     $scope.DeleteLocation = function (id) {
         console.log(id);
         Location.Delete(id).then(function (data) {
@@ -543,15 +541,13 @@
         });
     }
 
-
-
     $scope.open = function () {
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/admin-partials/addnewuser.html',
             animation: true,
             scope: $scope,
-            size: 'lg',
+            size: 'm',
             windowClass: 'center-modal',
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -565,9 +561,11 @@
                 }]
             }
         });
+        $scope.close = function () {
+            modalInstance.close();
+        };
     };
-
-    $scope.user = {};
+  
     $scope.newLocation = function () {
         var modalInstance = $uibModal.open(
         {
@@ -599,6 +597,11 @@
         User.Register(user);
 
     };
+
+
+  
+
+   
 
 
 })
@@ -649,5 +652,16 @@
         $modalInstance.close();
     };
   
+
+})
+
+.controller("NewLocationTypeCtrl", function ($scope) {
+    
+    $scope.addLocationType = function (data) {
+        console.log(data);
+        var newlocationType = {
+
+        }
+    }
 
 })
