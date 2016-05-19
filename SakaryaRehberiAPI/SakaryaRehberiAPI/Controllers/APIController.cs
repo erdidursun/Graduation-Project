@@ -23,7 +23,7 @@ namespace SakaryaRehberiAPI.Controllers
     {
 
         Coordinat coord = new Coordinat() { Latitude = -1, Longtitude = -1 };
-     
+
         DBContext _db = new DBContext();
         #region User
 
@@ -159,6 +159,34 @@ namespace SakaryaRehberiAPI.Controllers
 
         #region Locations
 
+        private object getComments(ICollection<UserComment> comments)
+        {
+            var hostName = GetHostName();
+
+            var Comments = from c in comments
+                           select new
+                          {
+
+                              UserName = c.User.User_Name,
+                              UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
+                              Date = c.UserComment_Date.AddHours(10),
+                              Comment = c.UserComment_Comment
+                          };
+            return Comments.OrderBy(p=> p.Date);
+        }
+        private object getImages(ICollection<LocationImage> images)
+        {
+            var hostName = GetHostName();
+
+            var Images = from i in images
+                         select new
+                           {
+                               LocationID = i.Location_ID,
+                               Info = i.LocationImage_Info,
+                               Path = Path.Combine(hostName, i.LocationImage_Path)
+                           };
+            return Images;
+        }
         public object getLocationInfo(Coordinat coord, int id, int count = 1)
         {
             var hostName = GetHostName();
@@ -170,23 +198,8 @@ namespace SakaryaRehberiAPI.Controllers
                 var result = list.AsEnumerable().Select(
                                    l => new
                                    {
-                                       Images = from i in l.LocationImages
-                                                select new
-                                                {
-
-                                                    LocationID = i.Location_ID,
-                                                    Info = i.LocationImage_Info,
-                                                    Path = Path.Combine(hostName, i.LocationImage_Path)
-                                                },
-                                       Comments = from c in l.UserComments
-                                                  select new
-                                                  {
-
-                                                      UserName = c.User.User_Name,
-                                                      UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
-                                                      Date = c.UserComment_Date,
-                                                      Comment = c.UserComment_Comment
-                                                  },
+                                       Images = getImages(l.LocationImages),
+                                       Comments = getComments(l.UserComments),
                                        ID = l.Location_ID,
                                        Banner = Path.Combine(hostName, l.Location_Banner),
                                        Name = l.Location_Name,
@@ -206,10 +219,10 @@ namespace SakaryaRehberiAPI.Controllers
             }
             catch (Exception ex)
             {
-                
+
                 throw ex;
             }
-            
+
 
 
         }
@@ -261,6 +274,23 @@ namespace SakaryaRehberiAPI.Controllers
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");
 
         }
+
+
+        public HttpResponseMessage GetCommentByLocationId(int id)
+        {
+            var data = _db.Locations.FirstOrDefault(p => p.Location_ID == id);
+            if (data != null)
+            {
+                var result = getComments(data.UserComments);
+                return Request.CreateResponse(HttpStatusCode.OK, result);
+            }
+            else
+            {
+                return Request.CreateResponse(HttpStatusCode.NotFound,"null");
+
+            }
+
+        }
         public string GetHostName()
         {
             return Request.RequestUri.Scheme + "://" + Request.RequestUri.Authority;
@@ -275,8 +305,8 @@ namespace SakaryaRehberiAPI.Controllers
         {
             LocationType _type = new LocationType();
             _type.LocationType_Name = name;
-             _db.LocationTypes.Add(_type);
-             _db.SaveChanges();
+            _db.LocationTypes.Add(_type);
+            _db.SaveChanges();
             return Request.CreateResponse(HttpStatusCode.OK, _type);
 
         }

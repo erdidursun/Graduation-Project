@@ -11,7 +11,7 @@
     $httpProvider.defaults.headers.put = {};
     $httpProvider.defaults.headers.patch = {};
     $httpProvider.defaults.useXDomain = true;
-
+  
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
     $httpProvider.interceptors.push('httpRequestInterceptor');
@@ -185,7 +185,6 @@
 })
 .run(function ($rootScope, $state, $ls, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
-
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
         $ls.setObject("SessionData", data)
 
@@ -207,4 +206,5 @@
 
     });
 })
+
 ;

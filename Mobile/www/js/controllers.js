@@ -151,17 +151,12 @@ angular.module('sakaryarehberi')
 
     $scope.latitude= $scope.location.Latitude,
     $scope.longitude=$scope.location.Longtitude
-    $scope.options = {
-        scrollwheel: false,
-        disableDoubleClickZoom: true,
-        fullscreenControl: true,
-        tilt: 40,
-    };
 
+  
+   
     $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
         $scope.getDirections("car");
-
     });
 
     $scope.getDirections = function (type) {
