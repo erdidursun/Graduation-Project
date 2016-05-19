@@ -27,6 +27,52 @@ namespace SakaryaRehberiAPI.Controllers
         DBContext _db = new DBContext();
         #region User
 
+        private object getUsers(ICollection<User> users)
+        {
+            var hostName = GetHostName();
+
+            var Users = from u in users
+                        select new
+                        {
+
+                            ID = u.User_ID,
+                            Email = u.User_Email,
+                            SignUpDate = u.User_SignUpDate,
+                            Type_ID = u.UserType_ID,
+                            Type_Name =u.UserType!=null?u.UserType.UserType_Name:"",
+                            ImgPath = u.User_ImgPath.StartsWith("http")?u.User_ImgPath:Path.Combine(hostName,u.User_ImgPath),
+                            Name = u.User_Name,
+                            LikeCount = u.UserLikes.Count,
+                            CommentCount = u.UserComments.Count
+                        };
+            return Users.OrderBy(p => p.SignUpDate);
+        }
+
+        [HttpPost]
+        public HttpResponseMessage AddSocialUser(SocialUser user)
+        {
+            List<User> u = new List<Models.User>();
+            var dbUser = _db.Users.FirstOrDefault(p => p.User_Email == user.Mail);
+            if (dbUser != null)
+            {
+                u.Add(dbUser);
+
+            }
+            else
+            {
+                User _user = new Models.User();
+                _user.User_Email = user.Mail;
+                _user.User_ImgPath = user.ImgPath;
+                _user.User_Password = user.Password;
+                _user.UserType_ID = 1;
+                _user.User_Name = user.Name;
+                _user.User_SignUpDate = DateTime.Now;
+                _db.Users.Add(_user);
+                _db.SaveChanges();              
+                u.Add(_user);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(u));
+        }
         [HttpPost]
         public HttpResponseMessage SendComment(CommentModel comment)
         {
@@ -38,18 +84,9 @@ namespace SakaryaRehberiAPI.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Login(LoginModel model)
         {
-            var user = _db.Users.FirstOrDefault(u => u.User_Email == model.Username && u.User_Password == model.Password);
+            var user = _db.Users.Where(u => u.User_Email == model.Username && u.User_Password == model.Password).ToList();
             if (user != null)
-                return Request.CreateResponse(HttpStatusCode.OK,
-                    new
-                    {
-                        ID = user.User_ID,
-                        Email = user.User_Email,
-                        Type_ID = user.UserType_ID,
-                        ImgPath = Path.Combine(GetHostName(), user.User_ImgPath),
-                        Name = user.User_Name,
-                        TypeName = user.UserType.UserType_Name
-                    });
+                return Request.CreateResponse(HttpStatusCode.OK, getUsers(user));
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
 
@@ -70,48 +107,25 @@ namespace SakaryaRehberiAPI.Controllers
             _user.User_ImgPath = "Images/UserImages/avatar5.jpg";
             _db.Users.Add(_user);
             _db.SaveChanges();
-            var data = new
-            {
-                ID = _user.User_ID,
-                Email = _user.User_Email,
-                SignUpDate = _user.User_SignUpDate,
-                Type_ID = _user.UserType_ID,
-                ImgPath = _user.User_ImgPath,
-                Name = _user.User_Name,
-                LikeCount = _user.UserLikes.Count,
-                CommentCount = _user.UserComments.Count
-
-            };
-            return Request.CreateResponse(HttpStatusCode.OK, data);
+            List<User> _users = new List<User>();
+            _users.Add(_user);
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(_users));
         }
         [HttpGet]
 
         public HttpResponseMessage Register()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, "anan");
+            return Request.CreateResponse(HttpStatusCode.OK, "se");
         }
 
 
 
         [HttpGet]
-        public HttpResponseMessage GetUsers(int count = 100)
+        public HttpResponseMessage getUsers(int count = 100)
         {
-            var user = from u in _db.Users
-                       select new
-                       {
-                           ID = u.User_ID,
-                           Email = u.User_Email,
-                           SignUpDate = u.User_SignUpDate,
-                           Type_ID = u.UserType_ID,
-                           Type_Name = u.UserType.UserType_Name,
-                           ImgPath = u.User_ImgPath,
-                           Name = u.User_Name,
-                           LikeCount = u.UserLikes.Count,
-                           CommentCount = u.UserComments.Count
-                       };
+            var users = (from u in _db.Users select u).ToList();
 
-
-            return Request.CreateResponse(HttpStatusCode.OK, user);
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(users));
         }
 
         [HttpGet]
@@ -162,17 +176,19 @@ namespace SakaryaRehberiAPI.Controllers
         private object getComments(ICollection<UserComment> comments)
         {
             var hostName = GetHostName();
-
+            int addTime=0;
+            if (hostName == "http://http://tommycarter-001-site1.itempurl.com")
+                addTime = 10;
             var Comments = from c in comments
                            select new
                           {
 
                               UserName = c.User.User_Name,
-                              UserImgPath = Path.Combine(hostName, c.User.User_ImgPath),
-                              Date = c.UserComment_Date.AddHours(10),
+                              UserImgPath = c.User.User_ImgPath.StartsWith("http") ? c.User.User_ImgPath : Path.Combine(hostName, c.User.User_ImgPath),
+                              Date = c.UserComment_Date.AddHours(addTime),
                               Comment = c.UserComment_Comment
                           };
-            return Comments.OrderBy(p=> p.Date);
+            return Comments.OrderBy(p => p.Date);
         }
         private object getImages(ICollection<LocationImage> images)
         {
@@ -286,7 +302,7 @@ namespace SakaryaRehberiAPI.Controllers
             }
             else
             {
-                return Request.CreateResponse(HttpStatusCode.NotFound,"null");
+                return Request.CreateResponse(HttpStatusCode.NotFound, "null");
 
             }
 

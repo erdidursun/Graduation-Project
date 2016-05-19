@@ -154,6 +154,7 @@
     <Compile Include="Models\ViewModels\LocationNew.cs" />
     <Compile Include="Models\ViewModels\LoginModel.cs" />
     <Compile Include="Models\ViewModels\RegisterModel.cs" />
+    <Compile Include="Models\ViewModels\SocialUser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
