@@ -25,8 +25,9 @@ namespace SakaryaRehberiAPI.Controllers
         Coordinat coord = new Coordinat() { Latitude = -1, Longtitude = -1 };
 
         DBContext _db = new DBContext();
-        #region User
 
+
+        #region helpers
         private object getUsers(ICollection<User> users)
         {
             var hostName = GetHostName();
@@ -39,155 +40,37 @@ namespace SakaryaRehberiAPI.Controllers
                             Email = u.User_Email,
                             SignUpDate = u.User_SignUpDate,
                             Type_ID = u.UserType_ID,
-                            Type_Name =u.UserType!=null?u.UserType.UserType_Name:"",
-                            ImgPath = u.User_ImgPath.StartsWith("http")?u.User_ImgPath:Path.Combine(hostName,u.User_ImgPath),
+                            Type_Name = u.UserType != null ? u.UserType.UserType_Name : "",
+                            ImgPath = u.User_ImgPath.StartsWith("http") ? u.User_ImgPath : Path.Combine(hostName, u.User_ImgPath),
                             Name = u.User_Name,
                             LikeCount = u.UserLikes.Count,
                             CommentCount = u.UserComments.Count
                         };
             return Users.OrderBy(p => p.SignUpDate);
         }
-
-        [HttpPost]
-        public HttpResponseMessage AddSocialUser(SocialUser user)
+        public string GetHostName()
         {
-            List<User> u = new List<Models.User>();
-            var dbUser = _db.Users.FirstOrDefault(p => p.User_Email == user.Mail);
-            if (dbUser != null)
-            {
-                u.Add(dbUser);
-
-            }
-            else
-            {
-                User _user = new Models.User();
-                _user.User_Email = user.Mail;
-                _user.User_ImgPath = user.ImgPath;
-                _user.User_Password = user.Password;
-                _user.UserType_ID = 1;
-                _user.User_Name = user.Name;
-                _user.User_SignUpDate = DateTime.Now;
-                _db.Users.Add(_user);
-                _db.SaveChanges();              
-                u.Add(_user);
-            }
-            return Request.CreateResponse(HttpStatusCode.OK, getUsers(u));
-        }
-        [HttpPost]
-        public HttpResponseMessage SendComment(CommentModel comment)
-        {
-            var Comment = new UserComment() { Location_ID = comment.LocationId, User_ID = comment.UserId, UserComment_Comment = comment.Comment, UserComment_Date = DateTime.Now };
-            _db.UserComments.Add(Comment);
-            _db.SaveChanges();
-            return Request.CreateResponse(HttpStatusCode.OK, Comment);
-        }
-        [HttpPost]
-        public async Task<HttpResponseMessage> Login(LoginModel model)
-        {
-            var user = _db.Users.Where(u => u.User_Email == model.Username && u.User_Password == model.Password).ToList();
-            if (user != null)
-                return Request.CreateResponse(HttpStatusCode.OK, getUsers(user));
-            else
-                return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
-
+            return Request.RequestUri.Scheme + "://" + Request.RequestUri.Authority;
 
         }
-        [HttpPost]
-
-        public HttpResponseMessage Register(RegisterModel model)
-        {
-
-            User _user = new User();
-
-            _user.User_Email = model.User_Email;
-            _user.User_Name = model.User_Name;
-            _user.User_Password = model.User_Password;
-            _user.User_SignUpDate = DateTime.Now;
-            _user.UserType_ID = model.UserType_ID.Value;
-            _user.User_ImgPath = "Images/UserImages/avatar5.jpg";
-            _db.Users.Add(_user);
-            _db.SaveChanges();
-            List<User> _users = new List<User>();
-            _users.Add(_user);
-            return Request.CreateResponse(HttpStatusCode.OK, getUsers(_users));
-        }
-        [HttpGet]
-
-        public HttpResponseMessage Register()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, "se");
-        }
-
-
-
-        [HttpGet]
-        public HttpResponseMessage getUsers(int count = 100)
-        {
-            var users = (from u in _db.Users select u).ToList();
-
-            return Request.CreateResponse(HttpStatusCode.OK, getUsers(users));
-        }
-
-        [HttpGet]
-        public HttpResponseMessage DeleteUser(int UserID)
-        {
-            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
-            if (user != null)
-            {
-                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
-                _db.SaveChanges();
-                return Request.CreateResponse(HttpStatusCode.OK, "success");
-
-            }
-            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
-
-        }
-
-        public HttpResponseMessage GetUserTypes()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
-
-        }
-
-        public HttpResponseMessage UpdateUser(User user, int UserID)
-        {
-            var olduser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
-            if (olduser != null)
-            {
-                olduser.User_Email = user.User_Email;
-                olduser.User_ImgPath = user.User_ImgPath;
-                olduser.User_Name = user.User_Name;
-
-                _db.Users.Add(olduser);
-                _db.SaveChanges();
-
-                return Request.CreateResponse(HttpStatusCode.OK, "");
-            }
-            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
-
-        }
-
-        #endregion
-
-
-
-        #region Locations
-
         private object getComments(ICollection<UserComment> comments)
         {
             var hostName = GetHostName();
-            int addTime=0;
+            int addTime = 0;
             if (hostName == "http://http://tommycarter-001-site1.itempurl.com")
                 addTime = 10;
             var Comments = from c in comments
                            select new
-                          {
+                           {
 
-                              UserName = c.User.User_Name,
-                              UserImgPath = c.User.User_ImgPath.StartsWith("http") ? c.User.User_ImgPath : Path.Combine(hostName, c.User.User_ImgPath),
-                              Date = c.UserComment_Date.AddHours(addTime),
-                              Comment = c.UserComment_Comment
-                          };
+                               UserName = c.User.User_Name,
+                               UserImgPath = c.User.User_ImgPath.StartsWith("http") ? c.User.User_ImgPath : Path.Combine(hostName, c.User.User_ImgPath),
+                               Date = c.UserComment_Date.AddHours(addTime),
+                               Comment = c.UserComment_Comment,
+                               LocationId = c.Location_ID,
+                               LocationName = c.Location.Location_Name
+
+                           };
             return Comments.OrderBy(p => p.Date);
         }
         private object getImages(ICollection<LocationImage> images)
@@ -196,11 +79,11 @@ namespace SakaryaRehberiAPI.Controllers
 
             var Images = from i in images
                          select new
-                           {
-                               LocationID = i.Location_ID,
-                               Info = i.LocationImage_Info,
-                               Path = Path.Combine(hostName, i.LocationImage_Path)
-                           };
+                         {
+                             LocationID = i.Location_ID,
+                             Info = i.LocationImage_Info,
+                             Path = Path.Combine(hostName, i.LocationImage_Path)
+                         };
             return Images;
         }
         public object getLocationInfo(Coordinat coord, int id, int count = 1)
@@ -242,6 +125,185 @@ namespace SakaryaRehberiAPI.Controllers
 
 
         }
+        public int GetDistance(double lat1, double long1, double lat2, double long2)
+        {
+            if (lat1 > 0 && long1 > 0 && lat2 > 0 && lat2 > 0)
+            {
+                var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
+                WebClient c = new WebClient();
+                var json = c.DownloadString(url);
+                RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
+                return a.rows.First().elements.First().distance.value;
+            }
+            else return 0;
+
+
+        }
+
+
+
+        #endregion
+
+        #region Users
+
+        [HttpPost]
+        public HttpResponseMessage AddSocialUser(SocialUser user)
+        {
+            List<User> u = new List<Models.User>();
+            var dbUser = _db.Users.FirstOrDefault(p => p.User_Email == user.Mail);
+            if (dbUser != null)
+            {
+                u.Add(dbUser);
+
+            }
+            else
+            {
+                User _user = new Models.User();
+                _user.User_Email = user.Mail;
+                _user.User_ImgPath = user.ImgPath;
+                _user.User_Password = user.Password;
+                _user.UserType_ID = 1;
+                _user.User_Name = user.Name;
+                _user.User_SignUpDate = DateTime.Now;
+                _db.Users.Add(_user);
+                _db.SaveChanges();
+                u.Add(_user);
+            }
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(u));
+        }
+
+        [HttpPost]
+        public HttpResponseMessage SendComment(CommentModel comment)
+        {
+            var Comment = new UserComment() { Location_ID = comment.LocationId, User_ID = comment.UserId, UserComment_Comment = comment.Comment, UserComment_Date = DateTime.Now };
+            _db.UserComments.Add(Comment);
+            _db.SaveChanges();
+            return Request.CreateResponse(HttpStatusCode.OK, Comment);
+        }
+
+        [HttpPost]
+        public async Task<HttpResponseMessage> Login(LoginModel model)
+        {
+            var user = _db.Users.Where(u => u.User_Email == model.Username && u.User_Password == model.Password).ToList();
+            if (user != null)
+                return Request.CreateResponse(HttpStatusCode.OK, getUsers(user));
+            else
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
+
+
+        }
+
+        [HttpPost]
+        public HttpResponseMessage Register(RegisterModel model)
+        {
+
+            User _user = new User();
+            var hostName = GetHostName();
+            _user.User_Email = model.User_Email;
+            _user.User_Name = model.User_Name;
+            _user.User_Password = model.User_Password;
+            _user.User_SignUpDate = DateTime.Now;
+            _user.UserType_ID = model.UserType_ID.Value;
+            _user.User_ImgPath = "Images/UserImages/avatar5.jpg";
+            _db.Users.Add(_user);
+            _db.SaveChanges();
+            var data = new
+            {
+                ID = _user.User_ID,
+                Email = _user.User_Email,
+                SignUpDate = _user.User_SignUpDate,
+                Type_ID = _user.UserType_ID,
+                Type_Name = _user.UserType != null ? _user.UserType.UserType_Name : "",
+                ImgPath = _user.User_ImgPath.StartsWith("http") ? _user.User_ImgPath : Path.Combine(hostName, _user.User_ImgPath),
+                Name = _user.User_Name,
+                Password = _user.User_Password,
+                LikeCount = _user.UserLikes.Count,
+                CommentCount = _user.UserComments.Count
+            };
+            return Request.CreateResponse(HttpStatusCode.OK, data);
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserById(int userId)
+        {
+            var user = (from u in _db.Users where u.User_ID == userId select u).ToList();
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(user));
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserComments(int userId)
+        {
+            var comments = (from comment in _db.UserComments
+                            where comment.User_ID == userId
+                            select comment).ToList();
+
+
+
+
+            return Request.CreateResponse(HttpStatusCode.OK, getComments(comments));
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage Register()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, "se");
+        }
+
+        [HttpGet]
+        public HttpResponseMessage getUsers(int count = 100)
+        {
+            var users = (from u in _db.Users select u).ToList();
+
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(users));
+        }
+
+        [HttpGet]
+        public HttpResponseMessage DeleteUser(int UserID)
+        {
+            var user = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (user != null)
+            {
+                _db.Entry(user).State = System.Data.Entity.EntityState.Deleted;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, "success");
+
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage GetUserTypes()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK, _db.UserTypes.ToList());
+
+        }
+
+        [HttpGet]
+        public HttpResponseMessage UpdateUser(User user, int UserID)
+        {
+            var olduser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (olduser != null)
+            {
+                olduser.User_Email = user.User_Email;
+                olduser.User_ImgPath = user.User_ImgPath;
+                olduser.User_Name = user.User_Name;
+
+                _db.Users.Add(olduser);
+                _db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, "");
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        }
+
+        #endregion
+
+        #region Locations
+
 
 
         [HttpPost]
@@ -307,11 +369,7 @@ namespace SakaryaRehberiAPI.Controllers
             }
 
         }
-        public string GetHostName()
-        {
-            return Request.RequestUri.Scheme + "://" + Request.RequestUri.Authority;
 
-        }
 
         public HttpResponseMessage GetLocationTypes()
         {
@@ -328,20 +386,6 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-        public int GetDistance(double lat1, double long1, double lat2, double long2)
-        {
-            if (lat1 > 0 && long1 > 0 && lat2 > 0 && lat2 > 0)
-            {
-                var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
-                WebClient c = new WebClient();
-                var json = c.DownloadString(url);
-                RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
-                return a.rows.First().elements.First().distance.value;
-            }
-            else return 0;
-
-
-        }
         [HttpGet]
         public HttpResponseMessage DeleteLocation(int LocationID)
         {
@@ -357,12 +401,7 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-        #endregion
-
-
-
         [HttpPost]
-        [AllowAnonymous]
         public async Task<HttpResponseMessage> Upload(int locationID, bool isBanner = false)
         {
             if (!Request.Content.IsMimeMultipartContent())
@@ -396,6 +435,9 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
+        #endregion
+
+        #region distance
 
         public class Distance
         {
@@ -435,4 +477,5 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
     }
+        #endregion
 }
