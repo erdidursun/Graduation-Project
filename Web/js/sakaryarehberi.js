@@ -130,24 +130,7 @@
              url: "/admin",
              cache: false,
              templateUrl: 'views/adminmain.html',
-             controller: "AdminMainCtrl",
-             resolve: {
-                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
-                     return $ocLazyLoad.load({
-                         name: 'sakaryarehberi',
-                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
-                         files: [
-                             'assets/layouts/layout2/css/layout.min.css',
-                             'assets/layouts/layout2/css/themes/default.min.css',
-                             'assets/layouts/layout2/css/custom.min.css',
-                             'assets/layouts/layout2/scripts/layout.min.js',
-                             'assets/layouts/layout2/quick-sidebar.min.js',
-                             'assets/layouts/layout2/css/themes/blue.min.css'
-
-                         ]
-                     });
-                 }]
-             }
+             controller: "AdminMainCtrl"       
          })
     .state('admin.locations', {
         url: "/locations",
@@ -191,7 +174,7 @@
     ;
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope, $state, $ls, AUTH_EVENTS, AuthService, amMoment) {
+.run(function ($rootScope,$location, $state, $ls,$window, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
         $ls.setObject("SessionData", data)
@@ -208,11 +191,8 @@
 
     });
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $state.go("home.locations", {}, { reload: true });
-
-
+        $window.location.reload();
 
     });
 })
 
-;

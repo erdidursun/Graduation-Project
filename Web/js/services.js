@@ -132,7 +132,7 @@
         }
     };
 })
-.factory('AuthService', function ($rootScope, Session, AUTH_EVENTS, $http, $ls, $firebaseAuth, $httpParamSerializerJQLike) {
+.factory('AuthService', function ($rootScope,User, Session, AUTH_EVENTS, $http, $ls, $firebaseAuth, $httpParamSerializerJQLike) {
 
     var authService = {};
 
@@ -148,9 +148,15 @@
     };
     authService.socialLogin = function (provider, callback) {
         this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-            Session.Create("social", authData)
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, authData);
-
+            var _data = {
+                ProviderName: authData.provider,
+                Mail: authData.uid,
+                Password: authData["" + authData.provider + ""].accessToken,
+                Name: authData["" + authData.provider + ""].displayName,
+                ImgPath: authData["" + authData.provider + ""].profileImageURL
+            }
+            console.log(_data);
+            User.SocialLogin(_data);
         }).catch(function (error) {
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
         });
@@ -165,42 +171,26 @@
     var Session = {};
     Session.User = $ls.getObject("SessionData");
     Session.Create = function (type, data) {
-        this.data = data;
         console.log(data);
+        this.data = data;
         if (data) {
-            if (type == 'social') {
+            Session.User = {
+                loginType: type,
+                id: data.ID,
+                name: data.Name,
+                profileImageURL: data.ImgPath,
+                type_id: data.Type_ID,
+                type_name: data.TypeName
+            };
 
-                var provider = data["" + data.provider + ""];
-                Session.User = {
-                    id: provider.id,
-                    name: provider.displayName,
-                    access_token: provider.accessToken,
-                    profileImageURL: provider.profileImageURL
-                };
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
-            }
-            else if (type == 'form') {
-                Session.User = {
-                    id: data.ID,
-                    name: data.Name,
-                    access_token: data.access_token,
-                    profileImageURL: data.ImgPath,
-                    type_id: data.Type_ID,
-                    type_name:data.TypeName
-                };
-
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
-            }
-            else {
-                Session.User = null;
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
-            }
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
         }
         else {
             Session.User = null;
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
         }
     }
+
     Session.Destroy = function () {
         User = null;
         data = null;

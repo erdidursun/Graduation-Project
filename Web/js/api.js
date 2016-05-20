@@ -10,7 +10,7 @@
         var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
                     if (data)
-                        Session.Create("form", data.data);
+                        Session.Create("form", data.data[0]);
                     else
                         Session.Create("form", null);
 
@@ -21,6 +21,23 @@
                 });
     };
 
+
+
+    User.SocialLogin = function (data) {
+        var data = $httpParamSerializerJQLike(data);
+        var func = $http.post("http://{apihost}/api/AddSocialUser", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (data) {
+                    if (data)
+                        Session.Create("social", data.data[0]);
+                    else
+                        Session.Create("social", null);
+
+
+                }, function (error) {
+                    Session.Create("social", null);
+
+                });
+    };
     User.Register = function (user) {
         user.User_Password = md5.createHash(user.User_Password);
 

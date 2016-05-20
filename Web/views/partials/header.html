@@ -9,17 +9,17 @@
                         </a>
                     </li>
 
-                    <li style="margin-top:10px;margin-right:5px" ng-show="isLogged===false" class="pull-right">
-                        <a ui-sref="home.register" ui-sref-opts="{reload: true}" class="btn btn-sm btn-block btn-circle-right bg-green-jungle bg-font-green-jungle">
-                            <i class="fa fa-registered"></i>Kayıt Ol
+                    <li style="margin-top:20px; margin-right:5px" ng-if="isLogged===false" class="pull-right">
+                        <a ui-sref="home.register" ui-sref-opts="{reload: true}" style="padding-top: 10px; padding-bottom: 10px;" class=" btn btn-sm btn-block btn-circle-right bg-green-jungle bg-font-green-jungle">
+                            <i class="fa fa-registered margin-left-10"></i>Kayıt Ol
                         </a>
                     </li>
-                    <li style="margin-top:10px" class="pull-right" ng-show="isLogged===false">
-                        <a ui-sref="home.login" ui-sref-opts="{reload: true}" class="btn btn-sm btn-block btn-circle-left bg-blue-steel bg-font-blue-steel">
+                    <li style="margin-top:20px" class="pull-right" ng-if="isLogged===false">
+                        <a ui-sref="home.login" ui-sref-opts="{reload: true}" class="btn btn-sm btn-block btn-circle-left bg-blue-steel bg-font-blue-steel" style="padding-top: 10px; padding-bottom: 10px;">
                             <i class="fa fa-sign-in right"></i>Giriş Yap
                         </a>
                     </li>
-                    <li class="dropdown dropdown-user dropdown-dark pull-right" ng-show="isLogged===true">
+                    <li class="dropdown dropdown-user dropdown-dark pull-right" ng-if="isLogged===true">
                         <ul class="nav navbar-nav pull-right">
                             <li class="dropdown dropdown-user">
                                 <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">

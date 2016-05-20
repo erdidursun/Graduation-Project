@@ -188,19 +188,16 @@
         Coord.Longtitude = location.coords.longitude;
 
         Location.GetLocations(Coord).then(function (data) {
-            console.log(data);
             angular.forEach(data.data, function (value, key) {
 
                 var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
                 if (value.DistanceToUser > 0) {
                     var t=(value.DistanceToUser / 1000);
-                    console.log(t);
                     value.DistanceToUser=t;
                     loc.DistanceToUser = t;
 
                 }
-                console.log(loc.DistanceToUser)
                 $scope.model.push(loc);
                 $scope.locations.push(value);
 
@@ -215,7 +212,6 @@
         });     
     }, function (error) {
         Location.GetLocations().then(function (data) {
-            console.log(data);
             angular.forEach(data.data, function (value, key) {
                 $scope.locations.push(value);
                 $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
@@ -266,7 +262,6 @@
 
 
     $scope.openMap = function (location) {
-        console.log(location);
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/partials/map.html',
@@ -293,7 +288,6 @@
 
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
-            console.log("33");
             swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
 
         }
@@ -314,6 +308,7 @@
 
 
     $scope.logout = function (provider) {
+        $scope.isLogged = false;
         AuthService.logout();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
     };
@@ -424,7 +419,6 @@
     if (location) {
         $scope.step = $ls.get("Step");
         $scope.location = location;
-        console.log($scope.location.ID);
         $scope.uploader2.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
         $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID;
 
@@ -436,7 +430,6 @@
     });
     $scope.addNewLocation = function () {
         $scope.location.Info = $("#info").data('markdown').parseContent();
-        console.log($scope.location);
         Location.Add($scope.location).then(function (data) {
             $scope.location = data.data[0];
             $ls.setObject("Location", $scope.location);
@@ -471,9 +464,21 @@
     $scope.isLogged = false;
     $scope.user = {};
 
-
     if (Session.isAdmin()) {
         $scope.isLogged = true;
+        $ocLazyLoad.load({
+            name: 'sakaryarehberi',
+            insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+            files: [
+                'assets/layouts/layout2/css/layout.min.css',
+                'assets/layouts/layout2/css/themes/default.min.css',
+                'assets/layouts/layout2/css/custom.min.css',
+                'assets/layouts/layout2/scripts/layout.min.js',
+                'assets/layouts/layout2/quick-sidebar.min.js',
+                'assets/layouts/layout2/css/themes/blue.min.css'
+
+            ]
+        });
         $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
         $scope.nick = Session.User.name;
     }
@@ -533,7 +538,6 @@
     }
 
     $scope.DeleteLocation = function (id) {
-        console.log(id);
         Location.Delete(id).then(function (data) {
             $state.go("admin.locations", {}, { reload: true });
         }, function (e) {
@@ -593,7 +597,6 @@
 
     $scope.addnewuser = function () {
         var user = angular.copy($scope.user);
-        console.log(user);
         User.Register(user);
 
     };
@@ -637,7 +640,6 @@
         $scope.comment.LocationId = $scope.location.ID;
 
         User.SendComment($scope.comment).then(function (data) {
-            console.log(data);
             var newComment = {
                 Comment: data.data.UserComment_Comment,
                 Date: data.data.UserComment_Date,
@@ -655,13 +657,11 @@
 
 })
 
-.controller("NewLocationTypeCtrl", function ($scope) {
-    
-    $scope.addLocationType = function (data) {
-        console.log(data);
-        var newlocationType = {
-
-        }
+.controller("NewLocationTypeCtrl", function ($scope, Location) {
+    $scope.name = "";
+    $scope.addLocationType = function () {
+        console.log($scope.name);
+        Location.AddLocationType($scope.name);
     }
 
 })
