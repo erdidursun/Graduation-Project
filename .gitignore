@@ -21,6 +21,8 @@
 Mobile/node_modules/
 Mobile/platforms/
 Mobile/plugins/
+SakaryaRehberiAPI/.nuget/
+SakaryaRehberiAPI/packages/
 SakaryaRehberiAPI/SakaryaRehberiAPI/obj*/
 SakaryaRehberiAPI/SakaryaRehberiAPI/Images*/
 SakaryaRehberiAPI/SakaryaRehberiAPI/[Bb]in
