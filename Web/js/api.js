@@ -9,6 +9,8 @@
         });
         var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
+                    swal({ title: "Başarılı", text: "Giriş Başarılı", type: "success", confirmButtonText: "Tamam" });
+                         
                     if (data)
                         Session.Create("form", data.data[0]);
                     else
@@ -16,6 +18,8 @@
 
 
                 }, function (error) {
+                    swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
+
                     Session.Create("form", null);
 
                 });
@@ -43,10 +47,15 @@
 
         var func = $http.post("http://{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                       .then(function (data) {
-                          console.log(data);
+                          swal({ title: "Başarılı", text: "Başarıyla Kayıt Oldunuz. Giriş Yapılıyor.", type: "success", confirmButtonText: "Tamam" }
+                              , function () {
+                                  User.Login(data.data.Email, data.data.Password);
+                              });
+
 
                       }, function (error) {
-                          console.log(error);
+                          swal({ title: "Başarısız", text: "Kayıt Olma Esnasında Bir hata oluştu", type: "error", confirmButtonText: "Tamam" });
+                             
                       });
     }
 
@@ -62,7 +71,18 @@
         var func = $http.get("http://{apihost}/API/GetUsers", { headers: { 'Content-Type': 'application/json' } })
         return func;
     }
-
+    User.GetUserById = function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserById?userId=" + id).then(function (data) {
+            return data.data[0];
+        })
+        return func;
+    }
+    User.GetUserByComments= function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserComments?userId=" + id).then(function (data) {
+            return data.data;
+        })
+        return func;
+    }
     User.Delete = function (id) {
         var data = {
             UserID: id
@@ -147,5 +167,5 @@
         var func = $http.get("http://{apihost}/API/AddLocationType?name=" + data);
         return func;
     }
-        return Location;
+    return Location;
 })

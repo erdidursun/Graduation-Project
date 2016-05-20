@@ -17,7 +17,7 @@
     }
 })
 
-.controller("MapCtrl", function ($scope, $rootScope, location,$modalInstance, uiGmapIsReady, $timeout) {
+.controller("MapCtrl", function ($scope, $rootScope, location, $modalInstance, uiGmapIsReady, $timeout) {
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
@@ -116,7 +116,7 @@
     $scope.slides = [];
 
 
-    $scope.comment = { 
+    $scope.comment = {
 
 
 
@@ -134,7 +134,7 @@
             resolve: {
                 location: function () {
 
-                    return { Latitude: location.Latitude, Longtitude: location.Longtitude,Name:location.Name };
+                    return { Latitude: location.Latitude, Longtitude: location.Longtitude, Name: location.Name };
                 }
             },
             size: 'lg'
@@ -193,8 +193,8 @@
                 var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
                 if (value.DistanceToUser > 0) {
-                    var t=(value.DistanceToUser / 1000);
-                    value.DistanceToUser=t;
+                    var t = (value.DistanceToUser / 1000);
+                    value.DistanceToUser = t;
                     loc.DistanceToUser = t;
 
                 }
@@ -207,9 +207,9 @@
                 cache: false
             });
 
-        },function (error) {
+        }, function (error) {
             console.log(error);
-        });     
+        });
     }, function (error) {
         Location.GetLocations().then(function (data) {
             angular.forEach(data.data, function (value, key) {
@@ -270,7 +270,7 @@
             backdrop: 'static',
             keyboard: false,
             windowClass: 'center-modal',
-          
+
             resolve: {
                 location: function () {
                     return { Latitude: location.Latitude, Longtitude: location.Longtitude, Name: location.Name };
@@ -303,7 +303,7 @@
         $scope.isLogged = true;
         $scope.profileImg = Session.User.profileImageURL;
         $scope.nick = Session.User.name;
-        $scope.userID=Session.User.id;
+        $scope.userID = Session.User.id;
     }
 
 
@@ -464,7 +464,7 @@
     $scope.users = {};
     $scope.userTypes = {};
     $scope.isLogged = false;
-   
+
     if (Session.isAdmin()) {
         $scope.isLogged = true;
         $ocLazyLoad.load({
@@ -612,20 +612,37 @@
 
 })
 
-.controller("AccountCtrl", function ($scope, $stateParams,Session) {
+.controller("AccountCtrl", function ($scope, $stateParams, Session, User, FileUploader) {
     var userId = $stateParams.userId;
-    if (userId == Session.User.id)
-        //alert("gogogogo");
-    $scope.profileImg = Session.User.profileImageURL;
-    $scope.nick = Session.User.name;
-    $scope.typename = Session.User.type_name;
+    $scope.isSelf = false;
+    if (Session.isAuthenticated() && userId == Session.User.id)
+        $scope.isSelf = true;
+    else
+        $scope.isSelf = false;
 
+
+    User.GetUserById(userId).then(function (data) {
+
+        $scope.user = data;
+    });
+
+
+    User.GetUserByComments(userId).then(function (data) {
+        $scope.comments = data;
+    });
     $scope.go = function () {
 
         $scope.msg = 'clicked';
     }
 
-    
+    $scope.uploader = new FileUploader();
+    $scope.uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
 
 })
 
@@ -641,7 +658,7 @@
             var newComment = {
                 Comment: data.data.UserComment_Comment,
                 Date: data.data.UserComment_Date,
-                UserImgPath:Session.User.profileImageURL,
+                UserImgPath: Session.User.profileImageURL,
                 UserName: Session.User.name
             }
             $scope.location.Comments.push(newComment);
@@ -651,6 +668,6 @@
     $scope.close = function () {
         $modalInstance.close();
     };
-  
+
 
 })

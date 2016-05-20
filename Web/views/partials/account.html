@@ -7,17 +7,17 @@
                 <div class="portlet light profile-sidebar-portlet  ">
                     <!-- SIDEBAR USERPIC -->
                     <div class="profile-userpic">
-                        <img ng-src="{{profileImg}}" class="img-responsive" alt="">
+                        <img ng-src="{{user.ImgPath}}" class="img-responsive" alt="">
                     </div>
                     <!-- END SIDEBAR USERPIC -->
                     <!-- SIDEBAR USER TITLE -->
                     <div class="profile-usertitle ">
-                        <div class="profile-usertitle-name"> {{nick}} </div>
-                        <div class="profile-usertitle- "> {{typename}} </div>
+                        <div class="profile-usertitle-name"> {{user.Name}} </div>
+                        <div class="profile-usertitle- "> {{user.TypeName}} </div>
                     </div>
-                    <br/>
+                    <br />
 
-                  
+
                     <!-- END MENU -->
                 </div>
                 <!-- END PORTLET MAIN -->
@@ -25,18 +25,17 @@
                 <div class="portlet light ">
                     <!-- STAT -->
                     <div class="row list-separated profile-stat">
-                        <!--<div class="col-md-4 col-sm-4 col-xs-6">
-                            <div class="uppercase profile-stat-title"> 37 </div>
-                            <div class="uppercase profile-stat-text"> Projects </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                           
+
+                            <div class="uppercase profile-stat-title"><a ng-href="#tab2" data-toggle="tab" ng-click='go()'>{{user.CommentCount}} </a> </div>
+                            <div class="uppercase profile-stat-text"> Yorum </div>
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-6">
-                            <div class="uppercase profile-stat-title"> 51 </div>
-                            <div class="uppercase profile-stat-text"> Tasks </div>
+                        <div class="col-md-6 col-sm-6 col-xs-6">
+                            <div class="uppercase profile-stat-title"><a ng-href="#tab3" data-toggle="tab" ng-click='go()'> {{user.LikeCount}} </a></div>
+                            <div class="uppercase profile-stat-text"> Beğeni </div>
                         </div>
-                        <div class="col-md-4 col-sm-4 col-xs-6">
-                            <div class="uppercase profile-stat-title"> 61 </div>
-                            <div class="uppercase profile-stat-text"> Uploads </div>
-                        </div>-->
+                       
                     </div>
                     <!-- END STAT -->
                     <div>
@@ -74,11 +73,15 @@
                                         <a ng-href="#tab1" data-toggle="tab" ng-click='go()'>Kullanıcı Bilgileri</a>
                                     </li>
                                     <li>
-                                        <a ng-href="#tab2" data-toggle="tab" ng-click='go()'>Beğenilen Yerler</a>
+                                        <a ng-href="#tab2" data-toggle="tab" ng-click='go()'>Yorumlar</a>
                                     </li>
                                     <li>
-                                        <a ng-href="#tab3" data-toggle="tab" ng-click='go()'>Şifre Değiştir</a>
+                                        <a ng-href="#tab3" data-toggle="tab" ng-click='go()'>Beğeniler</a>
                                     </li>
+                                    <li>
+                                        <a ng-href="#tab4" data-toggle="tab" ng-click='go()'>Şifre Değiştir</a>
+                                    </li>
+
 
                                 </ul>
                             </div>
@@ -88,20 +91,19 @@
                                     <div class="tab-pane active" id="tab1">
                                         <form action="#" role="form">
                                             <div class="form-group">
-                                                <div class="fileinput fileinput-new" data-provides="fileinput">
-                                                    <div class="fileinput-new thumbnail" style="width: 200px; height: 150px;">
-                                                        <img src="http://www.placehold.it/200x150/EFEFEF/AAAAAA&amp;text=no+image" alt="" />
-                                                    </div>
-                                                    <div class="fileinput-preview fileinput-exists thumbnail" style="max-width: 200px; max-height: 150px;"> </div>
+                                                <div class="fileinput fileinput-exists" data-provides="fileinput">
+                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
+                                                        <img ng-src="{{profileImg}} " style="height:100%"></div>
                                                     <div>
-                                                        <span class="btn default btn-file">
-                                                            <span class="fileinput-new"> Fotoğraf Seç </span>
+                                                        <span class="btn blue btn-outline btn-file">
+                                                            <span class="fileinput-new"> Profil Resmi Seç </span>
+                                                            <span class="fileinput-exists">Profil Resmini Değiştir </span>
+                                                            <input type="hidden" value="" name=""><input type="file" name="...">
                                                         </span>
-                                                        <a href="javascript:;" class="btn default fileinput-exists" data-dismiss="fileinput"> Sil </a>
-                                                        <a href="javascript:;" class="btn green"> Kaydet </a>
-
+                                                        <a href="javascript:;" class="btn green fileinput-exists" data-dismiss="fileinput"> Kaydet </a>
                                                     </div>
                                                 </div>
+                                               
 
                                             </div>
 
@@ -122,9 +124,26 @@
                                         </form>
                                     </div>
                                     <!-- TAB2 -->
+                                    <div class="tab-pane" id="tab2">
+                                        <div class="row" ng-repeat="comment in comments">
+                                            <div class="col-lg-8 col-lg-offset-2">
+                                                <p class="bg-white bg-font-white">{{comment.UserName}} 
+                                                <a ui-sref="home.locationDetails({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
+                                                 mekanına <span am-time-ago="comment.Date" style="font-style: italic;text-decoration: underline;"></span>    yorum yaptı. </p>
 
-                                    <!-- TAB3 -->
-                                    <div class="tab-pane" id="tab3">
+                                                <blockquote class="bg-white bg-font-white">
+                                                    <i class="fa fa-commenting"></i>
+                                                    {{comment.Comment}}
+                                                </blockquote>
+                                            </div>
+                                         
+                                        </div>
+                                        <hr />
+
+
+                                    </div>
+                                    <!-- TAB4 -->
+                                    <div class="tab-pane" id="tab4">
                                         <form action="#">
                                             <div class="form-group">
                                                 <label class="control-label">Mevcut Şifre</label>
@@ -144,7 +163,7 @@
                                             </div>
                                         </form>
                                     </div>
-                              
+
                                 </div>
                             </div>
                         </div>
