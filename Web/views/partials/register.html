@@ -45,18 +45,7 @@
                 <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Re-type Your Password" name="rpassword" ng-model="rpass" />
                 <p ng-show="rpass!=user.User_Password" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
 
-             </div>
-            <div class="form-group margin-top-20 margin-bottom-20">
-                <label class="check">
-                    <input type="checkbox" name="tnc" required="" ng-model="master" /> Okudum ve kabul ediyorum
-                    <a href="javascript:;"> Terms of Service </a> &
-                    <a href="javascript:;"> Privacy Policy </a>
-                </label>
-                <div ng-show="form.tnc.$touched" ng-checked="master">
-                    <p ng-show="!master" class="alert alert-info">Sözleşmeyi Kabul Ediniz.</p>
-                </div>
-
-            </div>
+             </div>         
             <div class="form-actions">
                 <button type="submit" ng-disabled="form.$invalid"  id="register-submit-btn" class="btn btn-success uppercase pull-right" ng-click="register()">Submit</button>
             </div>

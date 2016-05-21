@@ -1,30 +1,59 @@
-<ion-view class="signup-view auth-view" cache-view="false">
-  <ion-content scroll="false">
-    <div class="row">
-      <div class="col col-center">
-        <div class="card sign-up-container">
-          <form name="signup_form" class="" novalidate>
-            <div class="item item-body">
-              <label class="item item-input">
-                <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
-              </label>
-              <label class="item item-input" show-hide-container>
-                <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
-              </label>
+﻿<ion-view class="signup-view auth-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-center">
+                <div class="card sign-up-container">
+                    <form name="signup_form" class="" novalidate>
+                        <div class="item item-body">
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Ad Soyad</span>
+                                <input type="text" required placeholder="Ad Soyad" ng-minlength="6" name="username" ng-model="user.User_Name">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Email</span>
+                                <input type="email" required placeholder="Email" ng-minlength="6" name="email" ng-model="user.User_Email">
+                            </label>
+            
+                            <label class="item item-input item-floating-label" >
+                                <span class="input-label">Sifre</span>
+                                <input type="password" required placeholder="Sifre" ng-minlength="6" name="password" data-ng-model="user.User_Password">
+                            </label>
+                            <label class="item item-input item-floating-label">
+                                <span class="input-label">Tekrar Sifre</span>
+                                <input type="password" required placeholder="Tekrar Sifre"  name="rpassword" ng-model="rpass">
+                            </label>
+                        </div>
+                        <div class="item item-body bottom-content">
+                            <button type="submit" class="button button-assertive button-block" ng-click="doSignUp()" ng-disabled="signup_form.$invalid">
+                               Kayit Ol
+                            </button>
+                        </div>
+                        <div ng-if="signup_form.username.$touched" class="padding">
+                            <p ng-if="signup_form.username.$error.required" class="alert alert-info">*Ad-Soyad Alanini Doldurunuz</p>
+                            <p ng-if="signup_form.username.$error.minlength" class="swiper-button-white">*Ad-Soyad  Cok Kisa</p>
+                        </div>
+                        <div ng-if="signup_form.email.$touched" class="padding">
+                            <p ng-if="signup_form.email.$error.required" class="alert alert-info">*Email Alanini Doldurunuz</p>
+                            <p ng-if="signup_form.email.$error.minlength" class="swiper-button-white">*Email  Cok Kisa</p>
+                        </div>
+                        <div ng-if="signup_form.password.$touched" class="padding">
+                            <p ng-if="signup_form.password.$error.required" class="alert alert-info">*Sifre Doldurunuz</p>
+                            <p ng-if="signup_form.password.$error.minlength" class="swiper-button-white">*Sifre Cok Kisa</p>
+
+                        </div>
+                        <div ng-if="signup_form.rpassword.$touched" class="padding">
+                            <p ng-if="rpass!=user.User_Password" class="alert">*Sifreler Birbiriyle uyusmuyor</p>
+
+                        </div>
+                    </form>
+                </div>
+                <div class="alternative-actions">
+                    <a class="log-in button button-small button-clear button-light" ui-sref="auth.login">
+                        Log In
+                    </a>
+                </div>
+
             </div>
-            <div class="item item-body bottom-content">
-              <button type="submit" class="button button-assertive button-block" ng-click="doSignUp()" ng-disabled="signup_form.$invalid">
-                Sign Up
-              </button>
-            </div>
-          </form>
         </div>
-        <div class="alternative-actions">
-          <a class="log-in button button-small button-clear button-light" ui-sref="auth.login">
-            Log In
-          </a>
-        </div>
-      </div>
-    </div>
-  </ion-content>
+    </ion-content>
 </ion-view>

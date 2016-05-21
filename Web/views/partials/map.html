@@ -13,7 +13,15 @@
             <ui-gmap-google-map control="map.control" events="map.events" center="map.center" zoom="map.zoom" options="map.options">
                 <ui-gmap-marker coords="marker.coords" options="marker.options" idkey="marker.id"></ui-gmap-marker>
                 <ui-gmap-map-control template="control.tpl.html" position="top-left" index="-1"></ui-gmap-map-control>
-            </ui-gmap-google-map>
+                <info-window id="1" position="{{latitude}},{{longitude}}" visible="true">
+                    <div ng-non-bindable="">
+                        <b>{{location.Name}}</b><br>
+                        {{location.Info}} <br>
+                        <img ng-repeat="image in location.Images" style="border-radius: 24px;" ng-src="{{image.Path}}" height="50" width="50" />
+
+                    </div>
+                </info-window>
+              </ui-gmap-google-map>
         </div>
         <div class="col-lg-6">
             <div class="scroller" style="height:510px;  overflow: auto;">

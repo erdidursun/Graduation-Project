@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
@@ -8,8 +8,7 @@
     <link href="css/ionic.app.css" rel="stylesheet">
     <link href="lib/sweetalert/dist/sweetalert.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
-    <script src="//maps.googleapis.com/maps/api/js?sensor=false&language=tr-TR" type="text/javascript"></script>
-    <!--<script src="https://www.youtube.com/iframe_api"></script>-->
+    <script src="http://maps.googleapis.com/maps/api/js?sensor=false&language=tr-TR" type="text/javascript"></script>
     <script src="lib/ionic/js/ionic.bundle.js"></script>
     <script src="lib/angular-resource/angular-resource.min.js"></script>
     <script src="lib/underscore/underscore-min.js"></script>
@@ -19,13 +18,13 @@
     <script src="lib/angular-moment/angular-moment.min.js"></script>
     <script src="lib/angular-slugify/dist/angular-slugify.min.js"></script>
     <script src="lib/collide/collide.js"></script>
+    <script src="lib/firebase/firebase.js"></script>
+    <script src="lib/angularfire/dist/angularfire.min.js"></script>
     <script src="lib/ionic-contrib-tinder-cards/ionic.tdcards.js"></script>
-    <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
     <script src="lib/angular-youtube-mb/dist/angular-youtube-embed.min.js"></script>
     <script src="lib/angular-md5/angular-md5.min.js"></script>
     <script src="lib/sweetalert/dist/sweetalert.min.js"></script>
     <!-- cordova script (this will be a 404 during development) -->
-    <script src="cordova.js"></script>
     <script src="js/sakaryarehberi.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
@@ -34,7 +33,8 @@
     <script src="js/appSettings.js"></script>
     <script src="js/factories.js"></script>
     <script src="js/config.js"></script>
-    <script src="js/api.js"></script>
+    <script src="cordova.js"></script>
+    
 </head>
 <body ng-app="sakaryarehberi">
     <ion-nav-view></ion-nav-view>

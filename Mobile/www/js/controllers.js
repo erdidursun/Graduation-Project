@@ -1,17 +1,27 @@
 angular.module('sakaryarehberi')
 
-.controller('AuthCtrl', function ($scope, $ionicConfig) {
-
+.controller('AuthCtrl', function (Session,$location) {
+    if (Session.isAuthenticated())
+        $location.path("app/home");
 })
 
 // APP
-.controller('AppCtrl', function ($scope, $ionicConfig, Session) {
-    $scope.profileImg = Session.User.profileImageURL;
-    $scope.nick = Session.User.name;
+.controller('AppCtrl', function ($scope, $rootScope, AuthService, Session) {
+    if (Session.isAuthenticated()) {
+        $scope.profileImg = Session.User.profileImageURL;
+        $scope.nick = Session.User.name;
+    }
+   
+ 
 })
 
 //LOGIN
-.controller('LoginCtrl', function ($scope, $state, $templateCache, $q, $rootScope, md5, User) {
+.controller('LoginCtrl', function ($scope, $rootScope,Session,$location, md5, User, AuthService) {
+
+    if (Session.isAuthenticated())
+        $location.path("app/home");
+
+
     $scope.user = {
         email: "erdidursun09@hotmail.com",
         password: "12345"
@@ -24,6 +34,7 @@ angular.module('sakaryarehberi')
     };
 })
 .controller('SignupCtrl', function ($scope, User) {
+    $scope.rpass = "";
     $scope.user = {
         UserType_ID: 1
     };
@@ -33,8 +44,6 @@ angular.module('sakaryarehberi')
         User.Register(user);
     };
 })
-
-
 
 .controller('ForgotPasswordCtrl', function ($scope, $state) {
     $scope.recoverPassword = function () {
@@ -147,12 +156,13 @@ angular.module('sakaryarehberi')
         });
     }
 })
-.controller('DirectionCtrl', function ($scope, CurrrentLocation, $timeout) {
+.controller('DirectionCtrl', function ($scope,$ionicLoading, CurrrentLocation, $timeout) {
 
     $scope.latitude= $scope.location.Latitude,
     $scope.longitude=$scope.location.Longtitude
 
-  
+    $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Yol Tarifi getiriliyor.!' })
+
    
     $scope.$on('mapInitialized', function (event, map) {
         $scope.map = map;
@@ -193,10 +203,11 @@ angular.module('sakaryarehberi')
                         directionsDisplay.setMap($scope.map);
                         directionsDisplay.setPanel(document.getElementById('directionsList'));
                         $scope.showList = true;
+                        $ionicLoading.hide();
                     } else {
                         $scope.filterDisplayName = "Yol Tarifi"
-
-                        swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+                        $ionicLoading.hide();
+                        swal({ title: "Rota Bulumamadı!", text: "Seçtiğiniz kriterlere uygun yol bulunamadı.!", type: "error", confirmButtonText: "Tamam" });
                     }
                 });
             }, 1500);
@@ -437,7 +448,7 @@ angular.module('sakaryarehberi')
 })
 
 // SETTINGS
-.controller('SettingsCtrl', function ($scope, $ionicActionSheet, $state) {
+.controller('SettingsCtrl', function ($scope, $rootScope,AuthService, AUTH_EVENTS, $ionicActionSheet, $state) {
     $scope.airplaneMode = true;
     $scope.wifi = false;
     $scope.bluetooth = true;
@@ -449,6 +460,10 @@ angular.module('sakaryarehberi')
 
     $scope.radioChoice = 'B';
 
+    $scope.logout = function () {
+        AuthService.logout();
+        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
+    }
     // Triggered on a the logOut button click
     $scope.showLogOutMenu = function () {
 

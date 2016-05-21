@@ -1,8 +1,8 @@
-﻿<ion-content scroll="true" ng-controller="DirectionCtrl">
-    <div class="modal" >
-        <div class="mapWrap" data-tap-disabled="true" style="height:400px">
+﻿<ion-modal-view>
+    <ion-content scroll="true" class="padding" ng-controller="DirectionCtrl">
+        <div class="mapWrap" data-tap-disabled="true">
             <div class="col">
-                <map center="{{latitude}},{{longitude}}" zoom="10"  style="height:300px;">
+                <map center="{{latitude}},{{longitude}}" zoom="12" style="height:300px;">
                     <info-window id="1" position="{{latitude}},{{longitude}}" visible="true">
                         <div ng-non-bindable="">
                             <b>{{location.Name}}</b><br>
@@ -16,10 +16,15 @@
             </div>
 
         </div>
-        <div class="row">
-            <div id="directionsList" ng-if="showList" class="panel panel-primary"></div>
-         
+        <hr />
+        <div id="directionsList" data-tap-disabled="true" style="height:auto;width:100%">
         </div>
-    </div>
-
-</ion-content>
+    </ion-content>
+    <ion-footer-bar class="post-footer bar bar-footer bar-calm" style="background-color:#21692E!important">
+        <div class="row">
+            <div class="col col-40  col-offset-66 col-center">
+                <a class="button button-calm" ng-click="open()">Kapat</a>
+            </div>
+        </div>
+    </ion-footer-bar>
+</ion-modal-view>

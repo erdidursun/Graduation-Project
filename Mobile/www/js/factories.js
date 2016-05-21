@@ -1,6 +1,6 @@
 angular.module('sakaryarehberi')
 
-.factory('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
+.service('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
     var User = {};
 
     User.Login = function (mail, pass) {
@@ -10,27 +10,52 @@ angular.module('sakaryarehberi')
         });
         var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
+
                     if (data)
-                        Session.Create("form", data.data);
+                        Session.Create("form", data.data[0]);
                     else
                         Session.Create("form", null);
 
 
                 }, function (error) {
+                    swal({ title: "Baþarýsýz", text: "Giriþ Baþarýsýz", type: "error", confirmButtonText: "Tamam" });
+
                     Session.Create("form", null);
 
                 });
     };
 
+
+
+    User.SocialLogin = function (data) {
+        var data = $httpParamSerializerJQLike(data);
+        var func = $http.post("http://{apihost}/api/AddSocialUser", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+                .then(function (data) {
+                    if (data)
+                        Session.Create("social", data.data[0]);
+                    else
+                        Session.Create("social", null);
+
+
+                }, function (error) {
+                    Session.Create("social", null);
+
+                });
+    };
     User.Register = function (user) {
         user.User_Password = md5.createHash(user.User_Password);
 
         var func = $http.post("http://{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                       .then(function (data) {
-                          console.log(data);
+                          swal({ title: "Baþarýlý", text: "Baþarýyla Kayýt Oldunuz. Giriþ Yapýlýyor.", type: "success", confirmButtonText: "Tamam" }
+                              , function () {
+                                  User.Login(data.data.Email, data.data.Password);
+                              });
+
 
                       }, function (error) {
-                          console.log(error);
+                          swal({ title: "Baþarýsýz", text: "Kayýt Olma Esnasýnda Bir hata oluþtu", type: "error", confirmButtonText: "Tamam" });
+
                       });
     }
 
@@ -41,8 +66,21 @@ angular.module('sakaryarehberi')
 
         return func;
     };
+
     User.GetAll = function () {
         var func = $http.get("http://{apihost}/API/GetUsers", { headers: { 'Content-Type': 'application/json' } })
+        return func;
+    }
+    User.GetUserById = function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserById?userId=" + id).then(function (data) {
+            return data.data[0];
+        })
+        return func;
+    }
+    User.GetUserByComments = function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserComments?userId=" + id).then(function (data) {
+            return data.data;
+        })
         return func;
     }
     User.Delete = function (id) {
@@ -58,11 +96,20 @@ angular.module('sakaryarehberi')
         return func;
     }
 
-    User.AddNewUserCtrl = function () {
+    User.Update = function (user, id) {
+        var data = {
+            UserID: id
+        }
+        var func = $http.post("http://{apihost}/API/UpdateUser?UserID=" + id, $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+          .then(function (data) {
+              console.log(data);
 
-
-
+          }, function (error) {
+              console.log(error);
+          });
+        return func;
     }
+
 
     return User;
 
@@ -70,7 +117,7 @@ angular.module('sakaryarehberi')
 
 
 })
-.factory('Location', function ($http, $httpParamSerializerJQLike) {
+.service('Location', function ($http, $httpParamSerializerJQLike) {
     var data = {};
     var Location = {};
     Location.GetLocations = function (Coord) {
@@ -94,6 +141,10 @@ angular.module('sakaryarehberi')
     Location.GetLocationTypes = function () {
 
         var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth: false });
+
+
+        var func = $http.get("http://{apihost}/API/GetLocationTypes", { RequireAuth: false });
+
         return func;
     }
 
@@ -111,39 +162,43 @@ angular.module('sakaryarehberi')
         return func;
 
     }
+
+    Location.AddLocationType = function (data) {
+        var func = $http.get("http://{apihost}/API/AddLocationType?name=" + data);
+        return func;
+    }
     return Location;
-})
-.factory('$ls', ['$window', function ($window) {
-        return {
-            set: function (key, value) {
-                var compressed = Settings.compressedStorage ? LZString.compressToUTF16(value) : value;
-                $window.localStorage[key] = compressed;
-            },
-            get: function (key, defaultValue) {
-                var value = $window.localStorage[key];
-                return value;
-            },
-            setObject: function (key, value) {
-                var compressed = JSON.stringify(value);
-                $window.localStorage[key] = compressed;
-            },
-            getObject: function (key) {
-                var obj = null;
-                var value = $window.localStorage[key];
-                if (value)
-                    obj = JSON.parse(value);
-                return obj;
-            },
-            remove: function (key) {
-                $window.localStorage.removeItem(key);
-                return true;
-            },
-            removeAll: function () {
-                $window.localStorage.clear();
-                return true;
-            }
+}).factory('$ls', ['$window', function ($window) {
+    return {
+        set: function (key, value) {
+            var compressed = Settings.compressedStorage ? LZString.compressToUTF16(value) : value;
+            $window.localStorage[key] = compressed;
+        },
+        get: function (key, defaultValue) {
+            var value = $window.localStorage[key];
+            return value;
+        },
+        setObject: function (key, value) {
+            var compressed = JSON.stringify(value);
+            $window.localStorage[key] = compressed;
+        },
+        getObject: function (key) {
+            var obj = null;
+            var value = $window.localStorage[key];
+            if (value)
+                obj = JSON.parse(value);
+            return obj;
+        },
+        remove: function (key) {
+            $window.localStorage.removeItem(key);
+            return true;
+        },
+        removeAll: function () {
+            $window.localStorage.clear();
+            return true;
         }
-    }])
+    }
+}])
 .factory('httpRequestInterceptor', function ($q, $injector, HttpCache, $timeout) {
 
     var interceptor = {
@@ -152,8 +207,8 @@ angular.module('sakaryarehberi')
             if (config.url.indexOf('{apihost}') > -1) {
                 if (!config.timeout)
                     config.timeout = window.Settings.defaultRequestTimeout;
-              
-              
+
+
                 config.url = config.url.replace('{apihost}', Settings.apiHostUrl);
 
             };
@@ -186,7 +241,7 @@ angular.module('sakaryarehberi')
                         if (window.Settings.logingEnabled) console.log('Cache removed : ' + url);
                     }, window.Settings.cacheTime);
 
-                
+
                 }
             }
 
@@ -201,7 +256,7 @@ angular.module('sakaryarehberi')
         },
         responseError: function (error) {
             console.log(error)
-         
+
 
 
         }
@@ -235,27 +290,52 @@ angular.module('sakaryarehberi')
         }
     };
 })
-.factory('AuthService', function ($rootScope, Session, AUTH_EVENTS, $http, $ls, $firebaseAuth, $httpParamSerializerJQLike) {
+.factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
 
     var authService = {};
 
     var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
 
 
-    authService.SocialLoginProvider = $firebaseAuth(ref);
-
+    var SocialLoginProvider = $firebaseAuth(ref);
+    var retry = 0;
     authService.logout = function () {
-        $ls.removeAll();
         Session.Destroy();
-        this.SocialLoginProvider.$unauth();
+        SocialLoginProvider.$unauth();
     };
-    authService.socialLogin = function (provider, callback) {
-        this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-            Session.Create("social", authData)
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, authData);
+    SocialLoginProvider.$onAuth(function (authData) {
+        console.log(authData);
+        if (authData && !Session.isAuthenticated()) {
+            var _data = {
+                ProviderName: authData.provider,
+                Mail: authData.uid,
+                Password: authData["" + authData.provider + ""].accessToken,
+                Name: authData["" + authData.provider + ""].displayName,
+                ImgPath: authData["" + authData.provider + ""].profileImageURL
+            }
+            User.SocialLogin(_data);
+        }
 
+    });
+    authService.socialLogin = function (provider) {
+        SocialLoginProvider.$authWithOAuthRedirect(provider).then(function (authData) {
         }).catch(function (error) {
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+            if (error.code === "TRANSPORT_UNAVAILABLE") {
+                SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
+                    console.log(authData);
+
+                }).catch(function (error) {
+                    console.log(error);
+
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+                });
+            }
+            else {
+                consolelog(error);
+                $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+            }
         });
     }
 
@@ -269,48 +349,31 @@ angular.module('sakaryarehberi')
     Session.User = $ls.getObject("SessionData");
     Session.Create = function (type, data) {
         this.data = data;
-        console.log(data);
         if (data) {
-            if (type == 'social') {
+            Session.User = {
+                loginType: type,
+                id: data.ID,
+                name: data.Name,
+                profileImageURL: data.ImgPath,
+                type_id: data.Type_ID,
+                type_name: data.TypeName
+            };
 
-                var provider = data["" + data.provider + ""];
-                Session.User = {
-                    id: provider.id,
-                    name: provider.displayName,
-                    access_token: provider.accessToken,
-                    profileImageURL: provider.profileImageURL
-                };
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
-            }
-            else if (type == 'form') {
-                Session.User = {
-                    id: data.ID,
-                    name: data.Name,
-                    access_token: data.access_token,
-                    profileImageURL: data.ImgPath,
-                    type_id: data.Type_ID,
-                    type_name: data.TypeName
-                };
-
-                $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
-            }
-            else {
-                Session.User = null;
-                $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
-            }
+            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
         }
         else {
             Session.User = null;
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
         }
     }
+
     Session.Destroy = function () {
-        User = null;
+        Session.User = null;
         data = null;
         $ls.removeAll();
     }
     Session.isAuthenticated = function () {
-        return Session.User ? true : false;
+        return Session.User!=null ? true : false;
     }
     Session.isAdmin = function () {
         return Session.isAuthenticated() ? Session.User.type_id == 2 ? true : false : false;

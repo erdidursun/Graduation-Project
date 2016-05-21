@@ -310,7 +310,6 @@
     $scope.logout = function (provider) {
         $scope.isLogged = false;
         AuthService.logout();
-        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
     };
 
     //Location Detail 
@@ -337,10 +336,12 @@
         });
     };
 })
-.controller("LoginCtrl", function ($scope, AuthService, md5, User) {
+.controller("LoginCtrl", function ($scope, AuthService, md5, User, Session,$location) {
 
     $scope.mail = "erdidursun13@gmail.com";
     $scope.pass = "1234567";
+    if (Session.isAuthenticated())
+        $location.path("anasayfa")
     $scope.login = function () {
 
         User.Login($scope.mail, md5.createHash($scope.pass));

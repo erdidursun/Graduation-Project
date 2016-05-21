@@ -1,37 +1,45 @@
-<ion-view class="login-view auth-view" cache-view="false">
-  <ion-content scroll="false">
-    <div class="row">
-      <div class="col col-center">
-        <div class="card login-container" content-tabs tabsdata='tabsdata'>
-          <form name="login_form" class="" novalidate ng-cloak>
-            <my-tabs>
-              <my-tab title="Email">
-                <div class="list">
-                  <label class="item item-input">
-                    <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
-                  </label>
-                  <label class="item item-input" show-hide-container>
-                    <input type="password" placeholder="Password" name="user_password" ng-model="user.password" required show-hide-input>
-                  </label>
+﻿<ion-view class="login-view auth-view" cache-view="false">
+    <ion-content scroll="false">
+        <div class="row">
+            <div class="col col-center">
+                <div class="card login-container" content-tabs tabsdata='tabsdata'>
+                    <form name="login_form" class="" novalidate ng-cloak>
+                        <my-tabs>
+                            <my-tab >
+                                <div class="list">
+                                    <label class="item item-input">
+                                        <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
+                                    </label>
+                                    <label class="item item-input" show-hide-container>
+                                        <input type="password" placeholder="Şifre" name="user_password" ng-model="user.password" required show-hide-input>
+                                    </label>
+                                </div>
+                            </my-tab>
+                        </my-tabs>
+                        <div class="item item-body bottom-content">
+                            <button type="submit" class="button button-positive button-block" ng-click="doLogIn()" ng-disabled="(login_form.user_email.$invalid || login_form.user_password.$invalid)">
+                                Log In
+                            </button>
+                        </div>
+                    </form>
                 </div>
-              </my-tab>         
-            </my-tabs>
-            <div class="item item-body bottom-content">
-              <button type="submit" class="button button-positive button-block" ng-click="doLogIn()" ng-disabled="(login_form.user_email.$invalid || login_form.user_password.$invalid)">
-                Log In
-              </button>
+                <div style="text-align:center" class="padding">
+                    <button class="button button-calm icon ion-social-twitter-outline button-round " ng-click="socialLogin('twitter')">Twitter</button>
+                    <button class="button  icon  button-assertive ion-social-facebook-outline button-round" ng-click="socialLogin('facebook')"> Facebook</button>
+                    <button class="button  icon button-assertive ion-social-google-outline button-round" style="background-color:red;color:wheat" ng-click="socialLogin('google')">Google+</button>
+
+
+                </div>
+                <div class="alternative-actions">
+                    <a class="forgot-password button button-small button-clear button-light" ui-sref="auth.forgot-password">
+                        Forgot Password?
+                    </a>
+                    <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">
+                        Sign Up
+                    </a>
+
+                </div>
             </div>
-          </form>
         </div>
-        <div class="alternative-actions">
-          <a class="forgot-password button button-small button-clear button-light" ui-sref="auth.forgot-password">
-            Forgot Password?
-          </a>
-          <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">
-            Sign Up
-          </a>
-        </div>
-      </div>
-    </div>
-  </ion-content>
+    </ion-content>
 </ion-view>

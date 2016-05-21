@@ -17,11 +17,12 @@ angular.module('sakaryarehberi', [
   'ngResource',
   'ngCordova',
   'slugifier',
+  'firebase',
   'ionic.contrib.ui.tinderCards',
   'youtube-embed'
 ])
 
-.run(function ($ionicPlatform, PushNotificationsService, $rootScope, $ionicConfig, $timeout, AUTH_EVENTS, $ls, $state) {
+.run(function ($ionicPlatform, PushNotificationsService, $location,$rootScope, $ionicConfig, $timeout, AUTH_EVENTS, $ls, $state) {
 
     $ionicPlatform.on("deviceready", function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -32,8 +33,8 @@ angular.module('sakaryarehberi', [
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-
-        PushNotificationsService.register();
+        console.log(Settings.apiHostUrl);
+        //PushNotificationsService.register();
     });
 
     // This fixes transitions for transparent background views
@@ -64,16 +65,19 @@ angular.module('sakaryarehberi', [
     });
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
         $ls.setObject("SessionData", data)
+        swal({ title: "Baþarýlý", text: "Giriþ Baþarýlý", type: "success", confirmButtonText: "Tamam" });
+
         $state.go("app.home", {}, { reload: true });
 
     });
     $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        swal({ title: "Giriþ Baþarýsýz", text: "Seçtiðiniz kriterlere uygun yol bulunmamaktadýr.!", type: "error", confirmButtonText: "Cool" });
+        swal({ title: "Giriþ Basarisiz", text: "Seçtiðiniz kriterlere uygun yol bulunmamaktadýr.!", type: "error", confirmButtonText: "Cool" });
 
 
-    });
+    }); 
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $state.go("home.locations", {}, { reload: true });
+        $state.go("auth.login", {}, { reload: true });
+
     });
 })
 
@@ -88,13 +92,14 @@ angular.module('sakaryarehberi', [
     .state('auth', {
         url: "/auth",
         templateUrl: "views/auth/auth.html",
-        abstract: true,
-        controller: 'AuthCtrl'
+        abstract: true
     })
 
     .state('auth.walkthrough', {
         url: '/walkthrough',
-        templateUrl: "views/auth/walkthrough.html"
+        templateUrl: "views/auth/walkthrough.html",
+        controller: 'AuthCtrl'
+
     })
 
     .state('auth.login', {
