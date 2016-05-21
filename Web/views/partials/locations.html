@@ -81,10 +81,13 @@
                                             <i class=" fa fa-location-arrow">
                                             </i> &nbsp;{{location.DistanceToUser|number:1}} km
                                         </button>
-                                        <button type="button" class="btn btn-sm blue" ng-click="like(location.ID)" style="width:25%">
+                                        <button ng-if="location.IsLiked" type="button" class="btn btn-sm btn-danger" ng-disabled="!isLogged" ng-click="unlike(location.ID) " style="width:25%">
+                                            <i class="fa fa-thumbs-o-down"></i> &nbsp;{{location.LikeCount}}
+                                        </button>
+                                        <button ng-if="!location.IsLiked" type="button" class="btn btn-sm blue" ng-disabled="!isLogged"  ng-click="like(location.ID)" style="width:25%">
                                             <i class="fa fa-thumbs-o-up"></i> &nbsp;{{location.LikeCount}}
                                         </button>
-                                        <button type="button" class="btn btn-sm yellow" ng-click="openComment(location)" style="width:25%">
+                                        <button type="button" class="btn btn-sm yellow" ng-click="openComment(location)" ng-disabled="!isLogged"  style="width:25%">
                                             <i class=" fa fa-commenting-o">
                                             </i> &nbsp;{{location.CommentCount}}
                                         </button>

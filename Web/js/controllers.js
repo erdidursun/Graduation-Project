@@ -285,11 +285,46 @@
 
 
     }
+    $scope.isLogged = Session.isAuthenticated();
+    $scope.unlike = function (locationId) {
+        if (!Session.isAuthenticated()) {
+            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+        }
+        else {
+            Location.UnLike(locationId, Session.User.id).then(function (data) {
+                if (data.status == 200) {
+                    for (var i = 0; i < $scope.locations.length; i++) {
+                        if ($scope.locations[i].ID == locationId) {
+                            $scope.locations[i].LikeCount--;
+                            $scope.locations[i].IsLiked = false;
+                            break;
+                        }
 
+                    }
+                }
+            });
+        }
+
+
+    }
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
             swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
 
+        }
+        else {
+            Location.Like(locationId, Session.User.id).then(function (data) {
+                if (data.status == 200) {
+                    for (var i = 0; i < $scope.locations.length; i++) {
+                        if ($scope.locations[i].ID == locationId) {
+                            $scope.locations[i].LikeCount++;
+                            $scope.locations[i].IsLiked = true;
+                            break;
+                        }
+
+                    }
+                }
+            });
         }
 
 
@@ -336,7 +371,7 @@
         });
     };
 })
-.controller("LoginCtrl", function ($scope, AuthService, md5, User, Session,$location) {
+.controller("LoginCtrl", function ($scope, AuthService, md5, User, Session, $location) {
 
     $scope.mail = "erdidursun13@gmail.com";
     $scope.pass = "1234567";
@@ -628,8 +663,11 @@
     });
 
 
-    User.GetUserByComments(userId).then(function (data) {
+    User.GetUserComments(userId).then(function (data) {
         $scope.comments = data;
+    });
+    User.GetUserLikes(userId).then(function (data) {
+        $scope.likes = data;
     });
     $scope.go = function () {
 

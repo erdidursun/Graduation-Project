@@ -77,8 +77,14 @@
         })
         return func;
     }
-    User.GetUserByComments= function (id) {
+    User.GetUserComments= function (id) {
         var func = $http.get("http://{apihost}/API/GetUserComments?userId=" + id).then(function (data) {
+            return data.data;
+        })
+        return func;
+    }
+    User.GetUserLikes= function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserLikes?userId=" + id).then(function (data) {
             return data.data;
         })
         return func;
@@ -117,25 +123,39 @@
 
 
 })
-.service('Location', function ($http, $httpParamSerializerJQLike) {
+.service('Location', function ($http, $httpParamSerializerJQLike, Session) {
     var data = {};
     var Location = {};
-    Location.GetLocations = function (Coord) {
+    Location.GetLocations = function (Coord,page) {
         var Coord1 = {
             Latitude: -1,
             Longtitude: -1
         };
+        if (!page)
+            page = 1;
+        var userId = -1;
+        var url="http://{apihost}/API/GetLocations?page="+page;
+        if (Session.isAuthenticated())
+            url = url + "&userId=" + Session.User.id;
         console.log(Coord);
         if (Coord)
             var data = $httpParamSerializerJQLike(Coord)
         else
             var data = $httpParamSerializerJQLike(Coord1)
 
-        var func = $http.post("http://{apihost}/API/GetLocations?page=1", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        var func = $http.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
     Location.GetLocationById = function (id) {
         var func = $http.get("http://{apihost}/API/GetLocationById?id=" + id, { headers: { 'Content-Type': 'application/json' } });
+        return func;
+    }
+    Location.Like = function (locationId, userId) {
+        var func = $http.get("http://{apihost}/API/LikeLocation?locationId=" + locationId + "&userId=" + userId, { headers: { 'Content-Type': 'application/json' } });
+        return func;
+    }
+    Location.UnLike = function (locationId, userId) {
+        var func = $http.get("http://{apihost}/API/UnLikeLocation?locationId=" + locationId + "&userId=" + userId, { headers: { 'Content-Type': 'application/json' } });
         return func;
     }
     Location.GetLocationTypes = function () {
