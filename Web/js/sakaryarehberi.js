@@ -11,7 +11,7 @@
     $httpProvider.defaults.headers.put = {};
     $httpProvider.defaults.headers.patch = {};
     $httpProvider.defaults.useXDomain = true;
-  
+
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
 
     $httpProvider.interceptors.push('httpRequestInterceptor');
@@ -32,7 +32,7 @@
               cache: false
           })
           .state('home.login', {
-              url: "login",
+              url: "giris_yap",
               templateUrl: 'views/partials/login.html',
               controller: 'LoginCtrl',
               cache: false,
@@ -66,14 +66,14 @@
             }
         })
          .state('home.locationDetails', {
-             url: "locationDetail/:locationId",
+             url: "mekan/:locationId",
              cache: false,
              templateUrl: 'views/partials/locationFull.html',
              controller: 'LocationDetailCtrl'
 
          })
         .state('admin.newLocation', {
-            url: 'addLocation',
+            url: 'mekanekle',
             cache: false,
             templateUrl: 'views/admin-partials/addLocation.html',
             controller: "LocationNewCtrl",
@@ -93,7 +93,7 @@
             }
         })
           .state('home.forgot', {
-              url: "forgot",
+              url: "sifremi_unuttum",
               cache: false,
               templateUrl: 'views/partials/forgot.html',
               controller: 'LoginCtrl',
@@ -110,7 +110,7 @@
               }
           })
       .state('home.register', {
-          url: "register",
+          url: "kayit_ol",
           cache: false,
           templateUrl: 'views/partials/register.html',
           controller: 'RegisterCtrl',
@@ -126,21 +126,21 @@
               }]
           }
       })
-         .state('admin', {
-             url: "/admin",
-             cache: false,
-             templateUrl: 'views/adminmain.html',
-             controller: "AdminMainCtrl"       
-         })
+     .state('admin', {
+         url: "/yonetici",
+         cache: false,
+         templateUrl: 'views/adminmain.html',
+         controller: "AdminMainCtrl"
+     })
     .state('admin.locations', {
-        url: "/locations",
+        url: "/mekanlar",
         cache: false,
         templateUrl: 'views/admin-partials/locations.html',
         controller: "AdminMainCtrl",
 
     })
         .state('admin.users', {
-            url: "/users",
+            url: "/kullanicilar",
             cache: false,
             templateUrl: 'views/admin-partials/users.html',
             controller: "AdminMainCtrl",
@@ -155,7 +155,7 @@
 
         })
         .state('home.account', {
-            url: "user/:userId",
+            url: "kullanici/:userId",
             templateUrl: 'views/partials/account.html',
             controller: 'AccountCtrl',
             cache: false,
@@ -174,7 +174,7 @@
     ;
     $urlRouterProvider.otherwise("/anasayfa");
 })
-.run(function ($rootScope,$location, $state, $ls,$window, AUTH_EVENTS, AuthService, amMoment) {
+.run(function ($rootScope, $location, $state, $ls, $window, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
         $ls.setObject("SessionData", data)
@@ -191,7 +191,7 @@
 
     });
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $window.location.reload();
+        //$window.location.reload();
 
     });
 })

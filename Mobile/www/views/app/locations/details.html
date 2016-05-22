@@ -19,7 +19,28 @@
             </ion-slide-box>
             <hr />
             <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info | rawHtml"></p>
+           <br />
+            <h2 class="label label-info calm">
+                Yorumlar
+            </h2>
+            <br />
+             <div class="list">
 
+                <span class="item item-avatar"  ng-repeat="comment in location.Comments" style="border:0px!important;border-bottom: 2px solid #181918!important;">
+                    <img ng-src="{{comment.UserImgPath}}" style="margin-left:0px!important;    margin-top: 0px!important">
+                    <a href="directions.html">{{comment.UserName}}</a>
+                    <p>{{comment.Comment}}</p>
+                </span>
+            </div>
+            <br />
+            <h2 class="label label-info calm">
+                Yorum Yap
+            </h2>
+            <div class="col col-center">
+
+                <textarea rows="5" style="width:100%;background-color:wheat"></textarea>
+                <button class=" button button-assertive pull-right" style="    float: right; margin: 10px;">Gönder</button>
+            </div>
         </div>
         <!--<div class="post-tags item item-text-wrap">
             <span class="post-tag button button-small button-outline button-stable">{{category.title}}</span>
@@ -31,11 +52,8 @@
        
             <div class="col col-20 col-center">
                 <a class="button button-icon icon ion-heart button-balanced">{{location.LikeCount}}</a>
-            </div>
-            <div class="col col-20 col-center">
-                <a class="button button-icon icon ion-android-share-alt" ng-click="sharePost(post.url)"></a>
-            </div>
-            <div class="col col-30  col-offset-33 col-center">
+            </div>       
+            <div class="col-offset-66 col-center">
                 <a class="button button-calm" ng-click="open()">Yol Tarifi Al</a>
             </div>
         </div>

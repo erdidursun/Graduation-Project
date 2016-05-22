@@ -25,7 +25,11 @@
             return true;
         },
         removeAll: function () {
+            var key = "firebase:session::sakaryarehberi";
+            var data = $window.localStorage[key];
             $window.localStorage.clear();
+
+            $window.localStorage[key] = data;
             return true;
         }
     }
@@ -132,46 +136,12 @@
         }
     };
 })
-.factory('AuthService', function ($rootScope,User, Session, AUTH_EVENTS, $http, $ls, $firebaseAuth, $httpParamSerializerJQLike) {
-
-    var authService = {};
-
-    var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
-
-
-    authService.SocialLoginProvider = $firebaseAuth(ref);
-
-    authService.logout = function () {
-        $ls.removeAll();
-        Session.Destroy();
-        this.SocialLoginProvider.$unauth();
-    };
-    authService.socialLogin = function (provider, callback) {
-        this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-            var _data = {
-                ProviderName: authData.provider,
-                Mail: authData.uid,
-                Password: authData["" + authData.provider + ""].accessToken,
-                Name: authData["" + authData.provider + ""].displayName,
-                ImgPath: authData["" + authData.provider + ""].profileImageURL
-            }
-            console.log(_data);
-            User.SocialLogin(_data);
-        }).catch(function (error) {
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
-        });
-    }
-
-
-    return authService;
-})
 .service("Session", function ($ls, $rootScope, AUTH_EVENTS) {
 
     var data = {};
     var Session = {};
     Session.User = $ls.getObject("SessionData");
     Session.Create = function (type, data) {
-        console.log(data);
         this.data = data;
         if (data) {
             Session.User = {
@@ -192,18 +162,69 @@
     }
 
     Session.Destroy = function () {
-        User = null;
+        Session.User = null;
         data = null;
         $ls.removeAll();
+        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
+
     }
     Session.isAuthenticated = function () {
-        return Session.User ? true : false;
+        return Session.User != null ? true : false;
     }
     Session.isAdmin = function () {
         return Session.isAuthenticated() ? Session.User.type_id == 2 ? true : false : false;
     }
     return Session;
 })
+ .factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
+
+        var authService = {};
+
+        var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
+
+
+        authService.SocialLoginProvider = $firebaseAuth(ref);
+        var retry = 0;
+        authService.logout = function () {
+            $ls.remove("SessionData");
+            Session.Destroy();
+            ref.unauth();
+        };
+        authService.SocialLoginProvider.$onAuth(function (authData) {
+            if (authData && !Session.isAuthenticated()) {
+                var _data = {
+                    ProviderName: authData.provider,
+                    Mail: authData.uid,
+                    Password: authData["" + authData.provider + ""].accessToken,
+                    Name: authData["" + authData.provider + ""].displayName,
+                    ImgPath: authData["" + authData.provider + ""].profileImageURL
+                }
+                User.SocialLogin(_data);
+            }
+          
+        });
+        authService.socialLogin = function (provider) {
+            this.SocialLoginProvider.$authWithOAuthRedirect(provider).then(function (authData) {
+            }).catch(function (error) {          
+                if (error.code === "TRANSPORT_UNAVAILABLE") {
+                    this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
+                        console.log(authData);
+
+                    }).catch(function (error) {
+                        $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+                    });
+                }
+                else {
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+                }
+            });
+        }
+
+
+        return authService;
+    })
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');
 

@@ -26,7 +26,7 @@
                     <!-- STAT -->
                     <div class="row list-separated profile-stat">
                         <div class="col-md-6 col-sm-6 col-xs-6">
-                           
+
 
                             <div class="uppercase profile-stat-title"><a ng-href="#tab2" data-toggle="tab" ng-click='go()'>{{user.CommentCount}} </a> </div>
                             <div class="uppercase profile-stat-text"> Yorum </div>
@@ -35,7 +35,7 @@
                             <div class="uppercase profile-stat-title"><a ng-href="#tab3" data-toggle="tab" ng-click='go()'> {{user.LikeCount}} </a></div>
                             <div class="uppercase profile-stat-text"> Beğeni </div>
                         </div>
-                       
+
                     </div>
                     <!-- END STAT -->
                     <div>
@@ -93,7 +93,8 @@
                                             <div class="form-group">
                                                 <div class="fileinput fileinput-exists" data-provides="fileinput">
                                                     <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                                        <img ng-src="{{profileImg}} " style="height:100%"></div>
+                                                        <img ng-src="{{profileImg}} " style="height:100%">
+                                                    </div>
                                                     <div>
                                                         <span class="btn blue btn-outline btn-file">
                                                             <span class="fileinput-new"> Profil Resmi Seç </span>
@@ -103,7 +104,7 @@
                                                         <a href="javascript:;" class="btn green fileinput-exists" data-dismiss="fileinput"> Kaydet </a>
                                                     </div>
                                                 </div>
-                                               
+
 
                                             </div>
 
@@ -125,23 +126,59 @@
                                     </div>
                                     <!-- TAB2 -->
                                     <div class="tab-pane" id="tab2">
-                                        <div class="row" ng-repeat="comment in comments">
-                                            <div class="col-lg-8 col-lg-offset-2">
-                                                <p class="bg-white bg-font-white">{{comment.UserName}} 
-                                                <a ui-sref="home.locationDetails({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
-                                                 mekanına <span am-time-ago="comment.Date" style="font-style: italic;text-decoration: underline;"></span>    yorum yaptı. </p>
-
-                                                <blockquote class="bg-white bg-font-white">
-                                                    <i class="fa fa-commenting"></i>
-                                                    {{comment.Comment}}
-                                                </blockquote>
+                                        <div class="timeline">
+                                            <div class="timeline-item" ng-repeat="comment in comments">
+                                                <div class="timeline-badge">
+                                                    <img class="timeline-badge-userpic img-circle" ng-src="{{user.ImgPath}}">
+                                                </div>
+                                                <div class="timeline-body">
+                                                    <div class="timeline-body-arrow"> </div>
+                                                    <div class="timeline-body-head">
+                                                        <div class="timeline-body-head-caption">
+                                                            <a href="javascript:;" class="timeline-body-title font-blue-madison">{{user.Name}} <a ui-sref="home.locationDetails({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
+                                                        mekanına yorum yaptı.</a>
+                                                            <span class="timeline-body-time font-grey-cascade" am-time-ago="comment.Date"></span>
+                                                        </div>
+                                                        <div class="timeline-body-head-actions"> </div>
+                                                    </div>
+                                                    <div class="timeline-body-content">
+                                                     
+                                                        <br />
+                                                     <blockquote>{{comment.Comment}}</blockquote>   
+                                                    </div>
+                                                </div>
                                             </div>
-                                         
-                                        </div>
-                                        <hr />
-
-
+                                        </div>  
                                     </div>
+                                    <div class="tab-pane" id="tab3">
+                                        <div class="timeline ">
+                                            <div class="timeline-item" ng-repeat="like in likes">
+                                                <div class="timeline-badge">
+                                                    <img class="timeline-badge-userpic img-circle" ng-src="{{user.ImgPath}}">
+                                                </div>
+                                                <div class="timeline-body">
+                                                    <div class="timeline-body-arrow"> </div>
+                                                    <div class="timeline-body-head">
+                                                        <div class="timeline-body-head-caption">
+                                                            <a href="javascript:;" class="timeline-body-title font-blue-madison">
+                                                                {{like.UserName}}
+                                                                <a ui-sref="home.locationDetails({locationId: like.LocationId   })">{{like.LocationName}}</a>
+                                                                mekanını <span style="font-style: italic;text-decoration: underline;"></span> beğendi.
+                                                            </a>
+                                                            <span class="timeline-body-time font-grey-cascade" am-time-ago="like.Date"></span>
+                                                        </div>
+                                                        <div class="timeline-body-head-actions"> </div>
+                                                    </div>
+                                                    <div class="timeline-body-content">
+
+                                                        
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                     
+                                    </div>
+
                                     <!-- TAB4 -->
                                     <div class="tab-pane" id="tab4">
                                         <form action="#">
