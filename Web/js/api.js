@@ -71,6 +71,11 @@
         var func = $http.get("http://{apihost}/API/GetUsers", { headers: { 'Content-Type': 'application/json' } })
         return func;
     }
+    User.ChangeInfo = function (userId, name, email) {
+        var url = "http://{apihost}/API/ChangeInfo?userId=" + userId + "&name=" + name + "&mail=" + email;
+        var func = $http.get(url, { headers: { 'Content-Type': 'application/json' } })
+        return func;
+    }
     User.GetUserById = function (id) {
         var func = $http.get("http://{apihost}/API/GetUserById?userId=" + id).then(function (data) {
             return data.data[0];
@@ -137,7 +142,6 @@
         var url="http://{apihost}/API/GetLocations?page="+page;
         if (Session.isAuthenticated())
             url = url + "&userId=" + Session.User.id;
-        console.log(Coord);
         if (Coord)
             var data = $httpParamSerializerJQLike(Coord)
         else
@@ -147,7 +151,10 @@
         return func;
     }
     Location.GetLocationById = function (id) {
-        var func = $http.get("http://{apihost}/API/GetLocationById?id=" + id, { headers: { 'Content-Type': 'application/json' } });
+        var url = "http://{apihost}/API/GetLocationById?id=" + id;
+        if (Session.isAuthenticated())
+            url = url + "&userId=" + Session.User.id;
+        var func = $http.get(url, { headers: { 'Content-Type': 'application/json' } });
         return func;
     }
     Location.Like = function (locationId, userId) {

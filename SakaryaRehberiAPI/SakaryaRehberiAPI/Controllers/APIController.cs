@@ -58,7 +58,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             var hostName = GetHostName();
             int addTime = 0;
-            if (hostName == "http://http://tommycarter-001-site1.itempurl.com")
+            if (hostName == "http://tommycarter-001-site1.itempurl.com" || hostName == "http://tommycarter-001-site1.itempurl.com/web")
                 addTime = 10;
             var Comments = from c in comments
                            select new
@@ -139,7 +139,7 @@ namespace SakaryaRehberiAPI.Controllers
         //}
         public int GetDistance(double lat1, double long1, double lat2, double long2)
         {
-            if (lat1 > 0 && long1 > 0 && lat2 > 0 && lat2 > 0)
+            if (lat1 > 0 && long1 > 0 && lat2 > 0 && long2 > 0)
             {
                 var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
                 WebClient c = new WebClient();
@@ -157,6 +157,68 @@ namespace SakaryaRehberiAPI.Controllers
         #endregion
 
         #region Users
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> ChangeInfo(int userId, string name, string mail)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.User_ID == userId);
+            if (user == null)
+                return Request.CreateResponse(HttpStatusCode.Forbidden, userId);
+            user.User_Email = mail;
+            user.User_Name = name;
+            _db.Entry<User>(user).State = EntityState.Modified;
+            _db.SaveChanges();
+            var list = new List<User>();
+            list.Add(user);
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(list));
+
+        }
+
+        [HttpGet]
+        public async Task<HttpResponseMessage> ChangePassword(int userId, string password)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.User_ID == userId);
+            if (user == null)
+                return Request.CreateResponse(HttpStatusCode.Forbidden, userId);
+            user.User_Password = password;
+            _db.Entry<User>(user).State = EntityState.Modified;
+            _db.SaveChanges();
+            var list = new List<User>();
+            list.Add(user);
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(list));
+
+        }
+
+       
+        [HttpPost]
+        public async Task<HttpResponseMessage> ChangeAvatar(int userId)
+        {
+            if (!Request.Content.IsMimeMultipartContent())
+                throw new HttpResponseException(HttpStatusCode.UnsupportedMediaType);
+
+            var provider = new MultipartMemoryStreamProvider();
+            await Request.Content.ReadAsMultipartAsync(provider);
+            var user = _db.Users.FirstOrDefault(u => u.User_ID == userId);
+            if (user == null)
+                return Request.CreateResponse(HttpStatusCode.Forbidden, userId);
+            string path = "";
+            foreach (var file in provider.Contents)
+            {
+                var ext = Path.GetExtension(file.Headers.ContentDisposition.FileName.Trim('\"'));
+                var filename = Path.GetRandomFileName().Split('.').First() + ext;
+                var buffer = await file.ReadAsByteArrayAsync();
+                path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", filename);
+                File.WriteAllBytes(path, buffer);
+                user.User_ImgPath = Path.Combine("Images", filename);
+                _db.Entry<User>(user).State = EntityState.Modified;
+                _db.SaveChanges();
+            }
+
+            var list = new List<User>();
+            list.Add(user);
+            return Request.CreateResponse(HttpStatusCode.OK, getUsers(list));
+
+        }
 
         [HttpPost]
         public HttpResponseMessage AddSocialUser(SocialUser user)
@@ -260,6 +322,10 @@ namespace SakaryaRehberiAPI.Controllers
         [HttpGet]
         public HttpResponseMessage GetUserLikes(int userId)
         {
+            //var hostName = GetHostName();
+            //a
+            //if (hostName == "http://tommycarter-001-site1.itempurl.com" || hostName == "http://tommycarter-001-site1.itempurl.com/web")
+            //    addTime = 10;
             var locations = (from like in _db.UserLikes
                              join u in _db.Users on like.User_ID equals u.User_ID
                              join l in _db.Locations on like.Location_ID equals l.Location_ID
@@ -394,7 +460,7 @@ namespace SakaryaRehberiAPI.Controllers
                         select location).ToList();
             try
             {
-                var result = getLocations(coord, list, userId, page * 6);
+                var result = getLocations(coordinat, list, userId, page * 6);
                 return Request.CreateResponse(HttpStatusCode.OK, result); ;
 
             }
@@ -483,21 +549,19 @@ namespace SakaryaRehberiAPI.Controllers
             var location = _db.Locations.FirstOrDefault(u => u.Location_ID == locationID);
             if (location == null)
                 return Request.CreateResponse(HttpStatusCode.Forbidden, locationID);
-            string DirName = "LocationImages";
-            if (isBanner)
-                DirName = "LocationBannerImages";
+        
             string path = "";
             foreach (var file in provider.Contents)
             {
                 var ext = Path.GetExtension(file.Headers.ContentDisposition.FileName.Trim('\"'));
                 var filename = Path.GetRandomFileName().Split('.').First() + ext;
                 var buffer = await file.ReadAsByteArrayAsync();
-                path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", DirName, filename);
+                path = Path.Combine(HttpRuntime.AppDomainAppPath, "Images", filename);
                 File.WriteAllBytes(path, buffer);
                 if (!isBanner)
-                    _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", DirName, filename) });
+                    _db.LocationImages.Add(new LocationImage() { Location_ID = locationID, LocationImage_Path = Path.Combine("Images", filename) });
                 else
-                    location.Location_Banner = Path.Combine("Images", DirName, filename);
+                    location.Location_Banner = Path.Combine("Images", filename);
 
                 _db.SaveChanges();
             }

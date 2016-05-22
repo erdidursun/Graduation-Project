@@ -1,6 +1,5 @@
 angular.module('sakaryarehberi')
-
-.service('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
+.factory('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
     var User = {};
 
     User.Login = function (mail, pass) {
@@ -10,6 +9,7 @@ angular.module('sakaryarehberi')
         });
         var func = $http.post("http://{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
+                    swal({ title: "Baþarýlý", text: "Giriþ Baþarýlý", type: "success", confirmButtonText: "Tamam" });
 
                     if (data)
                         Session.Create("form", data.data[0]);
@@ -77,8 +77,14 @@ angular.module('sakaryarehberi')
         })
         return func;
     }
-    User.GetUserByComments = function (id) {
+    User.GetUserComments = function (id) {
         var func = $http.get("http://{apihost}/API/GetUserComments?userId=" + id).then(function (data) {
+            return data.data;
+        })
+        return func;
+    }
+    User.GetUserLikes = function (id) {
+        var func = $http.get("http://{apihost}/API/GetUserLikes?userId=" + id).then(function (data) {
             return data.data;
         })
         return func;
@@ -117,25 +123,41 @@ angular.module('sakaryarehberi')
 
 
 })
-.service('Location', function ($http, $httpParamSerializerJQLike) {
+.factory('Location', function ($http, $httpParamSerializerJQLike, Session) {
     var data = {};
     var Location = {};
-    Location.GetLocations = function (Coord) {
+    Location.GetLocations = function (Coord, page) {
         var Coord1 = {
             Latitude: -1,
             Longtitude: -1
         };
-        console.log(Coord);
+        if (!page)
+            page = 1;
+        var userId = -1;
+        var url = "http://{apihost}/API/GetLocations?page=" + page;
+        if (Session.isAuthenticated())
+            url = url + "&userId=" + Session.User.id;
         if (Coord)
             var data = $httpParamSerializerJQLike(Coord)
         else
             var data = $httpParamSerializerJQLike(Coord1)
 
-        var func = $http.post("http://{apihost}/API/GetLocations?page=1", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        var func = $http.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
     Location.GetLocationById = function (id) {
-        var func = $http.get("http://{apihost}/API/GetLocationById?id=" + id, { headers: { 'Content-Type': 'application/json' } });
+        var url = "http://{apihost}/API/GetLocationById?id=" + id;
+        if (Session.isAuthenticated())
+            url = url + "&userId=" + Session.User.id;
+        var func = $http.get(url, { headers: { 'Content-Type': 'application/json' } });
+        return func;
+    }
+    Location.Like = function (locationId, userId) {
+        var func = $http.get("http://{apihost}/API/LikeLocation?locationId=" + locationId + "&userId=" + userId, { headers: { 'Content-Type': 'application/json' } });
+        return func;
+    }
+    Location.UnLike = function (locationId, userId) {
+        var func = $http.get("http://{apihost}/API/UnLikeLocation?locationId=" + locationId + "&userId=" + userId, { headers: { 'Content-Type': 'application/json' } });
         return func;
     }
     Location.GetLocationTypes = function () {
@@ -168,37 +190,42 @@ angular.module('sakaryarehberi')
         return func;
     }
     return Location;
-}).factory('$ls', ['$window', function ($window) {
-    return {
-        set: function (key, value) {
-            var compressed = Settings.compressedStorage ? LZString.compressToUTF16(value) : value;
-            $window.localStorage[key] = compressed;
-        },
-        get: function (key, defaultValue) {
-            var value = $window.localStorage[key];
-            return value;
-        },
-        setObject: function (key, value) {
-            var compressed = JSON.stringify(value);
-            $window.localStorage[key] = compressed;
-        },
-        getObject: function (key) {
-            var obj = null;
-            var value = $window.localStorage[key];
-            if (value)
-                obj = JSON.parse(value);
-            return obj;
-        },
-        remove: function (key) {
-            $window.localStorage.removeItem(key);
-            return true;
-        },
-        removeAll: function () {
-            $window.localStorage.clear();
-            return true;
+})
+.factory('$ls', ['$window', function ($window) {
+        return {
+            set: function (key, value) {
+                var compressed = Settings.compressedStorage ? LZString.compressToUTF16(value) : value;
+                $window.localStorage[key] = compressed;
+            },
+            get: function (key, defaultValue) {
+                var value = $window.localStorage[key];
+                return value;
+            },
+            setObject: function (key, value) {
+                var compressed = JSON.stringify(value);
+                $window.localStorage[key] = compressed;
+            },
+            getObject: function (key) {
+                var obj = null;
+                var value = $window.localStorage[key];
+                if (value)
+                    obj = JSON.parse(value);
+                return obj;
+            },
+            remove: function (key) {
+                $window.localStorage.removeItem(key);
+                return true;
+            },
+            removeAll: function () {
+                var key = "firebase:session::sakaryarehberi";
+                var data = $window.localStorage[key];
+                $window.localStorage.clear();
+
+                $window.localStorage[key] = data;
+                return true;
+            }
         }
-    }
-}])
+    }])
 .factory('httpRequestInterceptor', function ($q, $injector, HttpCache, $timeout) {
 
     var interceptor = {

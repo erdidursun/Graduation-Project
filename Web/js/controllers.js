@@ -17,7 +17,7 @@
     }
 })
 
-.controller("MapCtrl", function ($scope, $rootScope, location, $modalInstance, uiGmapIsReady, $timeout) {
+.controller("MapCtrl", function ($scope, $rootScope,CurrentLocation, location, $modalInstance, uiGmapIsReady, $timeout) {
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
@@ -51,10 +51,10 @@
         $scope.getDirections(type);
     });
     $scope.getDirections = function (type) {
-        navigator.geolocation.getCurrentPosition(function (loc) {
+        CurrentLocation.get(function (loc) {
             $scope.currentLocation = loc;
             $rootScope.directions = {
-                origin: new google.maps.LatLng($scope.currentLocation.coords.latitude, $scope.currentLocation.coords.longitude),
+                origin: new google.maps.LatLng($scope.currentLocation.Latitude, $scope.currentLocation.Longtitude),
                 destination: new google.maps.LatLng($scope.location.Latitude, $scope.location.Longtitude),
                 showList: false
             }
@@ -108,7 +108,7 @@
 
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data[0];
-
+        console.log($scope.location)
         angular.forEach($scope.location.Images, function (value) {
             $scope.slides.push({ image: value.Path, text: value.Info });
         });
@@ -133,7 +133,6 @@
             controller: "MapCtrl",
             resolve: {
                 location: function () {
-
                     return { Latitude: location.Latitude, Longtitude: location.Longtitude, Name: location.Name };
                 }
             },
@@ -141,7 +140,37 @@
         });
     };
 
-    $scope.like = function (location) {
+    $scope.isLogged = Session.isAuthenticated();
+    $scope.unlike = function (locationId) {
+        if (!Session.isAuthenticated()) {
+            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+        }
+        else {
+            Location.UnLike(locationId, Session.User.id).then(function (data) {
+                if (data.status == 200) {
+                    $scope.location.LikeCount--;
+                    $scope.location.IsLiked = false;
+                }
+            }
+            );
+        }
+
+
+    }
+    $scope.like = function (locationId) {
+        if (!Session.isAuthenticated()) {
+            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+
+        }
+        else {
+            Location.Like(locationId, Session.User.id).then(function (data) {
+                if (data.status == 200) {
+                    $scope.location.LikeCount++;
+                    $scope.location.IsLiked = true;
+                }
+            });
+        }
+
 
     }
     $scope.isVisible = Session.isAuthenticated();
@@ -165,29 +194,10 @@
 
 
 })
-.controller("LocationsCtrl", function (Session, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationsCtrl", function (Session,CurrentLocation, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
-    $scope.model = [];
-
-    $scope.locations = [];
-    $scope.locationTypes = [];
-    Location.GetLocationTypes().then(function (data) {
-        $scope.locationTypes = data.data;
-
-    }, function (error) {
-        console.log(error);
-    });
-    var Coord = {
-        Latitude: -1,
-        Longtitude: -1
-    };
-    navigator.geolocation.getCurrentPosition(function (location) {
-
-        Coord.Latitude = location.coords.latitude;
-
-        Coord.Longtitude = location.coords.longitude;
-
-        Location.GetLocations(Coord).then(function (data) {
+    CurrentLocation.get(function (location) {
+        Location.GetLocations(location).then(function (data) {
             angular.forEach(data.data, function (value, key) {
 
                 var loc = { name: value.Name, type: value.TypeName, id: value.ID };
@@ -225,6 +235,65 @@
             console.log(error);
         });
     });
+    $scope.model = [];
+
+    $scope.locations = [];
+    $scope.locationTypes = [];
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
+
+    }, function (error) {
+        console.log(error);
+    });
+    var Coord = {
+        Latitude: -1,
+        Longtitude: -1
+    };
+    //navigator.geolocation.getCurrentPosition(function (location) {
+
+    //    console.log(location);
+    //    Coord.Latitude = location.coords.latitude;
+
+    //    Coord.Longtitude = location.coords.longitude;
+
+    //    Location.GetLocations(Coord).then(function (data) {
+    //        angular.forEach(data.data, function (value, key) {
+
+    //            var loc = { name: value.Name, type: value.TypeName, id: value.ID };
+
+    //            if (value.DistanceToUser > 0) {
+    //                var t = (value.DistanceToUser / 1000);
+    //                value.DistanceToUser = t;
+    //                loc.DistanceToUser = t;
+
+    //            }
+    //            $scope.model.push(loc);
+    //            $scope.locations.push(value);
+
+    //        });
+    //        $ocLazyLoad.load({
+    //            files: ['assets/pages/scripts/portfolio-1.js'],
+    //            cache: false
+    //        });
+
+    //    }, function (error) {
+    //        console.log(error);
+    //    });
+    //}, function (error) {
+    //    Location.GetLocations().then(function (data) {
+    //        angular.forEach(data.data, function (value, key) {
+    //            $scope.locations.push(value);
+    //            $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
+    //        });
+    //        $ocLazyLoad.load({
+    //            files: ['assets/pages/scripts/portfolio-1.js'],
+    //            cache: false
+    //        });
+
+    //    }, function (error) {
+    //        console.log(error);
+    //    });
+    //});
 
     $scope.open = function (locationId) {
         var modalInstance = $uibModal.open(
@@ -333,12 +402,13 @@
 })
 .controller("HeaderCtrl", function ($scope, $state, $rootScope, AUTH_EVENTS, $uibModal, Session, AuthService) {
     $scope.isLogged = false;
-
+    $scope.showAdminPanel = false;
     if (Session.isAuthenticated()) {
         $scope.isLogged = true;
-        $scope.profileImg = Session.User.profileImageURL;
+        $scope.profileImg = Session.User.profileImageURL 
         $scope.nick = Session.User.name;
         $scope.userID = Session.User.id;
+        $scope.showAdminPanel = Session.isAdmin();
     }
 
 
@@ -407,22 +477,29 @@
 
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
-    $ocLazyLoad.load({
-        files: [
-            'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css',
-            'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css',
-            'assets/global/plugins/bootstrap-summernote/summernote.css',
-            'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js',
-            'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js',
-            'assets/global/plugins/bootstrap-markdown/lib/markdown.js',
-            'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js',
-            'assets/global/plugins/bootstrap-summernote/summernote.min.js'
-        ],
-        cache: true
-    });
-    Location.GetLocationTypes().then(function (data) {
-        $scope.locationTypes = data.data;
+   
+    $scope.init = function () {
+        $ocLazyLoad.load({
+            files: [
+                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css',
+                'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css',
+                'assets/global/plugins/bootstrap-summernote/summernote.css',
+                'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js',
+                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js',
+                'assets/global/plugins/bootstrap-markdown/lib/markdown.js',
+                'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js',
+                'assets/global/plugins/bootstrap-summernote/summernote.min.js',
+            ],
+            cache: true
+        });
+        $('#summernote_1').summernote({ height: 300 });
 
+    };
+
+
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;      
+      
     }, function (error) {
         console.log(error);
     });
@@ -456,8 +533,8 @@
     if (location) {
         $scope.step = $ls.get("Step");
         $scope.location = location;
-        $scope.uploader2.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
-        $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + $scope.location.ID;
+        $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
+        $scope.uploader.url = "http://"+Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID;
 
     }
     $scope.width = ($scope.step / $scope.totalStep) * 100;
@@ -473,8 +550,8 @@
             $ls.set("Step", 2);
             $scope.step = 2;
             var id = $scope.location.ID;
-            $scope.uploader2.url = "http://localhost:8054/api/Upload?locationID=" + id + "&isBanner=true";
-            $scope.uploader.url = "http://localhost:8054/api/Upload?locationID=" + id;
+            $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + id + "&isBanner=true";
+            $scope.uploader.url = "http://"+Settings.apiHostUrl + "/api/Upload?locationID=" + id;
 
         });
     };
@@ -495,7 +572,7 @@
 })
 
 
-.controller("AdminMainCtrl", function ($scope, Session, $state, Location, User, $uibModal, $ocLazyLoad) {
+.controller("AdminMainCtrl", function ($scope, Session, $state, Location, $timeout, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
@@ -516,7 +593,7 @@
 
             ]
         });
-        $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "../assets/layouts/layout3/img/avatar9.jpg";
+        $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "assets/layouts/layout3/img/avatar9.jpg";
         $scope.nick = Session.User.name;
     }
     else
@@ -648,21 +725,76 @@
 
 })
 
-.controller("AccountCtrl", function ($scope, $stateParams, Session, User, FileUploader) {
+.controller("AccountCtrl", function ($scope, $state, $stateParams, $timeout, $ls, Session, User, FileUploader) {
     var userId = $stateParams.userId;
     $scope.isSelf = false;
     if (Session.isAuthenticated() && userId == Session.User.id)
         $scope.isSelf = true;
     else
         $scope.isSelf = false;
+    var url = "http://"+Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + userId;
+    $scope.uploader = new FileUploader();
+
+    $scope.uploader.filters.push({
+        name: 'imageFilter',
+        fn: function (item /*{File|FileLikeObject}*/, options) {
+            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
+            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
+        }
+    });
+    $scope.uploader.url = url;
+    $scope.uploader.autoUpload = true;
 
 
+    function changeSession(data) {
+        Session.User = {
+            loginType: Session.loginType,
+            id: data.ID,
+            name: data.Name,
+            profileImageURL: data.ImgPath,
+            type_id: data.Type_ID,
+            type_name: data.TypeName
+        };
+        $ls.setObject("SessionData", Session.User);
+    }
+    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {   
+        changeSession(response[0]);
+
+        swal({ title: "Başarılı", text: "Profil Resminiz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+        $state.go("home.account", {}, { reload: true });
+
+
+
+
+
+    };
     User.GetUserById(userId).then(function (data) {
-
         $scope.user = data;
     });
 
+    $scope.changeInfo = function () {
+        User.ChangeInfo(userId, $scope.user.Name, $scope.user.Email).then(function (data) {
+            changeSession(data.data[0]);
+            swal({ title: "Başarılı", text: "Bilgileriniz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+            $state.go("home.account", {}, { reload: true });
 
+        });
+    }
+    $scope.newUser = {
+        pass: "",
+        nPass1: "",
+        nPass2: "",
+    }
+    $scope.changePassword = function () {
+        console.log($scope.newUser);
+        //User.ChangeInfo(userId, $scope.user.Name, $scope.user.Email).then(function (data) {
+        //    changeSession(data.data[0]);
+        //    swal({ title: "Başarılı", text: "Bilgileriniz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+        //    $state.go("home.account", {}, { reload: true });
+
+        //});
+    }
+   
     User.GetUserComments(userId).then(function (data) {
         $scope.comments = data;
     });
@@ -673,16 +805,6 @@
 
         $scope.msg = 'clicked';
     }
-
-    $scope.uploader = new FileUploader();
-    $scope.uploader.filters.push({
-        name: 'imageFilter',
-        fn: function (item /*{File|FileLikeObject}*/, options) {
-            var type = '|' + item.type.slice(item.type.lastIndexOf('/') + 1) + '|';
-            return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
-        }
-    });
-
 })
 
 .controller("CommentModalCtrl", function ($scope, User, location, $modalInstance, Session) {

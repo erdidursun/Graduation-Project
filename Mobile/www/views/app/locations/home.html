@@ -24,7 +24,10 @@
                     <img class="alignnone size-medium wp-image-92" ng-src="{{location.Banner}}" alt="fotos-de-paisajes" width="300" height="195">
                     <div class="post-actions row">
                         <div class="col text-left" style="padding-right: 10px;">
-                            <button class="button button-block button-positive button-small icon icon-left ion-heart " style="margin-right:10px" ng-click="like">
+                            <button ng-if="location.IsLiked" class="button button-block button-calm button-small icon icon-left ion-thumbsdown " ng-disabled="!isLogged"  style="margin-right:10px" ng-click="like">
+                                {{location.LikeCount}}
+                            </button>
+                            <button ng-if="!location.IsLiked" class="button button-block button-small icon icon-left ion-thumbsdown "  style="margin-right:10px;background-color:red;color:white" ng-click="like">
                                 {{location.LikeCount}}
                             </button>
                         </div>

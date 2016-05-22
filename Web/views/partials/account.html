@@ -1,27 +1,35 @@
 ﻿<div class="page-content-inner">
     <div class="row">
         <div class="col-md-12 ">
-            <!-- BEGIN PROFILE SIDEBAR -->
             <div class="profile-sidebar">
-                <!-- PORTLET MAIN -->
+
                 <div class="portlet light profile-sidebar-portlet  ">
-                    <!-- SIDEBAR USERPIC -->
-                    <div class="profile-userpic">
-                        <img ng-src="{{user.ImgPath}}" class="img-responsive" alt="">
+
+                    <div class="profile-userpic fileinput fileinput-exists" data-provides="fileinput">
+                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="border:0">
+
+                            <img ng-src="{{user.ImgPath}}" class="img-responsive" style="height: 100%;
+    width: 50%;">
+                        </div>
+                        <div style="margin-left:20px;margin-right:20px" ng-show="isSelf">
+                            <span class="btn blue btn-outline btn-file btn-block">
+                                <span class="fileinput-new"> Profil Resmi Seç </span>
+                                <span class="fileinput-exists">Değiştir </span>
+                                <input type="hidden" value="" name="">
+                                <input type="file" name="..." nv-file-select="asdasd" uploader="uploader">
+                            </span>
+                        </div>
                     </div>
-                    <!-- END SIDEBAR USERPIC -->
-                    <!-- SIDEBAR USER TITLE -->
+
                     <div class="profile-usertitle ">
                         <div class="profile-usertitle-name"> {{user.Name}} </div>
-                        <div class="profile-usertitle- "> {{user.TypeName}} </div>
+                        <div class="profile-usertitle-jobs "> {{user.Type_Name}} </div>
                     </div>
                     <br />
 
 
-                    <!-- END MENU -->
                 </div>
-                <!-- END PORTLET MAIN -->
-                <!-- PORTLET MAIN -->
+
                 <div class="portlet light ">
                     <!-- STAT -->
                     <div class="row list-separated profile-stat">
@@ -69,17 +77,17 @@
                                     <span class="caption-subject font-blue-madison bold uppercase">Profil Hesabı</span>
                                 </div>
                                 <ul class="nav nav-tabs">
-                                    <li class="active">
-                                        <a ng-href="#tab1" data-toggle="tab" ng-click='go()'>Kullanıcı Bilgileri</a>
-                                    </li>
                                     <li>
+                                        <a ng-href="#tab1" data-toggle="tab" ng-show="isSelf" ng-click='go()'>Kullanıcı Bilgileri</a>
+                                    </li>
+                                    <li class="active">
                                         <a ng-href="#tab2" data-toggle="tab" ng-click='go()'>Yorumlar</a>
                                     </li>
                                     <li>
                                         <a ng-href="#tab3" data-toggle="tab" ng-click='go()'>Beğeniler</a>
                                     </li>
                                     <li>
-                                        <a ng-href="#tab4" data-toggle="tab" ng-click='go()'>Şifre Değiştir</a>
+                                        <a ng-href="#tab4" data-toggle="tab" ng-show="isSelf" ng-click='go()'>Şifre Değiştir</a>
                                     </li>
 
 
@@ -88,44 +96,26 @@
                             <div class="portlet-body">
                                 <div class="tab-content">
                                     <!-- TAB1 -->
-                                    <div class="tab-pane active" id="tab1">
+                                    <div class="tab-pane" id="tab1">
                                         <form action="#" role="form">
-                                            <div class="form-group">
-                                                <div class="fileinput fileinput-exists" data-provides="fileinput">
-                                                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="width: 200px; height: 150px; line-height: 150px;">
-                                                        <img ng-src="{{profileImg}} " style="height:100%">
-                                                    </div>
-                                                    <div>
-                                                        <span class="btn blue btn-outline btn-file">
-                                                            <span class="fileinput-new"> Profil Resmi Seç </span>
-                                                            <span class="fileinput-exists">Profil Resmini Değiştir </span>
-                                                            <input type="hidden" value="" name=""><input type="file" name="...">
-                                                        </span>
-                                                        <a href="javascript:;" class="btn green fileinput-exists" data-dismiss="fileinput"> Kaydet </a>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">Ad Soyad</label>
-                                                <input type="text" placeholder="John" class="form-control" />
+                                                <input type="text" placeholder="John" class="form-control" ng-model="user.Name" />
                                             </div>
 
                                             <div class="form-group">
                                                 <label class="control-label">Email</label>
-                                                <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" />
+                                                <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" ng-model="user.Email" />
                                             </div>
 
                                             <div class="margiv-top-10">
-                                                <a href="javascript:;" class="btn green"> Değişiklikleri Kaydet </a>
-                                                <a href="javascript:;" class="btn default"> İptal </a>
+                                                <a ng-click="changeInfo()" class="btn green"> Değişiklikleri Kaydet </a>
                                             </div>
                                         </form>
                                     </div>
                                     <!-- TAB2 -->
-                                    <div class="tab-pane" id="tab2">
+                                    <div class="tab-pane active" id="tab2">
                                         <div class="timeline">
                                             <div class="timeline-item" ng-repeat="comment in comments">
                                                 <div class="timeline-badge">
@@ -135,20 +125,22 @@
                                                     <div class="timeline-body-arrow"> </div>
                                                     <div class="timeline-body-head">
                                                         <div class="timeline-body-head-caption">
-                                                            <a href="javascript:;" class="timeline-body-title font-blue-madison">{{user.Name}} <a ui-sref="home.locationDetails({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
-                                                        mekanına yorum yaptı.</a>
+                                                            <a href="javascript:;" class="timeline-body-title font-blue-madison">
+                                                                {{user.Name}} <a ui-sref="home.locationDetails({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
+                                                                mekanına yorum yaptı.
+                                                            </a>
                                                             <span class="timeline-body-time font-grey-cascade" am-time-ago="comment.Date"></span>
                                                         </div>
                                                         <div class="timeline-body-head-actions"> </div>
                                                     </div>
                                                     <div class="timeline-body-content">
-                                                     
+
                                                         <br />
-                                                     <blockquote>{{comment.Comment}}</blockquote>   
+                                                        <blockquote>{{comment.Comment}}</blockquote>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>
                                     </div>
                                     <div class="tab-pane" id="tab3">
                                         <div class="timeline ">
@@ -171,32 +163,35 @@
                                                     </div>
                                                     <div class="timeline-body-content">
 
-                                                        
+
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>  
-                                     
+                                        </div>
+
                                     </div>
 
                                     <!-- TAB4 -->
                                     <div class="tab-pane" id="tab4">
-                                        <form action="#">
+                                        <form action="#" name="form">
                                             <div class="form-group">
                                                 <label class="control-label">Mevcut Şifre</label>
-                                                <input type="password" class="form-control" />
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Password" name="password" ng-model="newUser.pass" />
+                                                <div ng-show="form.$submitted || form.password.$touched">
+                                                    <p ng-show="form.password.$error.required" class="alert alert-info"> Mevcut Şifre Alanını Doldurunuz</p>
+                                                </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Yeni Şifre</label>
-                                                <input type="password" class="form-control" />
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" name="npassword" ng-model="newUser.nPass1"  />
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Tekrar Yeni Şifre</label>
-                                                <input type="password" class="form-control" />
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Re-type Your Password" name="rpassword" ng-model="newUser.nPass2" />
+                                                <p ng-show="newUser.nPass1!=newUser.nPass2" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
                                             </div>
                                             <div class="margin-top-10">
-                                                <a href="javascript:;" class="btn green"> Kaydet </a>
-                                                <a href="javascript:;" class="btn default"> İptal </a>
+                                                <a ng-click="changePassword()" ng-show="!form.$invalid" class="btn green"> Kaydet </a>
                                             </div>
                                         </form>
                                     </div>

@@ -178,53 +178,53 @@
 })
  .factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
 
-        var authService = {};
+     var authService = {};
 
-        var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
-
-
-        authService.SocialLoginProvider = $firebaseAuth(ref);
-        var retry = 0;
-        authService.logout = function () {
-            $ls.remove("SessionData");
-            Session.Destroy();
-            ref.unauth();
-        };
-        authService.SocialLoginProvider.$onAuth(function (authData) {
-            if (authData && !Session.isAuthenticated()) {
-                var _data = {
-                    ProviderName: authData.provider,
-                    Mail: authData.uid,
-                    Password: authData["" + authData.provider + ""].accessToken,
-                    Name: authData["" + authData.provider + ""].displayName,
-                    ImgPath: authData["" + authData.provider + ""].profileImageURL
-                }
-                User.SocialLogin(_data);
-            }
-          
-        });
-        authService.socialLogin = function (provider) {
-            this.SocialLoginProvider.$authWithOAuthRedirect(provider).then(function (authData) {
-            }).catch(function (error) {          
-                if (error.code === "TRANSPORT_UNAVAILABLE") {
-                    this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-                        console.log(authData);
-
-                    }).catch(function (error) {
-                        $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
-
-                    });
-                }
-                else {
-                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
-
-                }
-            });
-        }
+     var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
 
 
-        return authService;
-    })
+     authService.SocialLoginProvider = $firebaseAuth(ref);
+     var retry = 0;
+     authService.logout = function () {
+         $ls.remove("SessionData");
+         Session.Destroy();
+         ref.unauth();
+     };
+     authService.SocialLoginProvider.$onAuth(function (authData) {
+         if (authData && !Session.isAuthenticated()) {
+             var _data = {
+                 ProviderName: authData.provider,
+                 Mail: authData.uid,
+                 Password: authData["" + authData.provider + ""].accessToken,
+                 Name: authData["" + authData.provider + ""].displayName,
+                 ImgPath: authData["" + authData.provider + ""].profileImageURL
+             }
+             User.SocialLogin(_data);
+         }
+
+     });
+     authService.socialLogin = function (provider) {
+         this.SocialLoginProvider.$authWithOAuthRedirect(provider).then(function (authData) {
+         }).catch(function (error) {
+             if (error.code === "TRANSPORT_UNAVAILABLE") {
+                 this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
+                     console.log(authData);
+
+                 }).catch(function (error) {
+                     $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+                 });
+             }
+             else {
+                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+             }
+         });
+     }
+
+
+     return authService;
+ })
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');
 
@@ -235,5 +235,39 @@
         templateden istek gelmediği için cache süresi dolmuş olsa dahi yeni veriler yüklenmez.
      */
 })
+.factory('CurrentLocation', function () {
+    var CurrentLocation = {};    
+    CurrentLocation.get = function (successCB, errorCB) {
 
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function (location) {
+                    successCB({ Latitude: location.coords.latitude, Longtitude: location.coords.longitude });
+                },
+                function (err) {
+                    switch (err.code) {
+                        case err.TIMEOUT:
+                            errorCB(err);
+                            break;
+                        case err.PERMISSION_DENIED:
+                            if (err.message.indexOf("Only secure origins are allowed") == 0) {
+                                jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
+                                    successCB({ Latitude: data.location.lat, Longtitude: data.location.lng })
+                                })
+                              .fail(function (err) {
+                                  errorCB(err);
+                              });
+                            }
+                            break;
+                        case err.POSITION_UNAVAILABLE:
+                            errorCB(err);
+                            break;
+                    }
+                },
+              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: true });
+        }
+    };
+
+    return CurrentLocation;
+})
 ;

@@ -1,5 +1,5 @@
 
 var Settings = {
-    apiHostUrl: "localhost:8054",
+    apiHostUrl: "tommycarter-001-site1.itempurl.com",
     logingEnabled: true
 }
