@@ -164,7 +164,6 @@
     Session.Destroy = function () {
         Session.User = null;
         data = null;
-        $ls.removeAll();
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
 
     }
@@ -176,55 +175,46 @@
     }
     return Session;
 })
- .factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
+.factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
 
-     var authService = {};
+    var authService = {};
 
-     var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
-
-
-     authService.SocialLoginProvider = $firebaseAuth(ref);
-     var retry = 0;
-     authService.logout = function () {
-         $ls.remove("SessionData");
-         Session.Destroy();
-         ref.unauth();
-     };
-     authService.SocialLoginProvider.$onAuth(function (authData) {
-         if (authData && !Session.isAuthenticated()) {
-             var _data = {
-                 ProviderName: authData.provider,
-                 Mail: authData.uid,
-                 Password: authData["" + authData.provider + ""].accessToken,
-                 Name: authData["" + authData.provider + ""].displayName,
-                 ImgPath: authData["" + authData.provider + ""].profileImageURL
-             }
-             User.SocialLogin(_data);
-         }
-
-     });
-     authService.socialLogin = function (provider) {
-         this.SocialLoginProvider.$authWithOAuthRedirect(provider).then(function (authData) {
-         }).catch(function (error) {
-             if (error.code === "TRANSPORT_UNAVAILABLE") {
-                 this.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
-                     console.log(authData);
-
-                 }).catch(function (error) {
-                     $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
-
-                 });
-             }
-             else {
-                 $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
-
-             }
-         });
-     }
+    var ref = new Firebase("https://sakaryarehberi.firebaseio.com");
 
 
-     return authService;
- })
+    authService.SocialLoginProvider = $firebaseAuth(ref);
+    var retry = 0;
+    authService.logout = function () {
+        $ls.remove("SessionData");
+        Session.Destroy();
+        authService.SocialLoginProvider.$unauth();
+    };
+    authService.SocialLoginProvider.$onAuth(function (authData) {
+        if (authData && !Session.isAuthenticated()) {
+            var _data = {
+                ProviderName: authData.provider,
+                Mail: authData.uid,
+                Password: authData["" + authData.provider + ""].accessToken,
+                Name: authData["" + authData.provider + ""].displayName,
+                ImgPath: authData["" + authData.provider + ""].profileImageURL
+            }
+            User.SocialLogin(_data);
+        }
+
+    });
+    authService.socialLogin = function (provider) {
+
+        authService.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
+        }).catch(function (error) {
+            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
+
+        });
+
+    };
+
+
+    return authService;
+})
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');
 
@@ -236,7 +226,7 @@
      */
 })
 .factory('CurrentLocation', function () {
-    var CurrentLocation = {};    
+    var CurrentLocation = {};
     CurrentLocation.get = function (successCB, errorCB) {
 
         if (navigator.geolocation) {

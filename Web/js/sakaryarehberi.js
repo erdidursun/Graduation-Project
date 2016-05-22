@@ -146,6 +146,14 @@
             controller: "AdminMainCtrl",
 
         })
+
+        .state('admin.newlocationtypes', {
+            url: "/addlocationtypes",
+            cache: false,
+            templateUrl: 'views/admin-partials/addlocationtypes.html',
+            controller: "NewLocationTypeCtrl",
+
+        })
         .state('home.account', {
             url: "kullanici/:userId",
             templateUrl: 'views/partials/account.html',
@@ -188,4 +196,3 @@
     });
 })
 
-;

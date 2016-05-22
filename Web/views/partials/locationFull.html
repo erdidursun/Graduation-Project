@@ -30,10 +30,10 @@
                         <div class="row">
                             <span ng-click="open(location)" role="button" data-toggle="tab" class="btn blue btn-outline btn-file pull-right margin-bottom-40" style="margin-left:20px  ;  margin-right: 20px;"> Yol Tarifi Al </span>
 
-                            <span ng-if="location.IsLiked" class="btn  blue-steel pull-right" ng-disabled="!isLogged" ng-click="unlike(location.ID)">
+                            <span ng-if="location.IsLiked" class="btn  blue-steel pull-right"  ng-click="unlike(location.ID)">
                                 <i class="fa fa-star"></i> &nbsp;{{location.LikeCount}}
                             </span>
-                            <span ng-if="!location.IsLiked" class="btn  green-sharp pull-right margin-bottom-40" ng-disabled="!isLogged" ng-click="like(location.ID)">
+                            <span ng-if="!location.IsLiked" class="btn  green-sharp pull-right margin-bottom-40"  ng-click="like(location.ID)">
                                 <i class="fa fa-star-o"></i> &nbsp;{{location.LikeCount}}
                             </span>
                         </div>

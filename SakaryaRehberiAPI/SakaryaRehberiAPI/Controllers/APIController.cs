@@ -224,7 +224,7 @@ namespace SakaryaRehberiAPI.Controllers
         public HttpResponseMessage AddSocialUser(SocialUser user)
         {
             List<User> u = new List<Models.User>();
-            var dbUser = _db.Users.FirstOrDefault(p => p.User_Email == user.Mail);
+            var dbUser = _db.Users.FirstOrDefault(p => p.SocialID == user.Mail);
             if (dbUser != null)
             {
                 u.Add(dbUser);
@@ -234,6 +234,7 @@ namespace SakaryaRehberiAPI.Controllers
             {
                 User _user = new Models.User();
                 _user.User_Email = user.Mail;
+                _user.SocialID = user.Mail;
                 _user.User_ImgPath = user.ImgPath;
                 _user.User_Password = user.Password;
                 _user.UserType_ID = 1;
@@ -513,6 +514,7 @@ namespace SakaryaRehberiAPI.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK, _db.LocationTypes.ToList());
         }
+        [HttpGet]
         public HttpResponseMessage AddLocationType(string name)
         {
             LocationType _type = new LocationType();

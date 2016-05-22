@@ -17,7 +17,7 @@
     }
 })
 
-.controller("MapCtrl", function ($scope, $rootScope,CurrentLocation, location, $modalInstance, uiGmapIsReady, $timeout) {
+.controller("MapCtrl", function ($scope, $rootScope, CurrentLocation, location, $modalInstance, uiGmapIsReady, $timeout) {
 
     var directionsDisplay = new google.maps.DirectionsRenderer();
     var directionsService = new google.maps.DirectionsService();
@@ -159,7 +159,7 @@
     }
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
-            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+            swal({ title: "Giriş Yapmalısınız", text: "Beğenmek için giriş yapın.!", type: "error", confirmButtonText: "Cool" });
 
         }
         else {
@@ -194,7 +194,7 @@
 
 
 })
-.controller("LocationsCtrl", function (Session,CurrentLocation, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationsCtrl", function (Session, CurrentLocation, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     CurrentLocation.get(function (location) {
         Location.GetLocations(location).then(function (data) {
@@ -249,52 +249,6 @@
         Latitude: -1,
         Longtitude: -1
     };
-    //navigator.geolocation.getCurrentPosition(function (location) {
-
-    //    console.log(location);
-    //    Coord.Latitude = location.coords.latitude;
-
-    //    Coord.Longtitude = location.coords.longitude;
-
-    //    Location.GetLocations(Coord).then(function (data) {
-    //        angular.forEach(data.data, function (value, key) {
-
-    //            var loc = { name: value.Name, type: value.TypeName, id: value.ID };
-
-    //            if (value.DistanceToUser > 0) {
-    //                var t = (value.DistanceToUser / 1000);
-    //                value.DistanceToUser = t;
-    //                loc.DistanceToUser = t;
-
-    //            }
-    //            $scope.model.push(loc);
-    //            $scope.locations.push(value);
-
-    //        });
-    //        $ocLazyLoad.load({
-    //            files: ['assets/pages/scripts/portfolio-1.js'],
-    //            cache: false
-    //        });
-
-    //    }, function (error) {
-    //        console.log(error);
-    //    });
-    //}, function (error) {
-    //    Location.GetLocations().then(function (data) {
-    //        angular.forEach(data.data, function (value, key) {
-    //            $scope.locations.push(value);
-    //            $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
-    //        });
-    //        $ocLazyLoad.load({
-    //            files: ['assets/pages/scripts/portfolio-1.js'],
-    //            cache: false
-    //        });
-
-    //    }, function (error) {
-    //        console.log(error);
-    //    });
-    //});
-
     $scope.open = function (locationId) {
         var modalInstance = $uibModal.open(
         {
@@ -378,7 +332,7 @@
     }
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
-            swal({ title: "Giriş Yapmalısınız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+            swal({ title: "Giriş Yapmalısınız", text: "Beğenmek için giriş yapın.!", type: "error", confirmButtonText: "Cool" });
 
         }
         else {
@@ -405,7 +359,7 @@
     $scope.showAdminPanel = false;
     if (Session.isAuthenticated()) {
         $scope.isLogged = true;
-        $scope.profileImg = Session.User.profileImageURL 
+        $scope.profileImg = Session.User.profileImageURL
         $scope.nick = Session.User.name;
         $scope.userID = Session.User.id;
         $scope.showAdminPanel = Session.isAdmin();
@@ -474,10 +428,9 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
-
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
-   
+
     $scope.init = function () {
         $ocLazyLoad.load({
             files: [
@@ -498,8 +451,8 @@
 
 
     Location.GetLocationTypes().then(function (data) {
-        $scope.locationTypes = data.data;      
-      
+        $scope.locationTypes = data.data;
+
     }, function (error) {
         console.log(error);
     });
@@ -534,7 +487,7 @@
         $scope.step = $ls.get("Step");
         $scope.location = location;
         $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
-        $scope.uploader.url = "http://"+Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID;
+        $scope.uploader.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID;
 
     }
     $scope.width = ($scope.step / $scope.totalStep) * 100;
@@ -551,7 +504,7 @@
             $scope.step = 2;
             var id = $scope.location.ID;
             $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + id + "&isBanner=true";
-            $scope.uploader.url = "http://"+Settings.apiHostUrl + "/api/Upload?locationID=" + id;
+            $scope.uploader.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + id;
 
         });
     };
@@ -571,12 +524,13 @@
 
 })
 
-
 .controller("AdminMainCtrl", function ($scope, Session, $state, Location, $timeout, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
     $scope.isLogged = false;
+    $scope.user = {};
+
 
     if (Session.isAdmin()) {
         $scope.isLogged = true;
@@ -624,6 +578,7 @@
 
         });
     }
+
     function GetUsers() {
 
         User.GetAll().then(function (data) {
@@ -650,9 +605,6 @@
         });
     }
 
-
-
-
     $scope.DeleteLocation = function (id) {
         Location.Delete(id).then(function (data) {
             $state.go("admin.locations", {}, { reload: true });
@@ -661,15 +613,13 @@
         });
     }
 
-
-
     $scope.open = function () {
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/admin-partials/addnewuser.html',
             animation: true,
             scope: $scope,
-            size: 'lg',
+            size: 'm',
             windowClass: 'center-modal',
             resolve: {
                 deps: ['$ocLazyLoad', function ($ocLazyLoad) {
@@ -683,9 +633,11 @@
                 }]
             }
         });
+        $scope.close = function () {
+            modalInstance.close();
+        };
     };
 
-    $scope.user = {};
     $scope.newLocation = function () {
         var modalInstance = $uibModal.open(
         {
@@ -718,6 +670,11 @@
     };
 
 
+
+
+
+
+
 })
 
 .controller("AdminHeaderCtrl", function () {
@@ -732,7 +689,7 @@
         $scope.isSelf = true;
     else
         $scope.isSelf = false;
-    var url = "http://"+Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + userId;
+    var url = "http://" + Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + userId;
     $scope.uploader = new FileUploader();
 
     $scope.uploader.filters.push({
@@ -757,7 +714,7 @@
         };
         $ls.setObject("SessionData", Session.User);
     }
-    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {   
+    $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
         changeSession(response[0]);
 
         swal({ title: "Başarılı", text: "Profil Resminiz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
@@ -794,7 +751,7 @@
 
         //});
     }
-   
+
     User.GetUserComments(userId).then(function (data) {
         $scope.comments = data;
     });
@@ -830,5 +787,14 @@
         $modalInstance.close();
     };
 
+
+})
+
+.controller("NewLocationTypeCtrl", function ($scope, Location) {
+    $scope.name = "";
+    $scope.addLocationType = function () {
+        console.log($scope.name);
+        Location.AddLocationType($scope.name);
+    }
 
 })

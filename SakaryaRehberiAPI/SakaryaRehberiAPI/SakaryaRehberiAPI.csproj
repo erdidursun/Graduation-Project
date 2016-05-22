@@ -140,6 +140,10 @@
     <Compile Include="Migrations\201604260832232_a1.Designer.cs">
       <DependentUpon>201604260832232_a1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201605222236216_user_social.cs" />
+    <Compile Include="Migrations\201605222236216_user_social.Designer.cs">
+      <DependentUpon>201605222236216_user_social.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\DBContext.cs" />
     <Compile Include="Models\User.cs" />
@@ -187,6 +191,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201604260832232_a1.resx">
       <DependentUpon>201604260832232_a1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201605222236216_user_social.resx">
+      <DependentUpon>201605222236216_user_social.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

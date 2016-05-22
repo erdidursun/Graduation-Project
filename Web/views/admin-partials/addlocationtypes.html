@@ -1,0 +1,26 @@
+﻿<div class="modal-header  margin-top-40 ">
+    <div class="portlet box green-dark">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-user"></i>Yeni Mekan Tipi Ekle
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+
+                <input class="form-control" type="text" autocomplete="off" placeholder="Mekan Tipi"  ng-minlength="4"
+                       required ng-model="name" />
+
+                <div ng-show="form.$submitted || form.username.$touched">
+                    <p ng-show="form.username.$error.required" class="alert alert-info">Mekan Tipi Alanını Doldurunuz</p>
+
+                    <p ng-show="form.username.$error.minlength" class="alert alert-danger">Mekan Tipi Çok Kısa</p>
+                </div>
+            
+     
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success  " ng-click="addLocationType()">Ekle</button>
+</div>
