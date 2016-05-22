@@ -462,10 +462,8 @@
     $scope.users = {};
     $scope.userTypes = {};
     $scope.isLogged = false;
-<<<<<<< HEAD
     $scope.user = {};
-=======
->>>>>>> f758fbc7059db1fdf2648fcf8f7d96935b4ec960
+
 
     if (Session.isAdmin()) {
         $scope.isLogged = true;
