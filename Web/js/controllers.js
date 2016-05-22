@@ -397,8 +397,8 @@
 })
 .controller("LoginCtrl", function ($scope, AuthService, md5, User, Session, $location) {
 
-    $scope.mail = "erdidursun13@gmail.com";
-    $scope.pass = "1234567";
+    $scope.mail = "erdidursun09@hotmail.com";
+    $scope.pass = "12345";
     if (Session.isAuthenticated())
         $location.path("anasayfa")
     $scope.login = function () {
@@ -545,7 +545,8 @@
                 'assets/layouts/layout2/quick-sidebar.min.js',
                 'assets/layouts/layout2/css/themes/blue.min.css'
 
-            ]
+            ],
+            cache:false
         });
         $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "assets/layouts/layout3/img/avatar9.jpg";
         $scope.nick = Session.User.name;

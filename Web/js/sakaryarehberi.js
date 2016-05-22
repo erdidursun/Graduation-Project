@@ -191,7 +191,7 @@
 
     });
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        //$window.location.reload();
+        $state.go("home.locations", {}, { reload: true });
 
     });
 })
