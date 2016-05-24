@@ -23,9 +23,9 @@
                             </uib-carousel>
                         </div>
                         <div class="blog-single-desc">
-                            <p ng-bind-html="location.Info">
+                            <div ng-bind-html="to_trusted(location.Info)">
 
-                            </p>
+                            </div>
                         </div>
                         <div class="row">
                             <span ng-click="open(location)" role="button" data-toggle="tab" class="btn blue btn-outline btn-file pull-right margin-bottom-40" style="margin-left:20px  ;  margin-right: 20px;"> Yol Tarifi Al </span>

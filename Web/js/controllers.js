@@ -102,10 +102,12 @@
     };
 })
 
-.controller("LocationDetailCtrl", function ($scope, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope,$sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
-
+    $scope.to_trusted = function (html_code) {
+        return $sce.trustAsHtml(html_code);
+    }
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data[0];
         console.log($scope.location)
@@ -292,7 +294,6 @@
             controller: "MapCtrl",
             backdrop: 'static',
             keyboard: false,
-            windowClass: 'center-modal',
 
             resolve: {
                 location: function () {
@@ -431,23 +432,9 @@
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
 
-    $scope.init = function () {
-        $ocLazyLoad.load({
-            files: [
-                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.css',
-                'assets/global/plugins/bootstrap-markdown/css/bootstrap-markdown.min.css',
-                'assets/global/plugins/bootstrap-summernote/summernote.css',
-                'assets/global/plugins/bootstrap-wysihtml5/wysihtml5-0.3.0.js',
-                'assets/global/plugins/bootstrap-wysihtml5/bootstrap-wysihtml5.js',
-                'assets/global/plugins/bootstrap-markdown/lib/markdown.js',
-                'assets/global/plugins/bootstrap-markdown/js/bootstrap-markdown.js',
-                'assets/global/plugins/bootstrap-summernote/summernote.min.js',
-            ],
-            cache: true
-        });
-        $('#summernote_1').summernote({ height: 300 });
-
-    };
+    $(document).ready(function () {
+        $('#summernote_1').summernote({lang:"tr-TR", height: 300 })
+    })
 
 
     Location.GetLocationTypes().then(function (data) {
@@ -486,8 +473,8 @@
     if (location) {
         $scope.step = $ls.get("Step");
         $scope.location = location;
-        $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
-        $scope.uploader.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID;
+        $scope.uploader2.url = Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID + "&isBanner=true";
+        $scope.uploader.url = Settings.apiHostUrl + "/api/Upload?locationID=" + $scope.location.ID;
 
     }
     $scope.width = ($scope.step / $scope.totalStep) * 100;
@@ -496,15 +483,16 @@
         $scope.width = ($scope.step / $scope.totalStep) * 100;
     });
     $scope.addNewLocation = function () {
-        $scope.location.Info = $("#info").data('markdown').parseContent();
+        $scope.location.Info = $('#summernote_1').code();
+        console.log($scope.location.Info)
         Location.Add($scope.location).then(function (data) {
             $scope.location = data.data[0];
             $ls.setObject("Location", $scope.location);
             $ls.set("Step", 2);
             $scope.step = 2;
             var id = $scope.location.ID;
-            $scope.uploader2.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + id + "&isBanner=true";
-            $scope.uploader.url = "http://" + Settings.apiHostUrl + "/api/Upload?locationID=" + id;
+            $scope.uploader2.url = Settings.apiHostUrl + "/api/Upload?locationID=" + id + "&isBanner=true";
+            $scope.uploader.url = Settings.apiHostUrl + "/api/Upload?locationID=" + id;
 
         });
     };
@@ -518,7 +506,7 @@
     $scope.uploader.onCompleteAll = function (fileItem, response, status, headers) {
 
         swal({ title: "Başarılı", text: "Mekan Başarıyla Eklendi", type: "success", confirmButtonText: "Tamam" });
-        $state.go("admin.users", {}, { reload: true });
+        $state.go("admin.locations", {}, { reload: true });
 
     };
 
@@ -690,7 +678,7 @@
         $scope.isSelf = true;
     else
         $scope.isSelf = false;
-    var url = "http://" + Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + userId;
+    var url = Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + userId;
     $scope.uploader = new FileUploader();
 
     $scope.uploader.filters.push({

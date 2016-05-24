@@ -1,9 +1,13 @@
-﻿<div class="modal-header">
+﻿
+<div class="modal-header">
     <div class="portlet box green-dark">
         <div class="portlet-title">
             <div class="caption">
-               {{location.Name}}
+                {{location.Name}}
+                
+
             </div>
+            <button class="btn red btn-primary pull-right" type="button" ng-click="close()">Kapat</button>
         </div>
     </div>
 </div>
@@ -21,7 +25,7 @@
 
                     </div>
                 </info-window>
-              </ui-gmap-google-map>
+            </ui-gmap-google-map>
         </div>
         <div class="col-lg-6">
             <div class="scroller" style="height:510px;  overflow: auto;">
@@ -30,7 +34,4 @@
             </div>
         </div>
     </div>
-</div>
-<div class="modal-footer">
-    <button class="btn red btn-primary" type="button" ng-click="close()">Kapat</button>
 </div>
