@@ -58,7 +58,7 @@
                     return $ocLazyLoad.load({
                         name: 'sakaryarehberi',
                         files: [
-                            'assets/global/plugins/cubeportfolio/css/cubeportfolio.css',
+                            'assets/global/plugins/cubeportfolio/css/cubeportfolio.min.css',
                             'assets/pages/css/portfolio.min.css'
                         ]
                     });

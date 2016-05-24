@@ -215,7 +215,7 @@
 
             });
             $ocLazyLoad.load({
-                files: ['assets/pages/scripts/portfolio-1.js'],
+                files: ['assets/pages/scripts/portfolio-1.min.js'],
                 cache: false
             });
 
