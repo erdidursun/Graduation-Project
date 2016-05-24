@@ -229,7 +229,7 @@
                 $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
             });
             $ocLazyLoad.load({
-                files: ['assets/pages/scripts/portfolio-1.js'],
+                files: ['assets/pages/scripts/portfolio-1.min.js'],
                 cache: false
             });
 
