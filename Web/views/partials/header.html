@@ -4,11 +4,11 @@
             <div class="row">
                 <ul class="nav navbar-nav" style="width:100%">
                     <li style="max-width:500px; padding: 16px;float:left">
+
                         <a ui-sref="home.locations" ui-sref-opts="{reload: true}" style="padding-top:0px; margin-top:-7px">
                             <img src="../assets/img/yesillogokalin.png" alt="logo" class="logo-default">
                             <!--<img src="../assets/layouts/layout3/img/mlogo.jpg" alt="logo" class="logo-default">-->
-
-                        </a>
+                            </a>
                     </li>
 
                     <li style="margin-top:20px; margin-right:5px" ng-if="isLogged===false" class="pull-right">
@@ -32,12 +32,12 @@
                                 <ul class="dropdown-menu dropdown-menu-default">
                                     <li>
                                         <a ui-sref="home.account({userId: userID  })">
-                                            <i class="icon-user"></i> My Profile
+                                            <i class="icon-user"></i> Profil
                                         </a>
                                     </li>
                                     <li>
                                         <a ng-click="logout()">
-                                            <i class="icon-key"></i> Log Out
+                                            <i class="icon-key"></i> Çıkış Yap
                                         </a>
                                     </li>
                                     <li>
@@ -55,4 +55,8 @@
         </div>
         <!--<menu></menu>-->
 
+
     </div>
+
+</div>
+

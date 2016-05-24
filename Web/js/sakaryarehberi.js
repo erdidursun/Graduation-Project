@@ -58,7 +58,7 @@
                     return $ocLazyLoad.load({
                         name: 'sakaryarehberi',
                         files: [
-                            'assets/global/plugins/cubeportfolio/css/cubeportfolio.css',
+                            'assets/global/plugins/cubeportfolio/css/cubeportfolio.min.css',
                             'assets/pages/css/portfolio.min.css'
                         ]
                     });
@@ -84,9 +84,9 @@
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                              'assets/global/css/login.min.css',
-                              "/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
+                              "assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
                               "assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css",
-                             "/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+                             "assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
                         ]
                     });
                 }]
@@ -177,8 +177,8 @@
 .run(function ($rootScope, $location, $state, $ls, $window, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
+        console.log(data);
         $ls.setObject("SessionData", data)
-
         if (data.type_id == 2)
             $state.go("admin", {}, { reload: true });
         else
@@ -191,7 +191,7 @@
 
     });
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        //$window.location.reload();
+        $state.go("home.locations", {}, { reload: true });
 
     });
 })

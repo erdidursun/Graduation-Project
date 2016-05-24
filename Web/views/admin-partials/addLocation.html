@@ -72,19 +72,17 @@
                             <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
                                    required ng-model="location.Longtitude" />
                             <div ng-show="form.$submitted || form.boylam.$touched">
-                                <p ng-show="form.boylam.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
-                                <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                                <p ng-show="form.boylam.$error.required" class="alert alert-info">Boylam Doldurunuz</p>
+                                <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Boylam 3 karakterden az olamaz</p>
                             </div>
                         </div>
                         <div class="form-group">
-                            <textarea name="content" id="info" placeholder="Yer açıklaması" data-provide="markdown" rows="10" required style="width:100%;"></textarea>
-                            <div ng-show="form.$submitted || form.info.$touched">
-                                <p ng-show="form.info.$error.required" class="alert alert-info">Yer Açıklamasını Doldurunuz</p>
-                                <p ng-show="form.info.$error.minlength" class="alert alert-danger">Yer Açıklaması 3 karakterden az olamaz</p>
+                            <div class="col-md-12">
+                                <textarea name="summernote" id="summernote_1"> </textarea>
                             </div>
-                        </div>
-                        <div class="form-actions">
-                            <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addNewLocation()">Ekle</button>
+                            <div class="form-actions">
+                                <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="addNewLocation()">Ekle</button>
+                            </div>
                         </div>
                     </div>
                     <div ng-class="step==2?'tab-pane active':'tab-pane'" id="tab2">
@@ -245,4 +243,5 @@
         </div>
     </div>
 
+</div>
 </div>

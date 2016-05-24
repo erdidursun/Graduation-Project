@@ -20,6 +20,7 @@ namespace SakaryaRehberiAPI.Models
         public int UserType_ID { get; set; }
         public string User_Name { get; set; }
 
+        public string SocialID { get; set; }
         public string User_ImgPath { get; set; }
 
         [JsonIgnore]
