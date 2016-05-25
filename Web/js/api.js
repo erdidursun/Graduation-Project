@@ -150,6 +150,17 @@
         var func = $http.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
+
+    Location.GetSearchLocation = function () {       
+
+        var func = $http.get("{apihost}/API/GetSearchLocation");
+        return func;
+    }
+    Location.UpdateLocation = function (id,data) {
+
+        var func = $http.post("{apihost}/API/UpdateLocation?locationId="+id, $httpParamSerializerJQLike(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        return func;
+    }
     Location.GetLocationById = function (id) {
         var url = "{apihost}/API/GetLocationById?id=" + id;
         if (Session.isAuthenticated())

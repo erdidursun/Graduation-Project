@@ -1,0 +1,43 @@
+﻿<div ng-class="step==1?'tab-pane active':'tab-pane'" id=" tab1">
+    <h3 class="block">Mekan Bilgilerini Giriniz</h3>
+    <div class="form-group">
+        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Yer İsmi" name="name" ng-minlength="3"
+               required ng-model="location.Name" />
+
+        <div ng-show="form.$submitted || form.name.$touched">
+            <p ng-show="form.name.$error.required" class="alert alert-info">Yer Adını Doldurunuz</p>
+            <p ng-show="form.username.$error.minlength" class="alert alert-danger">Yer Adı 3 karakterden az olamaz</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <select class="form-control" name="select" ng-model="location.TypeId">
+            <option value="">Mekan Tipi...</option>
+            <option ng-repeat="type in locationTypes" ng-selected="type.LocationType_ID==location.TypeId" value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
+
+        </select>
+    </div>
+    <div class="form-group">
+        <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="5"
+               required ng-model="location.Latitude" />
+        <div ng-show="form.$submitted || form.enlem.$touched">
+            <p ng-show="form.enlem.$error.required" class="alert alert-info">Enlem  Doldurunuz</p>
+            <p ng-show="form.enlem.$error.minlength" class="alert alert-danger">ENLEM 3 karakterden az olamaz</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
+               required ng-model="location.Longtitude" />
+        <div ng-show="form.$submitted || form.boylam.$touched">
+            <p ng-show="form.boylam.$error.required" class="alert alert-info">Boylam Doldurunuz</p>
+            <p ng-show="form.boylam.$error.minlength" class="alert alert-danger">Boylam 3 karakterden az olamaz</p>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-12">
+            <textarea name="summernote" id="summernote_1"> </textarea>
+        </div>
+        <div class="form-actions">
+            <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase pull-right margin-bottom-20 " ng-click="send()">Güncelle</button>
+        </div>
+    </div>
+</div>
