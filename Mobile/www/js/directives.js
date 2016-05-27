@@ -1,4 +1,4 @@
-angular.module('sakaryarehberi')
+﻿angular.module('sakaryarehberi')
 
 .directive('myTabs', function() {
 	return {

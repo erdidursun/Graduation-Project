@@ -12,7 +12,7 @@
     <ion-side-menu side="left" class="main-menu" expose-aside-when="large">
         <ion-content>
             <ion-list>
-                <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile">
+                <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile({userId: id})">
                     <div class="user-image-container">
                         <pre-img ratio="_1_1" helper-class="rounded-image">
                             <img class="user-image" ng-src="{{profileImg}}" spinner-on-load>
@@ -25,9 +25,13 @@
                     <h2 class="menu-text">Anasayfa</h2>
                 </ion-item>
              
-                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.settings">
+                <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="app.settings">
                     <i class="icon ion-gear-a"></i>
                     <h2 class="menu-text">Profil</h2>
+                </ion-item>
+                <ion-item ng-if="!isLogged" class="item-icon-left" nav-clear menu-close ui-sref="auth.login">
+                    <i class="icon ion-log-in"></i>
+                    <h2 class="menu-text">Giriş Yap</h2>
                 </ion-item>
             </ion-list>
         </ion-content>

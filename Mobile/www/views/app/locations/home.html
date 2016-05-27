@@ -7,7 +7,7 @@
     </ion-nav-title>
     <ion-content>
         <!-- Refresh to get the new posts -->
-        <ion-refresher pulling-text="Pull to refresh..." on-refresh="doRefresh()">
+        <ion-refresher pulling-text="Yenilemek için aşağı çekiniz..." on-refresh="refresh()">
         </ion-refresher>
         <div class="posts-list">
             <div ng-repeat="location in locations" class="list card post-item">
@@ -20,9 +20,15 @@
                     </p>
                 </div>
                 <div class="post-content item item-text-wrap" post-content>
-                    <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info | rawHtml"></p>
-                    <img class="alignnone size-medium wp-image-92" ng-src="{{location.Banner}}" alt="fotos-de-paisajes" width="300" height="195">
-                    <div class="post-actions row">
+                    <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info|strLimit:200 | rawHtml"></p>
+                    <div class="ol col-center col-offset-50">
+                        <a ng-if="location.Info.length>200" ui-sref="app.details({locationId: location.ID   })" class=" button button-small button-block button-assertive">
+                            Devamını Oku
+                        </a>
+                    </div>
+                    <img class="alignnone size-medium wp-image-92" ng-src="{{location.Banner}}" ui-sref="app.details({locationId: location.ID   })" alt="fotos-de-paisajes" width="300" height="195">
+                 
+                       <div class="post-actions row">
                         <div class="col text-left" style="padding-right: 10px;">
                             <button ng-if="location.IsLiked" class="button button-block button-assertive  button-small icon icon-left ion-ios-star" style="margin-right:10px" ng-click="unlike(location.ID)">
                                 {{location.LikeCount}}
@@ -36,10 +42,11 @@
                                 {{location.CommentCount}}
                             </button>
                         </div>
+                   
                         <div class="col text-left" style="padding-right: 10px;">
-                            <a class="button  button-block button-royal button-small icon icon-right ion-chevron-right " ui-sref="app.details({locationId: location.ID   })">
-                                Detay
-                            </a>
+
+                            <a class="button  button-block button-royal button-small icon icon-right" ng-click="open($index)">Rota</a>
+
                         </div>
                     </div>
                 </div>

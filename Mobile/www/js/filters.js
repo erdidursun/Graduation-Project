@@ -1,4 +1,4 @@
-angular.module('sakaryarehberi')
+﻿angular.module('sakaryarehberi')
 .filter('strLimit', ['$filter', function ($filter) {
      return function (input, limit) {
          if (!input) return;

@@ -1,4 +1,4 @@
-// Ionic Starter App
+ï»¿// Ionic Starter App
 
 angular.module('underscore', [])
 .factory('_', function () {
@@ -19,8 +19,9 @@ angular.module('sakaryarehberi', [
   'firebase',
 ])
 
-.run(function ($ionicPlatform, $location, $rootScope, $ionicConfig, $timeout, AUTH_EVENTS, $ls, $state) {
+.run(function ($ionicPlatform, $window, $location, $rootScope, $ionicConfig, $timeout, AUTH_EVENTS, $ls, $state) {
 
+    $window.moment().locale("tr");
     $ionicPlatform.on("deviceready", function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -62,18 +63,18 @@ angular.module('sakaryarehberi', [
 
     $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
         $ls.setObject("SessionData", data)
-        swal({ title: "Baþarýlý", text: "Giriþ Baþarýlý", type: "success", confirmButtonText: "Tamam" });
+        swal({ title: "BaÅŸarÄ±lÄ±", text: "GiriÅŸ baÅŸarÄ±lÄ±", type: "success", confirmButtonText: "Tamam" });
 
         $state.go("app.home", {}, { reload: true });
 
     });
     $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        swal({ title: "Giriþ Basarisiz", text: "Kullanýcý Adý veya Þifre Hatalý!", type: "error", confirmButtonText: "Tamam" });
+        swal({ title: "GiriÅŸ BaÅŸarÄ±sÄ±z", text: "KullanÄ±cÄ± adÄ± veya ÅŸifre hatalÄ±", type: "error", confirmButtonText: "Tamam" });
 
 
     });
     $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $state.go("app.home", {}, { reload: true });
+        $state.go("auth.login", {}, { reload: true });
 
     });
 })
@@ -120,6 +121,7 @@ angular.module('sakaryarehberi', [
     .state('app', {
         url: "/app",
         abstract: true,
+        cache:false,
         templateUrl: "views/app/side-menu.html",
         controller: 'AppCtrl'
     })
@@ -134,17 +136,28 @@ angular.module('sakaryarehberi', [
         }
 
     })
-           .state('app.settings', {
-               url: "/settings",
-               views: {
-                   'menuContent': {
-                       templateUrl: "views/app/settings.html",
-                       controller: 'SettingsCtrl',
-                       cache: false
-                   }
-               }
+  .state('app.settings', {
+      url: "/settings",
+      views: {
+          'menuContent': {
+              templateUrl: "views/app/settings.html",
+              controller: 'SettingsCtrl',
+              cache: false
+          }
+      }
 
-           })
+  })
+ .state('app.profile', {
+     url: "/profile/:userId",
+     views: {
+         'menuContent': {
+             templateUrl: "views/app/profile.html",
+             controller: 'ProfileCtrl',
+             cache: false
+         }
+     }
+
+ })
     .state('app.details', {
         url: "/details/:locationId",
         views: {

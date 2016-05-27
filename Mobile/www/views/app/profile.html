@@ -1,26 +1,43 @@
-<ion-view class="profile-view">
-  <ion-nav-title>
-    <span>Profile</span>
-  </ion-nav-title>
-  <ion-content>
-    <div class="top-content row">
-      <div class="profile-container">
-        <div class="user-image-container">
-          <pre-img ratio="_1_1" helper-class="rounded-image">
-            <img class="user-image" ng-src="https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg" spinner-on-load>
-          </pre-img>
+﻿<ion-view class="profile-view">
+    <ion-nav-title>
+        <span>Profile</span>
+    </ion-nav-title>
+    <ion-content>
+        <div class="top-content row">
+            <div class="profile-container">
+                <div class="user-image-container" style="max-height:200px">
+                    <pre-img ratio="_1_1" helper-class="rounded-image">
+                        <img class="user-image" ng-src="{{profileImg}}" style="max-height:100px" spinner-on-load>
+                    </pre-img>
+                </div>
+                <div class="user-name">{{nick}}</div>
+
+            </div>
+
         </div>
-        <div class="user-name">Brynn Evans</div>
-        <div class="user-twitter">@brynn</div>
-      </div>
-      <div class="user-background-image-outer">
-        <div multi-bg="['https://s3.amazonaws.com/uifaces/faces/twitter/brynn/128.jpg']"></div>
-      </div>
-    </div>
-    <div class="bottom-content">
-      <div class="user-bio">
-        <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.</p>
-      </div>
-    </div>
-  </ion-content>
+
+        <div class="item item-divider"></div>
+        <my-tabs style="background-color:red">
+            <my-tab title="Profil Bilgileri">
+                <ul class="list">
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Ad Soyad</span>
+                        <input type="text" placeholder="John" class="form-control" ng-model="user.Name" />
+                    </label>
+                    <label class="item item-input item-floating-label">
+                        <span class="input-label">Email</span>
+                        <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" ng-model="user.Email" />
+                    </label>
+                    <a ng-click="changeInfo()" class="button button-small pull-right button-assertive" style="margin:10px"> Değişiklikleri Kaydet </a>
+
+                </ul>
+            </my-tab>
+            <my-tab title="Beğeniler">
+
+            </my-tab>
+            <my-tab title="Yorumlar">
+
+            </my-tab>
+        </my-tabs>
+    </ion-content>
 </ion-view>
