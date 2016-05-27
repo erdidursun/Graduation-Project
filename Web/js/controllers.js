@@ -102,7 +102,7 @@
     };
 })
 
-.controller("LocationDetailCtrl", function ($scope,$sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, $sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
     $scope.to_trusted = function (html_code) {
@@ -198,19 +198,31 @@
 })
 .controller("LocationsCtrl", function (Session, CurrentLocation, $scope, $location, $sce, $state, Location, $ocLazyLoad, $uibModal, $ls, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
+    $scope.model = [];
+
+    $scope.locations = [];
+    $scope.locationTypes = [];
+
+    $scope.myPagingFunction = function () {
+
+    }
+    Location.GetSearchLocation().then(function (data) {
+        angular.forEach(data.data, function (value, key) {
+            var loc = { name: value.Name, type: value.TypeName, id: value.ID };
+            $scope.model.push(loc);
+        });
+
+    });
     CurrentLocation.get(function (location) {
         Location.GetLocations(location).then(function (data) {
             angular.forEach(data.data, function (value, key) {
 
-                var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
                 if (value.DistanceToUser > 0) {
                     var t = (value.DistanceToUser / 1000);
                     value.DistanceToUser = t;
-                    loc.DistanceToUser = t;
 
                 }
-                $scope.model.push(loc);
                 $scope.locations.push(value);
 
             });
@@ -226,7 +238,6 @@
         Location.GetLocations().then(function (data) {
             angular.forEach(data.data, function (value, key) {
                 $scope.locations.push(value);
-                $scope.model.push({ name: value.Name, type: value.TypeName, id: value.ID });
             });
             $ocLazyLoad.load({
                 files: ['assets/pages/scripts/portfolio-1.min.js'],
@@ -237,10 +248,7 @@
             console.log(error);
         });
     });
-    $scope.model = [];
 
-    $scope.locations = [];
-    $scope.locationTypes = [];
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
@@ -429,11 +437,13 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
+
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
+    $scope.location = {}
 
     $(document).ready(function () {
-        $('#summernote_1').summernote({lang:"tr-TR", height: 300 })
+        $('#summernote_1').summernote({ lang: "tr-TR", height: 300 })
     })
 
 
@@ -461,13 +471,6 @@
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    $scope.location = {
-        Banner: "assets/global/img/locationImages/1.jpg",
-        Name: "Ozan Gölü",
-        Info: "Test",
-        Latitude: 40.716701507568359,
-        Longtitude: 40.716701507568359
-    }
     var location = $ls.getObject("Location");
 
     if (location) {
@@ -512,14 +515,23 @@
 
 })
 
+
+
 .controller("AdminMainCtrl", function ($scope, Session, $state, Location, $timeout, User, $uibModal, $ocLazyLoad) {
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
+    $scope.newTypeID = {};
+    //$scope.userType = {};
     $scope.isLogged = false;
     $scope.user = {};
+    var stateName = $state.current.name;
 
-
+    $scope.user = {
+        User_Name: "",
+        User_Password: "",
+        User_Email: ""
+    };
     if (Session.isAdmin()) {
         $scope.isLogged = true;
         $ocLazyLoad.load({
@@ -534,28 +546,23 @@
                 'assets/layouts/layout2/css/themes/blue.min.css'
 
             ],
-            cache:false
+            cache: false
         });
         $scope.profileImg = Session.User.profileImageURL ? Session.User.profileImageURL : "assets/layouts/layout3/img/avatar9.jpg";
         $scope.nick = Session.User.name;
     }
     else
         $state.go("home.locations", {}, { reload: true });
-    var stateName = $state.current.name;
-    $scope.user = {
-        User_Name: "",
-        User_Password: "",
-        User_Email: ""
-    };
+   
+
 
     if (stateName == "admin.locations")
         GetLocations();
-    if (stateName == "admin.users")
+    else if (stateName == "admin.users")
         GetUsers();
 
     User.GetUserTypes().then(function (data) {
         $scope.userTypes = data.data;
-
     }, function (error) {
         console.log(error);
     });
@@ -658,9 +665,46 @@
 
     };
 
+    $scope.OpenYetki = function (id) {
+        $scope.selectedUser = $scope.users[id];
+        console.log($scope.selectedUser)
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/useryetki.html',
+            animation: true,
+            scope: $scope,
+            size: 's',
+            windowClass: 'center-modal',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/global/css/login.min.css'
+                        ]
+                    });
+                }]
+            }
+        });
+        $scope.close = function () {
+            modalInstance.close();
+        };
+    };
+
+    $scope.UpdateYetki = function (userId) {
+        //seçili olanın id=yetki /useryetki.html
+       var newYetki=$("#yetki").val();
+       User.Yetkilendir(newYetki, userId).then(function (data) {
+           $state.go("admin.users", {}, { reload: true });
+       }, function (e) {
+
+       });
 
 
 
+
+    };
 
 
 
@@ -669,6 +713,38 @@
 .controller("AdminHeaderCtrl", function () {
 
 
+})
+
+.controller("LocationEditCtrl", function ($scope, $stateParams,$state, Location) {
+
+    var locationId = $stateParams.locationId;
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
+
+    }, function (error) {
+        console.log(error);
+    });
+    Location.GetLocationById(locationId).then(function (data) {
+        $scope.location = data.data[0];
+        console.log($scope.location);
+        $(document).ready(function () {
+            $('#summernote_1').summernote({ lang: "tr-TR", height: 300 })
+            $('#summernote_1').code($scope.location.Info);
+        })
+    });
+    $scope.send = function () {
+        $scope.location.Info = $('#summernote_1').code();
+        Location.UpdateLocation(locationId, $scope.location).then(function (data) {
+            if(data.status==200){
+                swal({ title: "Başarılı", text: "Mekan Başarıyla Güncellendi.", type: "success", confirmButtonText: "Tamam" });
+                $state.go("admin.locations", {}, { reload: true });
+
+            }
+            else
+                swal({ title: "Hata", text: "Olmadı.", type: "error", confirmButtonText: "Tamam" });
+
+        })
+    }
 })
 
 .controller("AccountCtrl", function ($scope, $state, $stateParams, $timeout, $ls, Session, User, FileUploader) {

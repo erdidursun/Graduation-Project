@@ -49,6 +49,7 @@
                       .then(function (data) {
                           swal({ title: "Başarılı", text: "Başarıyla Kayıt Oldunuz. Giriş Yapılıyor.", type: "success", confirmButtonText: "Tamam" }
                               , function () {
+                                  if (!Session.isAuthenticated())
                                   User.Login(data.data.Email, data.data.Password);
                               });
 
@@ -76,6 +77,9 @@
         var func = $http.get(url, { headers: { 'Content-Type': 'application/json' } })
         return func;
     }
+
+  
+
     User.GetUserById = function (id) {
         var func = $http.get("{apihost}/API/GetUserById?userId=" + id).then(function (data) {
             return data.data[0];
@@ -121,6 +125,23 @@
         return func;
     }
 
+    User.Yetkilendir = function (typeid, id) {
+        var data = {
+            UserID: id
+        }
+
+        var func = $http.get("{apihost}/API/UpdateYetki?typeID="+typeid + "&UserID=" + id)
+       .then(function (data) {
+           console.log(data);
+
+       }, function (error) {
+           console.log(error);
+       });
+        return func;
+
+
+    }
+
 
     return User;
 
@@ -148,6 +169,17 @@
             var data = $httpParamSerializerJQLike(Coord1)
 
         var func = $http.post(url, data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        return func;
+    }
+
+    Location.GetSearchLocation = function () {       
+
+        var func = $http.get("{apihost}/API/GetSearchLocation");
+        return func;
+    }
+    Location.UpdateLocation = function (id,data) {
+
+        var func = $http.post("{apihost}/API/UpdateLocation?locationId="+id, $httpParamSerializerJQLike(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
     Location.GetLocationById = function (id) {

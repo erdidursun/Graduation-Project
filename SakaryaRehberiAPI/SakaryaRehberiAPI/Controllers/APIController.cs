@@ -398,11 +398,40 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
+        [HttpGet]
+        public HttpResponseMessage UpdateYetki(int typeID, int UserID) 
+        {
+            var euser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (euser != null)
+            {
+                euser.UserType_ID = typeID;
+
+                _db.Entry<User>(euser).State = EntityState.Modified;
+                _db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, euser);
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        
+        }
         #endregion
 
         #region Locations
 
+        [HttpGet]
+        public HttpResponseMessage GetSearchLocation()
+        {
+            var data = from p in _db.Locations
+                       select new
+                       {
+                           ID = p.Location_ID,
+                           Name = p.Location_Name,
+                           TypeName = p.LocationType.LocationType_Name
+                       };
+            return Request.CreateResponse(HttpStatusCode.OK, data);
 
+        }
         [HttpGet]
         public HttpResponseMessage LikeLocation(int locationId, int userId)
         {
@@ -445,7 +474,7 @@ namespace SakaryaRehberiAPI.Controllers
             _loc.Location_Name = loc.Name;
             _loc.Location_Latitude = loc.Latitude;
             _loc.Location_Longtitude = loc.Longtitude;
-            _loc.LocationType_ID = loc.Type_ID;
+            _loc.LocationType_ID = loc.TypeId;
             _db.Locations.Add(_loc);
             _db.SaveChanges();
             var list = new List<Location>();
@@ -461,7 +490,7 @@ namespace SakaryaRehberiAPI.Controllers
                         select location).ToList();
             try
             {
-                var result = getLocations(coordinat, list, userId, page * 6);
+                var result = getLocations(coordinat, list, userId, page * 60);
                 return Request.CreateResponse(HttpStatusCode.OK, result); ;
 
             }
@@ -469,6 +498,29 @@ namespace SakaryaRehberiAPI.Controllers
             {
 
                 return Request.CreateResponse(HttpStatusCode.InternalServerError, ex.InnerException);
+            }
+
+
+        }
+
+        [HttpPost]
+        public HttpResponseMessage UpdateLocation(int locationId,LocationNew loc){
+
+            var location = _db.Locations.FirstOrDefault(p => p.Location_ID == locationId);
+            if(location==null)
+                return Request.CreateResponse(HttpStatusCode.NoContent, "");
+            else
+            {
+
+                location.Location_Name = loc.Name;
+                location.LocationType_ID = loc.TypeId;
+                location.Location_Latitude=loc.Latitude;
+                location.Location_Longtitude = loc.Longtitude;
+                location.Location_Info = loc.Info;
+                _db.Entry<Location>(location).State = EntityState.Modified;
+                _db.SaveChanges();
+                return Request.CreateResponse(HttpStatusCode.OK, location);
+
             }
 
 

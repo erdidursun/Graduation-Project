@@ -1,8 +1,9 @@
-﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularFileUpload', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
+﻿var sakaryarehberi = angular.module('sakaryarehberi', ['oc.lazyLoad', 'angularFileUpload', 'infinite-scroll', 'angularMoment', 'uiGmapgoogle-maps', "ui.router", "ui.select", "firebase", 'angular-md5',
     "ui.bootstrap",
     "oc.lazyLoad",
     "ngSanitize",
     'angularSpinner'])
+
 .config(function ($httpProvider, $stateProvider, $urlRouterProvider, usSpinnerConfigProvider, uiGmapGoogleMapApiProvider) {
 
     $httpProvider.defaults.headers.common = {};
@@ -126,24 +127,31 @@
               }]
           }
       })
-     .state('admin', {
-         url: "/yonetici",
-         cache: false,
-         templateUrl: 'views/adminmain.html',
-         controller: "AdminMainCtrl"
-     })
-    .state('admin.locations', {
-        url: "/mekanlar",
-        cache: false,
-        templateUrl: 'views/admin-partials/locations.html',
-        controller: "AdminMainCtrl",
+          .state('admin', {
+              url: "/yonetici",
+              cache: false,
+              templateUrl: 'views/adminmain.html',
+              controller: "AdminMainCtrl"
+          })
+            .state('admin.locations', {
+                url: "/mekanlar",
+                cache: false,
+                templateUrl: 'views/admin-partials/locations.html',
+                //controller: "AdminMainCtrl",
 
-    })
+            })
+         .state('admin.editLocation', {
+             url: "/mekanDuzenle/:locationId",
+             cache: false,
+             templateUrl: 'views/admin-partials/LocationEdit.html',
+             controller: "LocationEditCtrl",
+
+         })
         .state('admin.users', {
             url: "/kullanicilar",
             cache: false,
             templateUrl: 'views/admin-partials/users.html',
-            controller: "AdminMainCtrl",
+            //controller: "AdminMainCtrl",
 
         })
 
@@ -196,3 +204,4 @@
     });
 })
 
+;
