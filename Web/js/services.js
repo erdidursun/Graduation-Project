@@ -230,6 +230,7 @@
 })
 .factory('CurrentLocation', function () {
     var CurrentLocation = {};
+
     CurrentLocation.get = function (successCB, errorCB) {
 
         if (navigator.geolocation) {
@@ -257,7 +258,7 @@
                             break;
                     }
                 },
-              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: true });
+              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
         }
     };
 

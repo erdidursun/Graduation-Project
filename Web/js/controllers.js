@@ -648,9 +648,9 @@
                         insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
                         files: [
                              'assets/global/css/login.min.css',
-                              "/assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
+                              "assets/global/plugins/jquery-file-upload/blueimp-gallery/blueimp-gallery.min.css",
                               "assets/global/plugins/jquery-file-upload/css/jquery.fileupload.css",
-                             "/assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
+                             "assets/global/plugins/jquery-file-upload/css/jquery.fileupload-ui.css"
                         ]
                     });
                 }]
@@ -676,7 +676,7 @@
 
 
 })
-.controller("LocationEditCtrl", function ($scope, $stateParams,$state, Location) {
+.controller("LocationEditCtrl", function ($scope, $stateParams, $state, Location) {
 
     var locationId = $stateParams.locationId;
     Location.GetLocationTypes().then(function (data) {
@@ -696,7 +696,7 @@
     $scope.send = function () {
         $scope.location.Info = $('#summernote_1').code();
         Location.UpdateLocation(locationId, $scope.location).then(function (data) {
-            if(data.status==200){
+            if (data.status == 200) {
                 swal({ title: "Başarılı", text: "Mekan Başarıyla Güncellendi.", type: "success", confirmButtonText: "Tamam" });
                 $state.go("admin.locations", {}, { reload: true });
 
