@@ -1,5 +1,9 @@
 ﻿<ion-modal-view>
+
     <ion-content scroll="true" class="padding" ng-controller="DirectionCtrl">
+        <h4 class="label label-info calm">
+            {{location.Name}}
+        </h4>
         <div class="mapWrap" data-tap-disabled="true">
             <div class="col">
                 <map center="{{latitude}},{{longitude}}" zoom="12" style="height:300px;">
@@ -23,7 +27,7 @@
     <ion-footer-bar class="post-footer bar bar-footer bar-calm" style="background-color:#21692E!important">
         <div class="row">
             <div class="col col-40  col-offset-66 col-center">
-                <a class="button button-calm" ng-click="open()">Kapat</a>
+                <a class="button button-calm" ng-click="close()">Kapat</a>
             </div>
         </div>
     </ion-footer-bar>

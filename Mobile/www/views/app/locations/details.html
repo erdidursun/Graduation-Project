@@ -3,7 +3,7 @@
     <ion-nav-title>
         <span>{{location.Name}}</span>
     </ion-nav-title>
-    <ion-content>       
+    <ion-content>
         <div class="post-content item item-text-wrap" post-content>
             <ion-slide-box show-pager="true">
                 <ion-slide ng-repeat="slide in slides">
@@ -20,47 +20,53 @@
             <hr />
             <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info | rawHtml"></p>
             <br />
+            <div ng-if="isLogged">
 
-            <h2 class="label label-info calm">
-                Yorum Yap
-            </h2>
-            <div class="col col-center">
+                <h2 class="label label-info calm">
+                    Yorum Yap
+                </h2>
+                <div class="col col-center">
 
-                <textarea rows="5" style="width:100%;background-color:#EAEAEA"></textarea>
-                <button class=" button button-assertive pull-right" style="    float: right; margin: 10px;">Gönder</button>
+                    <textarea rows="5" style=" width:100%;border:1px solid;" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
+                    <button class=" button button-assertive pull-right" style="   float: right; margin: 10px;" ng-click="sendComment()">Gönder</button>
+                </div>
+                <br />
+                <h2 class="label label-info calm">
+                    Yorumlar
+                </h2>
+
+                <br />
             </div>
-            <br />
-            <h2 class="label label-info calm">
-                Yorumlar
-            </h2>
+            <div class="list">
 
-            <br />
-
-             <div class="list">
-
-                <span class="item item-avatar"  ng-repeat="comment in location.Comments" style="border:0px!important;border-bottom: 2px solid #181918!important;">
+                <span class="item item-avatar" ng-repeat="comment in location.Comments" style="border:0px!important;border-bottom: 2px solid #181918!important;">
                     <img ng-src="{{comment.UserImgPath}}" style="margin-left:0px!important;    margin-top: 0px!important">
                     <a href="directions.html">{{comment.UserName}}</a>
                     <p>{{comment.Comment}}</p>
                 </span>
             </div>
             <br />
-           
+
         </div>
         <!--<div class="post-tags item item-text-wrap">
             <span class="post-tag button button-small button-outline button-stable">{{category.title}}</span>
         </div>-->
     </ion-content>
 
-    <ion-footer-bar class="post-footer bar bar-footer bar-calm" style="background-color:#21692E!important">
-        <div class="row">            
-       
+    <ion-footer-bar class="post-footer bar bar-footer" style="background-color:transparent!important">
+        <div class="row">
+
             <div class="col col-20 col-center" ng-if="location.IsLiked">
-                <a class="button button-icon icon ion-star">{{location.LikeCount}}</a>
-            </div> 
+                <button class="button button-assertive  icon icon-left ion-ios-star" ng-click="unlike(location.ID)">
+                    {{location.LikeCount}}
+                </button>
+
+            </div>
             <div class="col col-20 col-center" ng-if="!location.IsLiked">
-                <a class="button button-icon icon ion-ios-star-outline">{{location.LikeCount}}</a>
-            </div>        
+                <button class="button  button-calm   icon icon-left ion-ios-star" ng-click="like(location.ID)">
+                    {{location.LikeCount}}
+                </button>
+            </div>
             <div class="col-offset-50 col-center">
                 <a class="button button-calm" ng-click="open()">Yol Tarifi Al</a>
             </div>
