@@ -164,6 +164,8 @@
     Session.Destroy = function () {
         Session.User = null;
         data = null;
+        $ls.removeAll();
+
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
 
     }
@@ -185,7 +187,8 @@
     authService.SocialLoginProvider = $firebaseAuth(ref);
     var retry = 0;
     authService.logout = function () {
-        $ls.remove("SessionData");
+        console.log("33");
+
         Session.Destroy();
         authService.SocialLoginProvider.$unauth();
     };

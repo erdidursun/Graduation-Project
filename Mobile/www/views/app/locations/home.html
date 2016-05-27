@@ -3,7 +3,7 @@
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
     </ion-nav-buttons>
     <ion-nav-title>
-        <span>WordPress</span>
+        <span>Mekanlar</span>
     </ion-nav-title>
     <ion-content>
         <!-- Refresh to get the new posts -->
@@ -24,20 +24,20 @@
                     <img class="alignnone size-medium wp-image-92" ng-src="{{location.Banner}}" alt="fotos-de-paisajes" width="300" height="195">
                     <div class="post-actions row">
                         <div class="col text-left" style="padding-right: 10px;">
-                            <button ng-if="location.IsLiked" class="button button-block button-calm button-small icon icon-left ion-thumbsdown " ng-disabled="!isLogged"  style="margin-right:10px" ng-click="like">
+                            <button ng-if="location.IsLiked" class="button button-block button-assertive  button-small icon icon-left ion-ios-star" style="margin-right:10px" ng-click="unlike(location.ID)">
                                 {{location.LikeCount}}
                             </button>
-                            <button ng-if="!location.IsLiked" class="button button-block button-small icon icon-left ion-thumbsdown "  style="margin-right:10px;background-color:red;color:white" ng-click="like">
+                            <button ng-if="!location.IsLiked" class="button button-block button-calm  button-small icon icon-left ion-ios-star " style="margin-right:10px" ng-click="like(location.ID)">
                                 {{location.LikeCount}}
                             </button>
                         </div>
                         <div class="col text-left" style="padding-right: 10px;">
-                            <button class="button button-block button-balanced button-small icon icon-left ion-chatbox-working ">
+                            <button class="button button-block button-balanced button-small icon icon-left ion-chatbox-working " ng-click="openComment($index)">
                                 {{location.CommentCount}}
                             </button>
                         </div>
                         <div class="col text-left" style="padding-right: 10px;">
-                            <a class="button  button-block button-assertive button-small icon icon-left ion-cube " ui-sref="app.details({locationId: location.ID   })">
+                            <a class="button  button-block button-royal button-small icon icon-right ion-chevron-right " ui-sref="app.details({locationId: location.ID   })">
                                 Detay
                             </a>
                         </div>

@@ -1,0 +1,46 @@
+﻿
+<ion-modal-view>
+    <ion-content>
+        <div class="post-content item item-text-wrap" post-content>
+            <div ng-if="isLogged">
+                <h2 class="label label-info calm">
+                    Yorum Yap
+                </h2>
+                <div class="col col-center">
+
+                    <textarea rows="5" style=" width:100%;border:1px solid;" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
+                    <button class=" button button-assertive pull-right" style="   float: right; margin: 10px;" ng-click="sendComment()">Gönder</button>
+                </div>
+                <br />
+            </div>
+          
+            <h2 class="label label-info calm">
+                Yorumlar
+            </h2>
+
+            <br />
+
+            <div class="list">
+
+                <span class="item item-avatar" ng-repeat="comment in selectedLocation.Comments" style="border:0px!important;border-bottom: 2px solid #181918!important;">
+                    <img ng-src="{{comment.UserImgPath}}" style="margin-left:0px!important;    margin-top: 0px!important">
+                    <a href="directions.html">{{comment.UserName}}</a>
+                    <p>{{comment.Comment}}</p>
+                </span>
+            </div>
+            <br />
+
+        </div>
+        <!--<div class="post-tags item item-text-wrap">
+            <span class="post-tag button button-small button-outline button-stable">{{category.title}}</span>
+        </div>-->
+    </ion-content>
+
+    <ion-footer-bar class="post-footer bar bar-footer bar-calm" style="background-color:#21692E!important">
+        <div class="row">
+            <div class="col-offset-80 col-center">
+                <a class="button button-calm" ng-click="close()">Kapat</a>
+            </div>
+        </div>
+    </ion-footer-bar>
+</ion-modal-view>
