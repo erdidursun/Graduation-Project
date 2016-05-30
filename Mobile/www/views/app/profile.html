@@ -6,9 +6,10 @@
         <div class="top-content row">
             <div class="profile-container">
                 <div class="user-image-container" style="max-height:200px">
-                    <pre-img ratio="_1_1" helper-class="rounded-image">
-                        <img class="user-image" ng-src="{{profileImg}}" style="max-height:100px" spinner-on-load>
+                    <pre-img ratio="_1_1" helper-class="rounded-image" style="max-height:50px!important">
+                        <img class="user-image" ng-src="{{profileImg}}" style="max-height:100px!important" spinner-on-load>
                     </pre-img>
+                    <button class="button button-small button-assertive button-block" style="margin-top:-50px" ng-click="changePicture()">Değiştir</button>
                 </div>
                 <div class="user-name">{{nick}}</div>
 
@@ -16,28 +17,19 @@
 
         </div>
 
-        <div class="item item-divider"></div>
-        <my-tabs style="background-color:red">
-            <my-tab title="Profil Bilgileri">
-                <ul class="list">
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Ad Soyad</span>
-                        <input type="text" placeholder="John" class="form-control" ng-model="user.Name" />
-                    </label>
-                    <label class="item item-input item-floating-label">
-                        <span class="input-label">Email</span>
-                        <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" ng-model="user.Email" />
-                    </label>
-                    <a ng-click="changeInfo()" class="button button-small pull-right button-assertive" style="margin:10px"> Değişiklikleri Kaydet </a>
+        <div class="list">
+            <div class="col col-center">
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Ad Soyad</span>
+                    <input type="text" placeholder="John" class="form-control" ng-model="user.Name" />
+                </label>
+                <label class="item item-input item-floating-label">
+                    <span class="input-label">Email</span>
+                    <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" ng-model="user.Email" />
+                </label>
+                <a ng-click="changeInfo()" class="button button-small pull-right button-assertive" style="margin:10px"> Değişiklikleri Kaydet </a>
 
-                </ul>
-            </my-tab>
-            <my-tab title="Beğeniler">
-
-            </my-tab>
-            <my-tab title="Yorumlar">
-
-            </my-tab>
-        </my-tabs>
-    </ion-content>
+            </div>
+        </div>      
+</ion-content>
 </ion-view>

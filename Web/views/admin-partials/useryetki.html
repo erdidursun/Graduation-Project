@@ -1,0 +1,36 @@
+﻿<div class="modal-header  margin-top-10 ">
+    <div class="portlet box green-dark">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-user"></i>Kullanıcı Yetkilendir
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="blog-single-foot">
+        <div class="blog-post-meta">
+
+            <div class="form-group">
+
+                <select class="form-control" name="select" id="yetki">
+                    <option ng-repeat=" type in userTypes" ng-selected="selectedUser.Type_ID==type.UserType_ID" value="{{type.UserType_ID}}">
+                        {{type.UserType_Name}}
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+    </div>
+
+
+</div>
+
+<div class="modal-footer">
+    <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase " ng-click="UpdateYetki(selectedUser.ID)">Değiştir</button>
+
+    <button class="btn red btn-primary" type="button" ng-click="close()">Kapat</button>
+
+</div>

@@ -334,7 +334,6 @@
     authService.SocialLoginProvider = $firebaseAuth(ref);
     var retry = 0;
     authService.logout = function () {
-        console.log("2sssssssssss2");
         $ls.remove("SessionData");
         Session.Destroy();
         authService.SocialLoginProvider.$unauth();
@@ -379,7 +378,9 @@
                 name: data.Name,
                 profileImageURL: data.ImgPath,
                 type_id: data.Type_ID,
-                type_name: data.TypeName
+                type_name: data.TypeName,
+                commentCount:data.CommentCount,
+                likeCount: data.LikeCount
             };
 
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
@@ -492,4 +493,59 @@
 
     }
     return CurrentLocation;
-}]);
+}])
+.factory('Resource', function ($cordovaCamera, $cordovaCapture, Session,$cordovaFileTransfer, $sce) {
+    return {
+
+        GetImage: function (fromCamera) {
+
+            var options = {
+                quality: 50, //0-100
+                destinationType: Camera.DestinationType.FILE_URI, //DATA_URL (returns base 64) or FILE_URI (returns image path)
+                allowEdit: true, //allow cropping
+                encodingType: Camera.EncodingType.JPEG,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            var resource = { Url: "", Type: 0, Name: "", MimeType: "" };
+
+            if (fromCamera == 0)
+                options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+            else if (fromCamera == 1)
+                options.sourceType = Camera.PictureSourceType.CAMERA;
+
+            var func = $cordovaCamera.getPicture(options).then(function (imageUrl) {
+                resource.nativeUrl = imageUrl;
+                resource.Type = 0;
+                resource.Url = $sce.trustAsResourceUrl(imageUrl);
+                resource.Name = imageUrl.substr(imageUrl.lastIndexOf('/') + 1);
+                resource.MimeType = "image/jpeg";
+                console.log("eddd ");
+                console.log(resource);
+                return resource;
+            });
+            return func;
+        },
+        Upload: function (resource) {
+            var options = {
+                fileKey: "avatar",
+                fileName: resource.Name,
+                chunkedMode: false,
+                mimeType: resource.MimeType,
+                headers: { Connection: "close" }
+            }
+            var target = Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + Session.User.id;
+            var func = $cordovaFileTransfer.upload(target, resource.nativeUrl, options).then(function (result) {
+                console.log(result);
+                return result;
+            }, function (err) {
+
+            }, function (progress) {
+                return progress.loaded / progress.total * 100;
+            });
+            return func;
+        }
+  
+    }
+})
+;

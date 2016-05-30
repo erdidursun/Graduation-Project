@@ -12,6 +12,7 @@ namespace SakaryaRehberiAPI.Models
         public DBContext() : base("DbContext") {
             //this.Configuration.LazyLoadingEnabled = false;
             //this.Configuration.ProxyCreationEnabled = false;
+           
         }
         public DbSet<User> Users { get; set; }
         public DbSet<Location> Locations { get; set; }
@@ -26,6 +27,7 @@ namespace SakaryaRehberiAPI.Models
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             //modelBuilder.Conventions.ad>();
+        
         }
     }
 }

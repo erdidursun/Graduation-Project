@@ -1,7 +1,5 @@
 ﻿angular.module('sakaryarehberi')
 .controller("MainCtrl", function () {
-
-
 })
 .controller("MapBtnCtrl", function ($scope, $rootScope) {
     $scope.filterDisplayName = "Araçla"
@@ -437,8 +435,10 @@
 .controller("MenuCtrl", function ($scope) {
 
 })
+
 .controller("LocationNewCtrl", function ($scope, $ls, $state, Location, FileUploader, $ocLazyLoad) {
     $scope.locationTypes = {};
+    $scope.location = {}
 
     $(document).ready(function () {
         $('#summernote_1').summernote({ lang: "tr-TR", height: 300 })
@@ -469,13 +469,6 @@
             return '|jpg|png|jpeg|bmp|gif|'.indexOf(type) !== -1;
         }
     });
-    $scope.location = {
-        Banner: "assets/global/img/locationImages/1.jpg",
-        Name: "Ozan Gölü",
-        Info: "Test",
-        Latitude: 40.716701507568359,
-        Longtitude: 40.716701507568359
-    }
     var location = $ls.getObject("Location");
 
     if (location) {
@@ -492,7 +485,8 @@
     });
     $scope.addNewLocation = function () {
         $scope.location.Info = $('#summernote_1').code();
-        console.log($scope.location.Info)
+        console.log($scope.location.Info);
+        console.log($scope.location);
         Location.Add($scope.location).then(function (data) {
             $scope.location = data.data[0];
             $ls.setObject("Location", $scope.location);
@@ -524,8 +518,17 @@
     $scope.locations = {};
     $scope.users = {};
     $scope.userTypes = {};
+    $scope.newTypeID = {};
+    //$scope.userType = {};
     $scope.isLogged = false;
     $scope.user = {};
+    var stateName = $state.current.name;
+
+    $scope.user = {
+        User_Name: "",
+        User_Password: "",
+        User_Email: ""
+    };
     if (Session.isAdmin()) {
         $scope.isLogged = true;
         $ocLazyLoad.load({
@@ -547,21 +550,16 @@
     }
     else
         $state.go("home.locations", {}, { reload: true });
-    var stateName = $state.current.name;
-    $scope.user = {
-        User_Name: "",
-        User_Password: "",
-        User_Email: ""
-    };
+
+
 
     if (stateName == "admin.locations")
         GetLocations();
-    if (stateName == "admin.users")
+    else if (stateName == "admin.users")
         GetUsers();
 
     User.GetUserTypes().then(function (data) {
         $scope.userTypes = data.data;
-
     }, function (error) {
         console.log(error);
     });
@@ -664,9 +662,46 @@
 
     };
 
+    $scope.OpenYetki = function (id) {
+        $scope.selectedUser = $scope.users[id];
+        console.log($scope.selectedUser)
+        var modalInstance = $uibModal.open(
+        {
+            templateUrl: 'views/admin-partials/useryetki.html',
+            animation: true,
+            scope: $scope,
+            size: 's',
+            windowClass: 'center-modal',
+            resolve: {
+                deps: ['$ocLazyLoad', function ($ocLazyLoad) {
+                    return $ocLazyLoad.load({
+                        name: 'sakaryarehberi',
+                        insertBefore: '#ng_load_plugins_before', // load the above css files before '#ng_load_plugins_before'
+                        files: [
+                            'assets/global/css/login.min.css'
+                        ]
+                    });
+                }]
+            }
+        });
+        $scope.close = function () {
+            modalInstance.close();
+        };
+    };
+
+    $scope.UpdateYetki = function (userId) {
+        //seçili olanın id=yetki /useryetki.html
+        var newYetki = $("#yetki").val();
+        User.Yetkilendir(newYetki, userId).then(function (data) {
+            $state.go("admin.users", {}, { reload: true });
+        }, function (e) {
+
+        });
 
 
 
+
+    };
 
 
 
@@ -676,6 +711,7 @@
 
 
 })
+
 .controller("LocationEditCtrl", function ($scope, $stateParams, $state, Location) {
 
     var locationId = $stateParams.locationId;
@@ -730,26 +766,15 @@
 
 
     function changeSession(data) {
-        Session.User = {
-            loginType: Session.loginType,
-            id: data.ID,
-            name: data.Name,
-            profileImageURL: data.ImgPath,
-            type_id: data.Type_ID,
-            type_name: data.TypeName
-        };
-        $ls.setObject("SessionData", Session.User);
+        var _user = Session.User;
+        _user.name = data.Name;
+        _user.profileImageURL = data.ImgPath;
+        $ls.setObject("SessionData", _user);
     }
     $scope.uploader.onSuccessItem = function (fileItem, response, status, headers) {
         changeSession(response[0]);
-
         swal({ title: "Başarılı", text: "Profil Resminiz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
         $state.go("home.account", {}, { reload: true });
-
-
-
-
-
     };
     User.GetUserById(userId).then(function (data) {
         $scope.user = data;

@@ -14,6 +14,7 @@ angular.module('sakaryarehberi', [
   'angular-md5',
   'underscore',
   'ngMap',
+  'ui.select',
   'ngCordova',
   'slugifier',
   'firebase',
@@ -80,8 +81,9 @@ angular.module('sakaryarehberi', [
 })
 
 
-.config(function ($stateProvider, $urlRouterProvider, $ionicConfigProvider, $httpProvider) {
+.config(function ($stateProvider, $urlRouterProvider, uiSelectConfig, $ionicConfigProvider, $httpProvider) {
     $httpProvider.defaults.useXDomain = true;
+    uiSelectConfig.theme = 'select2';
     delete $httpProvider.defaults.headers.common['X-Requested-With'];
     $httpProvider.interceptors.push('httpRequestInterceptor');
     $stateProvider
@@ -121,7 +123,7 @@ angular.module('sakaryarehberi', [
     .state('app', {
         url: "/app",
         abstract: true,
-        cache:false,
+        cache: false,
         templateUrl: "views/app/side-menu.html",
         controller: 'AppCtrl'
     })
@@ -135,18 +137,30 @@ angular.module('sakaryarehberi', [
             }
         }
 
-    })
-  .state('app.settings', {
-      url: "/settings",
-      views: {
-          'menuContent': {
-              templateUrl: "views/app/settings.html",
-              controller: 'SettingsCtrl',
-              cache: false
-          }
-      }
 
-  })
+    })
+    .state('app.userComments', {
+        url: "/userComments",
+        views: {
+            'menuContent': {
+                templateUrl: "views/app/locations/commentedLocation.html",
+                controller: 'UserCommentsCtrl',
+                cache: false
+            }
+        }      
+
+    })
+   .state('app.userLikes', {
+       url: "/userLikes",
+       views: {
+           'menuContent': {
+               templateUrl: "views/app/locations/likedLocation.html",
+               controller: 'UserLikesCtrl',
+               cache: false
+           }
+       }
+
+   })
  .state('app.profile', {
      url: "/profile/:userId",
      views: {

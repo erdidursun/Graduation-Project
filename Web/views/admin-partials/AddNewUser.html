@@ -7,62 +7,56 @@
         </div>
     </div>
 </div>
+
 <div class="modal-body">
-    <div class="blog-single-foot">
-        <div class="blog-post-meta">
 
-            <div class="form-group">
-                <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Ad Soyad" name="username" ng-minlength="6"
-                       required ng-model="user.User_Name" />
+    <form name="form">
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Ad Soyad" name="username" ng-minlength="6"
+                   required ng-model="user.User_Name" />
 
-                <div ng-show="form.$submitted || form.username.$touched">
-                    <p ng-show="form.username.$error.required" class="alert alert-info">Ad-Soyad Alanını Doldurunuz</p>
+            <div ng-show="form.$submitted || form.username.$touched">
+                <p ng-show="form.username.$error.required" class="alert alert-info">Ad-Soyad Alanını Doldurunuz</p>
 
-                    <p ng-show="form.username.$error.minlength" class="alert alert-danger">Ad-Soyad  Çok Kısa</p>
-                </div>
+                <p ng-show="form.username.$error.minlength" class="alert alert-danger">Ad-Soyad  Çok Kısa</p>
             </div>
 
-            <div class="form-group">
-                <input class="form-control placeholder-no-fix" type="email" required autocomplete="off" id="register_email" placeholder="Email Adres" name="email" ng-model="user.User_Email" />
 
-                <div ng-show="form.$submitted || form.email.$touched">
-                    <p ng-show="form.email.$error.required" class="alert alert-info">E-mail Alanını doldurunuz.</p>
+        </div>
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" type="email" required autocomplete="off" id="register_email" placeholder="Email Adresi" name="email" ng-model="user.User_Email" />
 
-                    <p ng-show="form.email.$error.email" class="alert alert-danger">Geçersiz Mail Adresi</p>
-                </div>
+            <div ng-show="form.$submitted || form.email.$touched">
+                <p ng-show="form.email.$error.required" class="alert alert-info">E-mail Alanını doldurunuz.</p>
 
+                <p ng-show="form.email.$error.email" class="alert alert-danger">Geçersiz Mail Adresi</p>
             </div>
 
-            <div class="form-group">
-                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Şifre" name="password" data-ng-model="user.User_Password" />
-                <div ng-show="form.$submitted || form.password.$touched">
-                    <p ng-show="form.password.$error.required" class="alert alert-info">Şifre Alanını Doldurunuz</p>
 
-                </div>
-            </div>
-
-            <div class="form-group">
-                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Tekrar Şifre" name="rpassword" ng-model="rpass" />
-                <p ng-show="rpass!=user.User_Password" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
-            </div>
-
-            <div class="form-group">
-
-                <select class="form-control" name="select" ng-model="user.UserType_ID">
-                    <option value="">Kullanıcı Tipi...</option>
-                    <option ng-repeat="type in userTypes " value="{{type.UserType_ID}}">{{type.UserType_Name}}</option>
-
-                </select>
-            </div>
 
         </div>
 
-    </div>
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Şifre" name="password" data-ng-model="user.User_Password" />
+            <div ng-show="form.$submitted || form.password.$touched">
+                <p ng-show="form.password.$error.required" class="alert alert-info">Şifre Alanını Doldurunuz</p>
+
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Şifre Tekrar" name="rpassword" ng-model="rpass" />
+            <p ng-show="rpass!=user.User_Password" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
+
+        </div>
+    </form>
+
 
 
 </div>
 
+
 <div class="modal-footer">
+
     <button type="button" ng-disabled="form.$invalid" id="register-submit-btn" class="btn btn-success uppercase " ng-click="addnewuser()">Ekle</button>
 
     <button class="btn red btn-primary" type="button" ng-click="close()">Kapat</button>

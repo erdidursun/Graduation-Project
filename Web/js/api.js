@@ -1,5 +1,5 @@
 ﻿angular.module("sakaryarehberi")
-.service('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
+.service('User', function (Session, $rootScope, AUTH_EVENTS,$state, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
     var User = {};
 
     User.Login = function (mail, pass) {
@@ -11,15 +11,22 @@
                 .then(function (data) {
                     swal({ title: "Başarılı", text: "Giriş Başarılı", type: "success", confirmButtonText: "Tamam" });
                          
-                    if (data)
-                        Session.Create("form", data.data[0]);
+                    if (data) {
+                        var user= data.data[0];
+                        Session.Create("form",user);
+
+                        if (user.type_id == 2)
+                            $state.go("admin", {}, { reload: true });
+                        else
+                            $state.go("home.locations", {}, { reload: true });
+                    }
                     else
                         Session.Create("form", null);
-
+             
 
                 }, function (error) {
                     swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
-
+                    $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
                     Session.Create("form", null);
 
                 });
@@ -49,6 +56,7 @@
                       .then(function (data) {
                           swal({ title: "Başarılı", text: "Başarıyla Kayıt Oldunuz. Giriş Yapılıyor.", type: "success", confirmButtonText: "Tamam" }
                               , function () {
+                                  if (!Session.isAuthenticated())
                                   User.Login(data.data.Email, data.data.Password);
                               });
 
@@ -76,6 +84,9 @@
         var func = $http.get(url, { headers: { 'Content-Type': 'application/json' } })
         return func;
     }
+
+  
+
     User.GetUserById = function (id) {
         var func = $http.get("{apihost}/API/GetUserById?userId=" + id).then(function (data) {
             return data.data[0];
@@ -119,6 +130,23 @@
               console.log(error);
           });
         return func;
+    }
+
+    User.Yetkilendir = function (typeid, id) {
+        var data = {
+            UserID: id
+        }
+
+        var func = $http.get("{apihost}/API/UpdateYetki?typeID="+typeid + "&UserID=" + id)
+       .then(function (data) {
+           console.log(data);
+
+       }, function (error) {
+           console.log(error);
+       });
+        return func;
+
+
     }
 
 

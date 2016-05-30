@@ -1,9 +1,10 @@
 ﻿
-<ion-view class="post-view">
     <ion-nav-title>
         <span>{{location.Name}}</span>
     </ion-nav-title>
     <ion-content>
+        <br />
+        <br />
         <div class="post-content item item-text-wrap" post-content>
             <ion-slide-box show-pager="true">
                 <ion-slide ng-repeat="slide in slides">
@@ -22,14 +23,15 @@
             <br />
             <div ng-if="isLogged">
 
-                <h2 class="label label-info calm">
-                    Yorum Yap
-                </h2>
-                <div class="col col-center">
+              
+                <label class="item item-input item-stacked-label">
+                    <span class="label label-info calm">Yorum Yap</span>
+                    <hr />
+                    <textarea rows="5" style="width:100%;" class="form-control c-square" name="message" ng-model="comment.Comment" ></textarea>
 
-                    <textarea rows="5" style=" width:100%;border:1px solid;" name="message" ng-model="comment.Comment" placeholder="Yorumunuzu Yazınız ..." class="form-control c-square"></textarea>
-                    <button class=" button button-assertive pull-right" style="   float: right; margin: 10px;" ng-click="sendComment()">Gönder</button>
-                </div>
+                </label>
+                <button class="button button-small button-assertive pull-right" style="float: right; margin: 10px;" ng-click="sendComment()">Gönder</button>
+
                 <br />
                 <h2 class="label label-info calm">
                     Yorumlar
@@ -39,9 +41,9 @@
             </div>
             <div class="list">
 
-                <span class="item item-avatar" ng-repeat="comment in location.Comments" style="border:0px!important;border-bottom: 2px solid #181918!important;">
+                <span class="item item-avatar" ng-repeat="comment in location.Comments" style="border:0px!important;margin-bottom:4px; background-color:#f7f5f5">
                     <img ng-src="{{comment.UserImgPath}}" style="margin-left:0px!important;    margin-top: 0px!important">
-                    <a href="directions.html">{{comment.UserName}}</a>
+                    <span >{{comment.UserName}}</span>
                     <p>{{comment.Comment}}</p>
                 </span>
             </div>
@@ -72,4 +74,4 @@
             </div>
         </div>
     </ion-footer-bar>
-</ion-view>
+

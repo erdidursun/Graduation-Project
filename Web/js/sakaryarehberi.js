@@ -127,31 +127,31 @@
               }]
           }
       })
-     .state('admin', {
-         url: "/yonetici",
-         cache: false,
-         templateUrl: 'views/adminmain.html',
-         controller: "AdminMainCtrl"
-     })
-    .state('admin.locations', {
-        url: "/mekanlar",
-        cache: false,
-        templateUrl: 'views/admin-partials/locations.html',
-        controller: "AdminMainCtrl",
+          .state('admin', {
+              url: "/yonetici",
+              cache: false,
+              templateUrl: 'views/adminmain.html',
+              controller: "AdminMainCtrl"
+          })
+            .state('admin.locations', {
+                url: "/mekanlar",
+                cache: false,
+                templateUrl: 'views/admin-partials/locations.html',
+                //controller: "AdminMainCtrl",
 
-    })
-   .state('admin.editLocation', {
-       url: "/mekanDuzenle/:locationId",
-       cache: false,
-       templateUrl: 'views/admin-partials/LocationEdit.html',
-       controller: "LocationEditCtrl",
+            })
+         .state('admin.editLocation', {
+             url: "/mekanDuzenle/:locationId",
+             cache: false,
+             templateUrl: 'views/admin-partials/LocationEdit.html',
+             controller: "LocationEditCtrl",
 
-   })
+         })
         .state('admin.users', {
             url: "/kullanicilar",
             cache: false,
             templateUrl: 'views/admin-partials/users.html',
-            controller: "AdminMainCtrl",
+            //controller: "AdminMainCtrl",
 
         })
 
@@ -184,24 +184,6 @@
 })
 .run(function ($rootScope, $location, $state, $ls, $window, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
-    $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
-        console.log(data);
-        $ls.setObject("SessionData", data)
-        if (data.type_id == 2)
-            $state.go("admin", {}, { reload: true });
-        else
-            $state.go("home.locations", {}, { reload: true });
-
-    });
-    $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        swal({ title: "Giriş Başarısız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
-
-
-    });
-    $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $state.go("home.locations", {}, { reload: true });
-
-    });
 })
 
 ;

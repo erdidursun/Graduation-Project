@@ -13,23 +13,31 @@
         <ion-content>
             <ion-list>
                 <ion-item class="heading-item item item-avatar" nav-clear menu-close ui-sref="app.profile({userId: id})">
-                    <div class="user-image-container">
-                        <pre-img ratio="_1_1" helper-class="rounded-image">
-                            <img class="user-image" ng-src="{{profileImg}}" spinner-on-load>
+                    <div class="user-image-container" style="max-height:200px">
+                        <pre-img ratio="_1_1" helper-class="rounded-image" style="max-height:50px!important">
+                            <img class="user-image" ng-src="{{profileImg}}" style="max-height:100px!important" spinner-on-load>
                         </pre-img>
                     </div>
                     <h2 class="greeting">{{nick}}</h2>
                 </ion-item>
-                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.home">
+                <ion-item class="item-icon-left" nav-clear menu-close ui-sref="app.home" ui-sref-opts="{reload: true}">
                     <i class="icon ion-home"></i>
                     <h2 class="menu-text">Anasayfa</h2>
                 </ion-item>
              
-                <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="app.settings">
-                    <i class="icon ion-gear-a"></i>
-                    <h2 class="menu-text">Profil</h2>
+                <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="app.userComments" ui-sref-opts="{reload: true}">
+                    <i class="icon ion-chatbox"></i>
+                    <h2 class="menu-text">Yorumlar({{commentCount}})</h2>
                 </ion-item>
-                <ion-item ng-if="!isLogged" class="item-icon-left" nav-clear menu-close ui-sref="auth.login">
+                <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="app.userLikes" ui-sref-opts="{reload: true}">
+                    <i class="icon ion-star"></i>
+                    <h2 class="menu-text">Beğeniler({{likeCount}})</h2>
+                </ion-item>
+                <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="#">
+                    <i class="icon ion-log-out"></i>
+                    <h2 class="menu-text" ng-click="logout()">Çıkış Yap</h2>
+                </ion-item>
+                <ion-item ng-if="!isLogged" class="item-icon-left" nav-clear menu-close ui-sref="auth.login" >
                     <i class="icon ion-log-in"></i>
                     <h2 class="menu-text">Giriş Yap</h2>
                 </ion-item>

@@ -73,7 +73,7 @@ namespace SakaryaRehberiAPI.Controllers
                                LocationName = c.Location.Location_Name
 
                            };
-            return Comments.OrderBy(p => p.Date);
+            return Comments.OrderByDescending(p => p.Date);
         }
         private object getImages(ICollection<LocationImage> images)
         {
@@ -141,11 +141,20 @@ namespace SakaryaRehberiAPI.Controllers
         {
             if (lat1 > 0 && long1 > 0 && lat2 > 0 && long2 > 0)
             {
-                var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
-                WebClient c = new WebClient();
-                var json = c.DownloadString(url);
-                RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
-                return a.rows.First().elements.First().distance.value;
+                try
+                {
+                    var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
+                    WebClient c = new WebClient();
+                    var json = c.DownloadString(url);
+                    RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
+                    return a.rows.First().elements.First().distance.value;
+                }
+                catch (Exception)
+                {
+
+                    return 0;
+                }
+               
             }
             else return 0;
 
@@ -337,7 +346,7 @@ namespace SakaryaRehberiAPI.Controllers
                                  LocationName = l.Location_Name,
                                  LocationId = l.Location_ID,
                                  Date = like.UserLike_Date
-                             }).OrderBy(d => d.Date).ToList();
+                             }).OrderByDescending(d => d.Date).ToList();
 
             return Request.CreateResponse(HttpStatusCode.OK, locations);
 
@@ -398,6 +407,23 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
+        [HttpGet]
+        public HttpResponseMessage UpdateYetki(int typeID, int UserID) 
+        {
+            var euser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
+            if (euser != null)
+            {
+                euser.UserType_ID = typeID;
+
+                _db.Entry<User>(euser).State = EntityState.Modified;
+                _db.SaveChanges();
+
+                return Request.CreateResponse(HttpStatusCode.OK, euser);
+            }
+            return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
+
+        
+        }
         #endregion
 
         #region Locations
@@ -452,10 +478,11 @@ namespace SakaryaRehberiAPI.Controllers
         public HttpResponseMessage AddLocation(LocationNew loc)
         {
             Location _loc = new Location();
-            _loc.Location_Banner = loc.Banner;
+            _loc.Location_Banner = "Images/location.jpg";
             _loc.Location_Info = loc.Info;
             _loc.Location_Name = loc.Name;
             _loc.Location_Latitude = loc.Latitude;
+           
             _loc.Location_Longtitude = loc.Longtitude;
             _loc.LocationType_ID = loc.TypeId;
             _db.Locations.Add(_loc);

@@ -1,0 +1,31 @@
+﻿
+<ion-content>
+    <br />
+    <br />
+    <div class="list timeline">
+        <ion-scroll style="height: 500px;" direction="y">
+
+            <div class="timeline-item" ng-repeat="like in likes">
+                <div class="timeline-badge">
+                    <img class="timeline-badge-userpic img-circle" ng-src="{{user.profileImageURL}}">
+                </div>
+                <div class="timeline-body">
+                    <div class="timeline-body-arrow"> </div>
+                    <div class="timeline-body-head">
+                        <div class="timeline-body-head-caption">
+                            <span class="timeline-body-title ">
+                                {{like.UserName}}
+                                <a ui-sref="app.details({locationId: like.LocationId   })">{{like.LocationName}}</a>
+                                mekanını <span style="font-style: italic;text-decoration: underline;"></span> beğendi.
+                            </span>
+                            <span class="timeline-body-time font-grey-cascade" am-time-ago="like.Date"></span>
+                        </div>
+                        <div class="timeline-body-head-actions"> </div>
+                    </div>
+
+                </div>
+            </div>
+        </ion-scroll>
+    </div>
+
+</ion-content>
