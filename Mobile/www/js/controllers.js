@@ -1,4 +1,4 @@
-angular.module('sakaryarehberi')
+﻿angular.module('sakaryarehberi')
 
 .controller('AuthCtrl', function (Session, $location) {
     if (Session.isAuthenticated())
@@ -6,15 +6,82 @@ angular.module('sakaryarehberi')
 })
 
 // APP
-.controller('AppCtrl', function ($scope, $rootScope, AuthService, Session) {
-    if (Session.isAuthenticated()) {
-        $scope.profileImg = Session.User.profileImageURL;
-        $scope.nick = Session.User.name;
+.controller('AppCtrl', function ($scope, $rootScope, $ls, AuthService, Session, AUTH_EVENTS) {
+
+    function getData() {
+        $scope.isLogged = Session.isAuthenticated();
+
+        if ($scope.isLogged) {
+            var user = Session.User;
+            $scope.profileImg = user.profileImageURL;
+            $scope.nick = user.name;
+            $scope.id = user.id;
+            $scope.commentCount = user.commentCount;
+            $scope.likeCount = user.likeCount;
+        }
     }
+    getData();
+    $rootScope.$on(AUTH_EVENTS.sessionChanged, function (conf, data) {
+        getData();
+    });
+    $scope.logout = function () {
+        AuthService.logout();
 
-
+    }
 })
+ .controller('ProfileCtrl', function ($scope, Resource, User, Resource, $ls, $state, $stateParams, $rootScope, AuthService, Session, AUTH_EVENTS) {
+     $scope.isSelf = false;
+     var userId = $stateParams.userId;
+     if (Session.isAuthenticated() && userId == Session.User.id)
+         $scope.isSelf = true;
+     else
+         $scope.isSelf = false;
+     function changeSession(data) {
+         Session.User = {
+             loginType: Session.loginType,
+             id: data.ID,
+             name: data.Name,
+             profileImageURL: data.ImgPath,
+             type_id: data.Type_ID,
+             type_name: data.TypeName,
+             commentCount: data.CommentCount,
+             likeCount: data.LikeCount
+         };
+         $ls.setObject("SessionData", Session.User);
+         $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
 
+     }
+     User.GetUserById(userId).then(function (data) {
+         $scope.user = data;
+         console.log($scope.user);
+         $scope.profileImg = $scope.user.ImgPath;
+         $scope.nick = $scope.user.Name;
+
+     });
+     $scope.changeInfo = function () {
+         User.ChangeInfo(userId, $scope.user.Name, $scope.user.Email).then(function (data) {
+             changeSession(data.data[0]);
+             swal({ title: "Başarılı", text: "Bilgileriniz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+
+         });
+     }
+     $scope.changePicture = function () {
+         Resource.GetImage(0).then(function (res) {
+             $scope.profileImg = res.Url;
+             Resource.Upload(res).then(function (data) {
+      
+
+             }, function (err) {
+                 console.log(err);
+             },
+             function (progress) {
+                 if (progress >= 99)
+                     swal({ title: "Başarılı", text: "Profil Resiminiz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+             })
+         });
+     }
+
+ })
 //LOGIN
 .controller('LoginCtrl', function ($scope, $rootScope, Session, $location, md5, User, AuthService) {
 
@@ -53,7 +120,7 @@ angular.module('sakaryarehberi')
     $scope.user = {};
 })
 
-.controller('HomeCtrl', function (Session, $rootScope, $ionicModal, User, $ionicSlideBoxDelegate, $scope, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
+.controller('HomeCtrl', function (Session, $rootScope, AUTH_EVENTS, $ionicModal, User, $ionicSlideBoxDelegate, $scope, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
 
     $scope.isLogged = Session.isAuthenticated();
@@ -74,9 +141,15 @@ angular.module('sakaryarehberi')
                         }
 
                     }
+                    Session.User.likeCount--;
+                    $ls.setObject("SessionData", Session.User);
+                    $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
+
+
                 }
             });
         }
+
 
 
     }
@@ -95,7 +168,11 @@ angular.module('sakaryarehberi')
                             break;
                         }
 
+
                     }
+                    Session.User.likeCount++;
+                    $ls.setObject("SessionData", Session.User);
+                    $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
                 }
             });
         }
@@ -104,7 +181,8 @@ angular.module('sakaryarehberi')
     };
 
     $scope.openComment = function (index) {
-        $scope.selectedLocation = $scope.locations[index];
+        $scope.selectedIndex = index;
+        $scope.location = $scope.locations[index];
         console.log()
         $ionicModal.fromTemplateUrl('views/app/locations/comments.html', {
             scope: $scope,
@@ -117,9 +195,23 @@ angular.module('sakaryarehberi')
         });
     };
 
+    $scope.open = function (index) {
+        $scope.location = $scope.locations[index];
+
+        $ionicModal.fromTemplateUrl('views/app/locations/directions.html', {
+            scope: $scope,
+            animation: 'slide-in-left'
+
+        }).then(function (modal) {
+
+            $scope.modal = modal;
+            modal.show();
+        });
+    };
     $scope.sendComment = function () {
+        console.log()
         $scope.comment.UserId = Session.User.id;
-        $scope.comment.LocationId = $scope.selectedLocation.ID;
+        $scope.comment.LocationId = $scope.location.ID;
 
         User.SendComment($scope.comment).then(function (data) {
             var newComment = {
@@ -128,32 +220,47 @@ angular.module('sakaryarehberi')
                 UserImgPath: Session.User.profileImageURL,
                 UserName: Session.User.name
             }
-            $scope.selectedLocation.Comments.push(newComment);
+            //$scope.selectedLocation.Comments.push(newComment);
+            $scope.locations[$scope.selectedIndex].Comments.push(newComment);
             $scope.comment.Comment = "";
+            Session.User.commentCount++;
+            $ls.setObject("SessionData", Session.User);
+            $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
+
         });
     }
     $scope.close = function () {
         $scope.modal.remove();
-        $scope.refresh();
     }
+
     $scope.refresh = function () {
 
         $scope.locations = [];
         $scope.locationTypes = [];
         $scope.comment = {};
+        $scope.model = [];
 
-        $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Konumunuz Aranıyor.!' });
+        Location.GetSearchLocation().then(function (data) {
+            angular.forEach(data.data, function (value, key) {
+                var loc = { name: value.Name, type: value.TypeName, id: value.ID };
+                $scope.model.push(loc);
+            });
+
+        });
         Location.GetLocationTypes().then(function (data) {
             $scope.locationTypes = data.data;
 
         }, function (error) {
             console.log(error);
         });
+        $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Konumunuz Aranıyor.' });
+
         CurrrentLocation.get(function (Coord) {
+            $ionicLoading.hide();
+            $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' });
+
             Location.GetLocations(Coord).then(function (data) {
                 $ionicLoading.hide();
-                $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.!' })
-
                 angular.forEach(data.data, function (value, key) {
                     var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
@@ -163,15 +270,20 @@ angular.module('sakaryarehberi')
                         loc.DistanceToUser = t;
                     }
                     $scope.locations.push(value);
-
                 });
                 $ionicLoading.hide();
+                $scope.$broadcast('scroll.refreshComplete');
+
 
             }, function (error) {
                 console.log(error);
+                $scope.$broadcast('scroll.refreshComplete');
+
             });
         }, function error(err) {
-            console.log(err);
+            $ionicLoading.hide();
+            $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' })
+
             Location.GetLocations().then(function (data) {
                 angular.forEach(data.data, function (value, key) {
                     $scope.locations.push(value);
@@ -182,26 +294,22 @@ angular.module('sakaryarehberi')
             }, function (error) {
                 $ionicLoading.hide();
                 console.log(error);
+                $scope.$broadcast('scroll.refreshComplete');
+
             });
 
         });
     }
 
-    $rootScope.$on("$stateChangeSuccess", function (event, toState, toParams, fromState, fromParams) {
-        if (toState.name.indexOf('app.home') > -1) {
-            console.log(fromState);
+    $scope.selectChange = function (locationId) {
+        $state.go("app.details", { locationId: locationId });
+        $scope.selected = "";
 
-            // Restore platform default transition. We are just hardcoding android transitions to auth views.
-            $scope.refresh();
-
-
-        }
-
-    });
+    }
     $scope.refresh();
 
 })
-.controller('DetailCtrl', function (Session, User, $ionicModal, $scope, $ionicModal, $ionicSlideBoxDelegate, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
+.controller('DetailCtrl', function (Session, User, AUTH_EVENTS, $ionicModal, $scope, $ionicModal, $ionicSlideBoxDelegate, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
     $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Yükleniyor!' })
     var locationId = $stateParams.locationId;
@@ -219,6 +327,7 @@ angular.module('sakaryarehberi')
         }, 50);
     });
     $scope.like = function (locationId) {
+
         if (!Session.isAuthenticated())
             swal({ title: "Giriş Yapmalısınız", text: "Beğenmek için giriş yapın.!", type: "error", confirmButtonText: "Cool" });
         else {
@@ -226,6 +335,9 @@ angular.module('sakaryarehberi')
                 if (data.status == 200) {
                     $scope.location.LikeCount++;
                     $scope.location.IsLiked = true;
+                    Session.User.likeCount++;
+                    $ls.setObject("SessionData", Session.User);
+                    $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
                 }
             });
         }
@@ -240,7 +352,9 @@ angular.module('sakaryarehberi')
                 if (data.status == 200) {
                     $scope.location.LikeCount--;
                     $scope.location.IsLiked = false;
-
+                    Session.User.likeCount--;
+                    $ls.setObject("SessionData", Session.User);
+                    $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
 
                 }
             }
@@ -270,6 +384,7 @@ angular.module('sakaryarehberi')
         $scope.modal.remove();
     }
     $scope.sendComment = function () {
+        console.log("33");
         $scope.comment.UserId = Session.User.id;
         $scope.comment.LocationId = $scope.location.ID;
 
@@ -282,6 +397,9 @@ angular.module('sakaryarehberi')
             }
             $scope.location.Comments.push(newComment);
             $scope.comment.Comment = "";
+            Session.User.commentCount++;
+            $ls.setObject("SessionData", Session.User);
+            $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
         });
     }
     $scope.isVisible = Session.isAuthenticated();
@@ -349,7 +467,28 @@ angular.module('sakaryarehberi')
         $scope.modal.close();
     }
 })
+.controller('UserCommentsCtrl', function ($scope, $rootScope, AUTH_EVENTS, User, $ls, Session) {
 
+    $scope.user = Session.User;
+
+    User.GetUserComments($scope.user.id).then(function (data) {
+        $scope.comments = data;
+        Session.User.commentCount = data.length;
+        $ls.setObject("SessionData", Session.User);
+        $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
+    });
+})
+.controller('UserLikesCtrl', function ($scope, $rootScope, AUTH_EVENTS, $ls, User, Session) {
+
+    $scope.user = Session.User;
+
+    User.GetUserLikes($scope.user.id).then(function (data) {
+        $scope.likes = data;
+        Session.User.likeCount = data.length;
+        $ls.setObject("SessionData", Session.User);
+        $rootScope.$broadcast(AUTH_EVENTS.sessionChanged, Session.User);
+    });
+})
 .controller('SettingsCtrl', function ($scope, $rootScope, AuthService, AUTH_EVENTS, $ionicActionSheet, $state) {
     $scope.airplaneMode = true;
     $scope.wifi = false;
@@ -362,10 +501,7 @@ angular.module('sakaryarehberi')
 
     $scope.radioChoice = 'B';
 
-    $scope.logout = function () {
-        AuthService.logout();
 
-    }
     // Triggered on a the logOut button click
     $scope.showLogOutMenu = function () {
 
@@ -383,7 +519,7 @@ angular.module('sakaryarehberi')
                 // add cancel code..
             },
             buttonClicked: function (index) {
-                
+
             },
             destructiveButtonClicked: function () {
                 //Called when the destructive button is clicked.

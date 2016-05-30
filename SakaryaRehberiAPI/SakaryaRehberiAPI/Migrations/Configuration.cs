@@ -10,15 +10,17 @@ namespace SakaryaRehberiAPI.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
+            
         }
 
         protected override void Seed(SakaryaRehberiAPI.Models.DBContext context)
         {
 
+            
             context.UserTypes.AddOrUpdate(new Models.UserType() { UserType_ID = 1, UserType_Name = "Kullanýcý" });
             context.UserTypes.AddOrUpdate(new Models.UserType() { UserType_ID = 2, UserType_Name = "Yönetici" });
-            context.Users.AddOrUpdate(new Models.User() { User_ID = 1, User_Name = "Erdi Dursun", User_Password = "827ccb0eea8a706c4c34a16891f84e7b", User_Email = "erdidursun09@hotmail.com", UserType_ID = 2, User_SignUpDate = DateTime.Now, User_ImgPath = "Images/avatar5.jpg" });
-            context.Users.AddOrUpdate(new Models.User() { User_ID = 2, User_Name = "Ozan Ceylan", User_Password = "827ccb0eea8a706c4c34a16891f84e7b", User_Email = "cyln@hotmail.com", UserType_ID = 2, User_SignUpDate = DateTime.Now, User_ImgPath = "Images/avatar7.jpg" });
+            context.Users.AddOrUpdate(new Models.User() { User_ID = 1, User_Name = "Erdi Dursun", User_Password = "827ccb0eea8a706c4c34a16891f84e7b", User_Email = "erdidursun09@hotmail.com", UserType_ID = 2, User_SignUpDate = DateTime.Now, User_ImgPath = "Images/person.png" });
+            context.Users.AddOrUpdate(new Models.User() { User_ID = 2, User_Name = "Ozan Ceylan", User_Password = "827ccb0eea8a706c4c34a16891f84e7b", User_Email = "cyln@hotmail.com", UserType_ID = 2, User_SignUpDate = DateTime.Now, User_ImgPath = "Images/person.png" });
           
             //context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 1, LocationType_Name = "Tarihi" });
             //context.LocationTypes.AddOrUpdate(new Models.LocationType() { LocationType_ID = 2, LocationType_Name = "Doðal Güzellik" });

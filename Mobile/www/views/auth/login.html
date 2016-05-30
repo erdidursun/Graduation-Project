@@ -5,7 +5,7 @@
                 <div class="card login-container" content-tabs tabsdata='tabsdata'>
                     <form name="login_form" class="" novalidate ng-cloak>
                         <my-tabs>
-                            <my-tab >
+                            <my-tab title="Sakarya Rehberi">
                                 <div class="list">
                                     <label class="item item-input">
                                         <input type="email" placeholder="Email" name="user_email" ng-model="user.email" required>
@@ -18,9 +18,11 @@
                         </my-tabs>
                         <div class="item item-body bottom-content">
                             <button type="submit" class="button button-positive button-block" ng-click="doLogIn()" ng-disabled="(login_form.user_email.$invalid || login_form.user_password.$invalid)">
-                               Giriş Yap
+                                Giriş Yap
                             </button>
+
                         </div>
+                     
                     </form>
                 </div>
                 <div style="text-align:center" class="padding">
@@ -37,9 +39,12 @@
                     <a class="sign-up button button-small button-clear button-light" ui-sref="auth.signup">
                         Kayıt Ol
                     </a>
-
+                    <a class="button  button-block button-royal " ui-sref="app.home">
+                        Giriş Yapmadan Devam Et
+                    </a>
                 </div>
             </div>
         </div>
     </ion-content>
+  
 </ion-view>

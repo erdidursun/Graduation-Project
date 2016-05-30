@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
+using SakaryaRehberiAPI.Models;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Http.Formatting;
 using System.Web;
@@ -20,7 +22,6 @@ namespace SakaryaRehberiAPI
 
             GlobalConfiguration.Configure(WebApiConfig.Register);
             HttpConfiguration config = GlobalConfiguration.Configuration;
-         
 
         }
         protected void Application_EndRequest()

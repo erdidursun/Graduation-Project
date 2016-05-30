@@ -1,4 +1,4 @@
-angular.module('sakaryarehberi')
+ï»¿angular.module('sakaryarehberi')
 .service('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
     var User = {};
 
@@ -9,7 +9,6 @@ angular.module('sakaryarehberi')
         });
         var func = $http.post("{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
-                    swal({ title: "Baþarýlý", text: "Giriþ Baþarýlý", type: "success", confirmButtonText: "Tamam" });
 
                     if (data)
                         Session.Create("form", data.data[0]);
@@ -18,8 +17,6 @@ angular.module('sakaryarehberi')
 
 
                 }, function (error) {
-                    swal({ title: "Baþarýsýz", text: "Giriþ Baþarýsýz", type: "error", confirmButtonText: "Tamam" });
-
                     Session.Create("form", null);
 
                 });
@@ -47,14 +44,8 @@ angular.module('sakaryarehberi')
 
         var func = $http.post("{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                       .then(function (data) {
-                          swal({ title: "Baþarýlý", text: "Baþarýyla Kayýt Oldunuz. Giriþ Yapýlýyor.", type: "success", confirmButtonText: "Tamam" }
-                              , function () {
-                                  User.Login(data.data.Email, data.data.Password);
-                              });
-
-
+                          User.Login(data.data.Email, data.data.Password);
                       }, function (error) {
-                          swal({ title: "Baþarýsýz", text: "Kayýt Olma Esnasýnda Bir hata oluþtu", type: "error", confirmButtonText: "Tamam" });
 
                       });
     }
@@ -343,7 +334,6 @@ angular.module('sakaryarehberi')
     authService.SocialLoginProvider = $firebaseAuth(ref);
     var retry = 0;
     authService.logout = function () {
-        console.log("2sssssssssss2");
         $ls.remove("SessionData");
         Session.Destroy();
         authService.SocialLoginProvider.$unauth();
@@ -388,7 +378,9 @@ angular.module('sakaryarehberi')
                 name: data.Name,
                 profileImageURL: data.ImgPath,
                 type_id: data.Type_ID,
-                type_name: data.TypeName
+                type_name: data.TypeName,
+                commentCount:data.CommentCount,
+                likeCount: data.LikeCount
             };
 
             $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
@@ -404,6 +396,7 @@ angular.module('sakaryarehberi')
         data = null;
         $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
 
+
     }
     Session.isAuthenticated = function () {
         return Session.User != null ? true : false;
@@ -416,26 +409,30 @@ angular.module('sakaryarehberi')
 .factory('HttpCache', function ($cacheFactory) {
     return $cacheFactory.get('$http');
 
-    /*  istek yapýlýrken options parametresiyle cache:true deðeri verilirse
-        appSettings.js dosyasýndaki cacheTime parametresinde belirtilen
-        süre kadar(ms cinsinden)  ilgili veri cachte tutulur, süre dolunca cachten silinir.
-        Not:Verilerin gösterildiði template'in cache deðeri app.js dosyasýndaki ilgili kýsýmdan false yapýlmalý. Aksi takdirde
-        templateden istek gelmediði için cache süresi dolmuþ olsa dahi yeni veriler yüklenmez.
+    /*  istek yapï¿½lï¿½rken options parametresiyle cache:true deï¿½eri verilirse
+        appSettings.js dosyasï¿½ndaki cacheTime parametresinde belirtilen
+        sï¿½re kadar(ms cinsinden)  ilgili veri cachte tutulur, sï¿½re dolunca cachten silinir.
+        Not:Verilerin gï¿½sterildiï¿½i template'in cache deï¿½eri app.js dosyasï¿½ndaki ilgili kï¿½sï¿½mdan false yapï¿½lmalï¿½. Aksi takdirde
+        templateden istek gelmediï¿½i iï¿½in cache sï¿½resi dolmuï¿½ olsa dahi yeni veriler yï¿½klenmez.
      */
 })
-.factory('CurrrentLocation', ["$cordovaGeolocation", function ($cordovaGeolocation) {
+.factory('CurrrentLocation', ["$cordovaGeolocation", "$ls", function ($cordovaGeolocation, $ls) {
     var CurrentLocation = {};
+    var storagedLocation = {};
+
+    var currentPlatform = ionic.Platform.platform();
+
     var Coord = {
         Latitude: -1,
         Longtitude: -1
     };
-    var currentPlatform = ionic.Platform.platform();
-
     CurrentLocation.get = function (successCB, errorCB) {
-        function success(location) {
+        function success(location, isStoraged) {
             console.log(location);
             Coord.Latitude = location.coords.latitude;
             Coord.Longtitude = location.coords.longitude;
+            if (!isStoraged)
+                $ls.setObject("CurrentLocation", { "location": Coord, "time": moment().add(5, 'm').toDate() });
             successCB(Coord);
         }
         function error(err) {
@@ -443,15 +440,112 @@ angular.module('sakaryarehberi')
             errorCB(err);
 
         }
-        if (currentPlatform == "android" || currentPlatform == "ios") {
-            var posOptions = { timeout: 20000, enableHighAccuracy: false };
-            $cordovaGeolocation.getCurrentPosition(posOptions).then(success, error);
+        storagedLocation = $ls.getObject("CurrentLocation");
+        if (storagedLocation) {
+            var storedTime = moment(storagedLocation.time).toDate();
+            var now = moment().toDate();     
+            if (storedTime > now)
+                successCB(storagedLocation.location);
+            else
+                getCoord();
         }
         else
-            navigator.geolocation.getCurrentPosition(success, error);
-    };
+            getCoord();
 
+        function getCoord() {
+            if (currentPlatform == "android" || currentPlatform == "ios") {
+                var posOptions = { timeout: 20000, enableHighAccuracy: false };
+                $cordovaGeolocation.getCurrentPosition(posOptions).then(function (location) {
+                    success(location, false);
+
+                }, error);
+            }
+            else {
+                navigator.geolocation.getCurrentPosition(function (loc) {
+                    success(loc, false);
+                },
+                    function (err) {
+                        switch (err.code) {
+                            case err.TIMEOUT:
+                                errorCB(err);
+                                break;
+                            case err.PERMISSION_DENIED:
+                                if (err.message.indexOf("Only secure origins are allowed") == 0) {
+                                    jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
+                                        var location = {}
+                                        location.coords.latitude = data.location.lat;
+                                        location.coords.longitude = data.location.lng
+                                        success(location, false)
+                                    })
+                                  .fail(function (err) {
+                                      errorCB(err);
+                                  });
+                                }
+                                break;
+                            case err.POSITION_UNAVAILABLE:
+                                errorCB(err);
+                                break;
+                        }
+                    },
+                  { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
+            }
+        }
+
+    }
     return CurrentLocation;
+}])
+.factory('Resource', function ($cordovaCamera, $cordovaCapture, Session,$cordovaFileTransfer, $sce) {
+    return {
 
-   
-}]);
+        GetImage: function (fromCamera) {
+
+            var options = {
+                quality: 50, //0-100
+                destinationType: Camera.DestinationType.FILE_URI, //DATA_URL (returns base 64) or FILE_URI (returns image path)
+                allowEdit: true, //allow cropping
+                encodingType: Camera.EncodingType.JPEG,
+                popoverOptions: CameraPopoverOptions,
+                saveToPhotoAlbum: false
+            };
+            var resource = { Url: "", Type: 0, Name: "", MimeType: "" };
+
+            if (fromCamera == 0)
+                options.sourceType = Camera.PictureSourceType.PHOTOLIBRARY;
+            else if (fromCamera == 1)
+                options.sourceType = Camera.PictureSourceType.CAMERA;
+
+            var func = $cordovaCamera.getPicture(options).then(function (imageUrl) {
+                resource.nativeUrl = imageUrl;
+                resource.Type = 0;
+                resource.Url = $sce.trustAsResourceUrl(imageUrl);
+                resource.Name = imageUrl.substr(imageUrl.lastIndexOf('/') + 1);
+                resource.MimeType = "image/jpeg";
+                console.log("eddd ");
+                console.log(resource);
+                return resource;
+            });
+            return func;
+        },
+        Upload: function (resource) {
+            var options = {
+                fileKey: "avatar",
+                fileName: resource.Name,
+                chunkedMode: false,
+                mimeType: resource.MimeType,
+                headers: { Connection: "close" }
+            }
+            var target = Settings.apiHostUrl + "/api/ChangeAvatar?userId=" + Session.User.id;
+            var func = $cordovaFileTransfer.upload(target, resource.nativeUrl, options).then(function (result) {
+                console.log(result);
+                return result;
+            }, function (err) {
+
+            }, function (progress) {
+                return progress.loaded / progress.total * 100;
+            });
+            return func;
+        }
+  
+    }
+})
+;

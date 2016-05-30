@@ -184,24 +184,6 @@
 })
 .run(function ($rootScope, $location, $state, $ls, $window, AUTH_EVENTS, AuthService, amMoment) {
     amMoment.changeLocale('tr');
-    $rootScope.$on(AUTH_EVENTS.loginSuccess, function (conf, data) {
-        console.log(data);
-        $ls.setObject("SessionData", data)
-        if (data.type_id == 2)
-            $state.go("admin", {}, { reload: true });
-        else
-            $state.go("home.locations", {}, { reload: true });
 
-    });
-    $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        swal({ title: "Giriş Başarısız", text: "Bilgilerinizi Kontrol Ediniz!", type: "error", confirmButtonText: "Tamam" });
-
-
-    });
-    $rootScope.$on(AUTH_EVENTS.logoutSuccess, function (error) {
-        $state.go("home.locations", {}, { reload: true });
-
-    });
-})
-
-;
+  
+});

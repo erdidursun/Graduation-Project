@@ -1,5 +1,5 @@
 ﻿angular.module("sakaryarehberi")
-.service('User', function (Session, $rootScope, AUTH_EVENTS, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
+.service('User', function (Session, $rootScope, AUTH_EVENTS, $state, $ls, $timeout, $http, $httpParamSerializerJQLike, md5) {
     var User = {};
 
     User.Login = function (mail, pass) {
@@ -9,19 +9,23 @@
         });
         var func = $http.post("{apihost}/api/Login", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
-                    swal({ title: "Başarılı", text: "Giriş Başarılı", type: "success", confirmButtonText: "Tamam" });
-                         
-                    if (data)
-                        Session.Create("form", data.data[0]);
-                    else
-                        Session.Create("form", null);
+                    if (data && data.status == 200) {                      
+                        if (data.data.length > 0) {
+                            var user = data.data[0];
+                            Session.Create("form", user);
+                            swal({ title: "Başarılı", text: "Giriş Başarılı", type: "success", confirmButtonText: "Tamam" });
 
-
+                            if (user.type_id == 2)
+                                $state.go("admin", {}, { reload: true });
+                            else
+                                $state.go("home.locations", {}, { reload: true });
+                        }
+                    }
+                    else 
+                        swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
+                    
                 }, function (error) {
                     swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
-
-                    Session.Create("form", null);
-
                 });
     };
 
@@ -56,7 +60,7 @@
 
                       }, function (error) {
                           swal({ title: "Başarısız", text: "Kayıt Olma Esnasında Bir hata oluştu", type: "error", confirmButtonText: "Tamam" });
-                             
+
                       });
     }
 
@@ -78,7 +82,7 @@
         return func;
     }
 
-  
+
 
     User.GetUserById = function (id) {
         var func = $http.get("{apihost}/API/GetUserById?userId=" + id).then(function (data) {
@@ -86,13 +90,13 @@
         })
         return func;
     }
-    User.GetUserComments= function (id) {
+    User.GetUserComments = function (id) {
         var func = $http.get("{apihost}/API/GetUserComments?userId=" + id).then(function (data) {
             return data.data;
         })
         return func;
     }
-    User.GetUserLikes= function (id) {
+    User.GetUserLikes = function (id) {
         var func = $http.get("{apihost}/API/GetUserLikes?userId=" + id).then(function (data) {
             return data.data;
         })
@@ -130,7 +134,7 @@
             UserID: id
         }
 
-        var func = $http.get("{apihost}/API/UpdateYetki?typeID="+typeid + "&UserID=" + id)
+        var func = $http.get("{apihost}/API/UpdateYetki?typeID=" + typeid + "&UserID=" + id)
        .then(function (data) {
            console.log(data);
 
@@ -144,14 +148,14 @@
 
 
 
-    User.ChangePassword = function (id, pass ,npass1, npass2) {
+    User.ChangePassword = function (id, pass, npass1, npass2) {
         pass = md5.createHash(pass);
         npass1 = md5.createHash(npass1);
         npass2 = md5.createHash(npass2);
 
         var data = $httpParamSerializerJQLike({
-            UserId:id,
-            Password:pass,
+            UserId: id,
+            Password: pass,
             Npassword: npass1,
             Npassword2: npass2
         });
@@ -175,7 +179,7 @@
 .service('Location', function ($http, $httpParamSerializerJQLike, Session) {
     var data = {};
     var Location = {};
-    Location.GetLocations = function (Coord,page) {
+    Location.GetLocations = function (Coord, page) {
         var Coord1 = {
             Latitude: -1,
             Longtitude: -1
@@ -183,7 +187,7 @@
         if (!page)
             page = 1;
         var userId = -1;
-        var url="{apihost}/API/GetLocations?page="+page;
+        var url = "{apihost}/API/GetLocations?page=" + page;
         if (Session.isAuthenticated())
             url = url + "&userId=" + Session.User.id;
         if (Coord)
@@ -195,14 +199,14 @@
         return func;
     }
 
-    Location.GetSearchLocation = function () {       
+    Location.GetSearchLocation = function () {
 
         var func = $http.get("{apihost}/API/GetSearchLocation");
         return func;
     }
-    Location.UpdateLocation = function (id,data) {
+    Location.UpdateLocation = function (id, data) {
 
-        var func = $http.post("{apihost}/API/UpdateLocation?locationId="+id, $httpParamSerializerJQLike(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
+        var func = $http.post("{apihost}/API/UpdateLocation?locationId=" + id, $httpParamSerializerJQLike(data), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } });
         return func;
     }
     Location.GetLocationById = function (id) {

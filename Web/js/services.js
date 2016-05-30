@@ -150,34 +150,30 @@
                 name: data.Name,
                 profileImageURL: data.ImgPath,
                 type_id: data.Type_ID,
-                type_name: data.TypeName
+                type_name: data.TypeName,
+                expireTime : moment().add(1, 'h').toDate()
             };
-
-            $rootScope.$broadcast(AUTH_EVENTS.loginSuccess, Session.User);
+            $ls.setObject("SessionData", Session.User);
         }
-        else {
-            Session.User = null;
-            $rootScope.$broadcast(AUTH_EVENTS.loginFailed, null);
-        }
+        else 
+            Session.User = null;       
     }
 
     Session.Destroy = function () {
         Session.User = null;
         data = null;
         $ls.removeAll();
-
-        $rootScope.$broadcast(AUTH_EVENTS.logoutSuccess, null);
-
     }
     Session.isAuthenticated = function () {
-        return Session.User != null ? true : false;
+        var now = moment().toDate();
+        return Session.User != null ? moment(Session.User.expireTime).toDate() > now ? true : false : false;
     }
     Session.isAdmin = function () {
         return Session.isAuthenticated() ? Session.User.type_id == 2 ? true : false : false;
     }
     return Session;
 })
-.factory('AuthService', function ($rootScope, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
+.factory('AuthService', function ($rootScope,$state, User, Session, AUTH_EVENTS, $ls, $firebaseAuth) {
 
     var authService = {};
 
@@ -187,10 +183,10 @@
     authService.SocialLoginProvider = $firebaseAuth(ref);
     var retry = 0;
     authService.logout = function () {
-        console.log("33");
-
         Session.Destroy();
         authService.SocialLoginProvider.$unauth();
+        $state.go("home.locations", {}, { reload: true });
+
     };
     authService.SocialLoginProvider.$onAuth(function (authData) {
         if (authData && !Session.isAuthenticated()) {
@@ -230,6 +226,7 @@
 })
 .factory('CurrentLocation', function () {
     var CurrentLocation = {};
+
     CurrentLocation.get = function (successCB, errorCB) {
 
         if (navigator.geolocation) {
@@ -257,7 +254,7 @@
                             break;
                     }
                 },
-              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: true });
+              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
         }
     };
 

@@ -1,0 +1,33 @@
+﻿
+<ion-content>
+    <br />
+    <br />
+    <div class="timeline">
+        <ion-scroll style="height: 500px;" direction="y">
+            <div class="timeline-item" ng-repeat="comment in comments">
+                <div class="timeline-badge">
+                    <img class="timeline-badge-userpic img-circle" ng-src="{{user.profileImageURL}}">
+                </div>
+                <div class="timeline-body">
+                    <div class="timeline-body-arrow"> </div>
+                    <div class="timeline-body-head">
+                        <div class="timeline-body-head-caption">
+                            <span class="timeline-body-title">
+                                {{user.name}} <a ui-sref="app.details({locationId: comment.LocationId   })">{{comment.LocationName}}</a>
+                                mekanına yorum yaptı.
+                            </span>
+                        </div>
+                        <!--<div class="timeline-body-head-actions"> </div>-->
+                    </div>
+                    <div class="timeline-body-content">
+                        <span class="timeline-body-time font-grey-cascade" am-time-ago="comment.Date"></span>
+
+                        <hr />
+                        <span style="color:#0026ff">{{comment.Comment}}</span>
+                    </div>
+                </div>
+            </div>
+        </ion-scroll>
+         
+</div>
+</ion-content>
