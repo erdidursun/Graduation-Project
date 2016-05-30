@@ -194,7 +194,7 @@
 
     });
     $rootScope.$on(AUTH_EVENTS.loginFailed, function (error) {
-        swal({ title: "Giriş Başarısız", text: "Seçtiğiniz kriterlere uygun yol bulunmamaktadır.!", type: "error", confirmButtonText: "Cool" });
+        swal({ title: "Giriş Başarısız", text: "Bilgilerinizi Kontrol Ediniz!", type: "error", confirmButtonText: "Tamam" });
 
 
     });

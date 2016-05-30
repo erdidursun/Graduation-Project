@@ -802,19 +802,25 @@
 
         });
     }
-    $scope.newUser = {
-        pass: "",
-        nPass1: "",
-        nPass2: "",
-    }
-    $scope.changePassword = function () {
-        console.log($scope.newUser);
-        //User.ChangeInfo(userId, $scope.user.Name, $scope.user.Email).then(function (data) {
-        //    changeSession(data.data[0]);
-        //    swal({ title: "Başarılı", text: "Bilgileriniz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
-        //    $state.go("home.account", {}, { reload: true });
+    //$scope.newUser = {
+    //    pass: "",
+    //    nPass1: "",
+    //    nPass2: "",
+    //}
 
-        //});
+    $scope.changePassword = function () {
+        //console.log(data);
+
+        User.ChangePassword(userId, $scope.user.pass, $scope.user.nPass1, $scope.user.nPass2).then(function (data) {
+            if (data.status == 200) {
+                swal({ title: "Başarılı", text: "Bilgileriniz Başarıyla Değiştirildi.", type: "success", confirmButtonText: "Tamam" });
+                $state.go("home.account", {}, { reload: true });
+            }
+            else {
+                swal({ title: "Hata", text: "Şifre Değiştirilemedi.Eski Şifreniz yanlış", type: "success", confirmButtonText: "Tamam" });
+            }
+        
+        });
     }
 
     User.GetUserComments(userId).then(function (data) {

@@ -6,7 +6,7 @@
                 <div class="portlet light profile-sidebar-portlet  ">
 
                     <div class="profile-userpic fileinput fileinput-exists" data-provides="fileinput" style="height:193px;width:300px">
-                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="border:0;height:154px;width:300px" >
+                        <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="border:0;height:154px;width:300px">
 
                             <img ng-src="{{user.ImgPath}}" class="img-responsive" style="height: 100%;
     width: 50%;">
@@ -69,7 +69,7 @@
             <!-- BEGIN PROFILE CONTENT -->
             <div class="profile-content">
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-12" >
                         <div class="portlet light ">
                             <div class="portlet-title tabbable-line">
                                 <div class="caption caption-md">
@@ -93,10 +93,10 @@
 
                                 </ul>
                             </div>
-                            <div class="portlet-body">
+                            <div class="portlet-body" style="padding:12px 20px 45px">
                                 <div class="tab-content">
                                     <!-- TAB1 -->
-                                    <div class="tab-pane" id="tab1">
+                                    <div class="tab-pane" id="tab1" >
                                         <form action="#" role="form">
 
                                             <div class="form-group">
@@ -109,8 +109,8 @@
                                                 <input type="text" placeholder="jsnowbastard@hotmail.com" class="form-control" ng-model="user.Email" />
                                             </div>
 
-                                            <div class="margiv-top-10">
-                                                <a ng-click="changeInfo()" class="btn green"> Değişiklikleri Kaydet </a>
+                                            <div class="form-group">
+                                                <a ng-click="changeInfo()" class="btn green pull-right"> Değişiklikleri Kaydet </a>
                                             </div>
                                         </form>
                                     </div>
@@ -142,6 +142,7 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <!--TAB3-->
                                     <div class="tab-pane" id="tab3">
                                         <div class="timeline ">
                                             <div class="timeline-item" ng-repeat="like in likes">
@@ -170,28 +171,27 @@
                                         </div>
 
                                     </div>
-
                                     <!-- TAB4 -->
                                     <div class="tab-pane" id="tab4">
-                                        <form action="#" name="form">
+                                        <form  name="form">
                                             <div class="form-group">
                                                 <label class="control-label">Mevcut Şifre</label>
-                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Password" name="password" ng-model="newUser.pass" />
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" id="register_password" placeholder="Şifre" name="password" ng-model="user.pass" />
                                                 <div ng-show="form.$submitted || form.password.$touched">
                                                     <p ng-show="form.password.$error.required" class="alert alert-info"> Mevcut Şifre Alanını Doldurunuz</p>
                                                 </div>
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Yeni Şifre</label>
-                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" name="npassword" ng-model="newUser.nPass1"  />
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Yeni Şifre" name="npassword" ng-model="user.nPass1" />
                                             </div>
                                             <div class="form-group">
                                                 <label class="control-label">Tekrar Yeni Şifre</label>
-                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Re-type Your Password" name="rpassword" ng-model="newUser.nPass2" />
-                                                <p ng-show="newUser.nPass1!=newUser.nPass2" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
+                                                <input class="form-control placeholder-no-fix" required type="password" autocomplete="off" placeholder="Tekrar Yeni Şifre" name="rpassword" ng-model="user.nPass2" />
+                                                <p ng-show="user.nPass1!=user.nPass2" class="alert alert-danger">Şifreler Biribiriyle uyuşmuyor</p>
                                             </div>
-                                            <div class="margin-top-10">
-                                                <a ng-click="changePassword()" ng-show="!form.$invalid" class="btn green"> Kaydet </a>
+                                            <div class="margiv-top-10">
+                                                <a ng-click="changePassword()" ng-disabled="form.$invalid"  class="btn green pull-right"> Kaydet </a>
                                             </div>
                                         </form>
                                     </div>

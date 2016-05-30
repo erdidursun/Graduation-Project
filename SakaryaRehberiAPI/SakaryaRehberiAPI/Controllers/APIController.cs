@@ -174,22 +174,32 @@ namespace SakaryaRehberiAPI.Controllers
 
         }
 
-        [HttpGet]
-        public async Task<HttpResponseMessage> ChangePassword(int userId, string password)
+        [HttpPost]
+        public async Task<HttpResponseMessage> ChangePassword(ChangePasswordModel model)
         {
-            var user = _db.Users.FirstOrDefault(u => u.User_ID == userId);
+            var user = _db.Users.FirstOrDefault(u => u.User_ID == model.UserId);
+
             if (user == null)
-                return Request.CreateResponse(HttpStatusCode.Forbidden, userId);
-            user.User_Password = password;
-            _db.Entry<User>(user).State = EntityState.Modified;
-            _db.SaveChanges();
-            var list = new List<User>();
-            list.Add(user);
-            return Request.CreateResponse(HttpStatusCode.OK, getUsers(list));
+                return Request.CreateResponse(HttpStatusCode.Forbidden, model.UserId);
+
+            if (user.User_Password == model.Password && model.Npassword == model.Npassword2)
+            {
+
+                user.User_Password = model.Npassword;
+                _db.Entry<User>(user).State = EntityState.Modified;
+                _db.SaveChanges();
+                var list = new List<User>();
+                list.Add(user);
+                return Request.CreateResponse(HttpStatusCode.OK, getUsers(list));
+
+            }
+            else
+                return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
+
 
         }
 
-       
+
         [HttpPost]
         public async Task<HttpResponseMessage> ChangeAvatar(int userId)
         {
@@ -399,7 +409,7 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [HttpGet]
-        public HttpResponseMessage UpdateYetki(int typeID, int UserID) 
+        public HttpResponseMessage UpdateYetki(int typeID, int UserID)
         {
             var euser = _db.Users.Where(u => u.User_ID == UserID).FirstOrDefault();
             if (euser != null)
@@ -413,7 +423,7 @@ namespace SakaryaRehberiAPI.Controllers
             }
             return Request.CreateResponse(HttpStatusCode.Forbidden, "fail");
 
-        
+
         }
         #endregion
 
@@ -504,17 +514,18 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage UpdateLocation(int locationId,LocationNew loc){
+        public HttpResponseMessage UpdateLocation(int locationId, LocationNew loc)
+        {
 
             var location = _db.Locations.FirstOrDefault(p => p.Location_ID == locationId);
-            if(location==null)
+            if (location == null)
                 return Request.CreateResponse(HttpStatusCode.NoContent, "");
             else
             {
 
                 location.Location_Name = loc.Name;
                 location.LocationType_ID = loc.TypeId;
-                location.Location_Latitude=loc.Latitude;
+                location.Location_Latitude = loc.Latitude;
                 location.Location_Longtitude = loc.Longtitude;
                 location.Location_Info = loc.Info;
                 _db.Entry<Location>(location).State = EntityState.Modified;
@@ -603,7 +614,7 @@ namespace SakaryaRehberiAPI.Controllers
             var location = _db.Locations.FirstOrDefault(u => u.Location_ID == locationID);
             if (location == null)
                 return Request.CreateResponse(HttpStatusCode.Forbidden, locationID);
-        
+
             string path = "";
             foreach (var file in provider.Contents)
             {

@@ -48,7 +48,6 @@
                             <div class="form-group">
                                 <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Yer İsmi" name="name" ng-minlength="3"
                                        required ng-model="location.Name" />
-
                                 <div ng-show="form.$submitted || form.name.$touched">
                                     <p ng-show="form.name.$error.required" class="alert alert-info">Yer Adını Doldurunuz</p>
                                     <p ng-show="form.username.$error.minlength" class="alert alert-danger">Yer Adı 3 karakterden az olamaz</p>
@@ -56,15 +55,14 @@
                             </div>
                             <div class="form-group">
                                 <select class="form-control" name="select" required ng-model="location.TypeId">
+                                 
                                     <option value="">Mekan Tipi...</option>
                                     <option ng-repeat="type in locationTypes " value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
-                                    <div ng-show="form.$submitted || form.select.$touched || ">
-                                        <p ng-show="form.select.$error.required" class="alert alert-info">Mekan Tipi Seçiniz</p>
-                                    </div>
+                                  
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="5"
+                                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Enlem" name="enlem" ng-minlength="3"
                                        required ng-model="location.Latitude" />
                                 <div ng-show="form.$submitted || form.enlem.$touched">
                                     <p ng-show="form.enlem.$error.required" class="alert alert-info">Enlem  Doldurunuz</p>
@@ -72,7 +70,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="5"
+                                <input class="form-control placeholder-no-fix" type="number" autocomplete="off" placeholder="Boylam" name="boylam" ng-minlength="3"
                                        required ng-model="location.Longtitude" />
                                 <div ng-show="form.$submitted || form.boylam.$touched">
                                     <p ng-show="form.boylam.$error.required" class="alert alert-info">Boylam Doldurunuz</p>

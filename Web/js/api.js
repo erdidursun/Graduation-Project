@@ -50,7 +50,7 @@
                           swal({ title: "Başarılı", text: "Başarıyla Kayıt Oldunuz. Giriş Yapılıyor.", type: "success", confirmButtonText: "Tamam" }
                               , function () {
                                   if (!Session.isAuthenticated())
-                                  User.Login(data.data.Email, data.data.Password);
+                                      User.Login(data.data.Email, data.data.Password);
                               });
 
 
@@ -142,6 +142,29 @@
 
     }
 
+
+
+    User.ChangePassword = function (id, pass ,npass1, npass2) {
+        pass = md5.createHash(pass);
+        npass1 = md5.createHash(npass1);
+        npass2 = md5.createHash(npass2);
+
+        var data = $httpParamSerializerJQLike({
+            UserId:id,
+            Password:pass,
+            Npassword: npass1,
+            Npassword2: npass2
+        });
+
+        var func = $http.post("{apihost}/API/ChangePassword", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
+         .then(function (data) {
+             console.log(data);
+
+         }, function (error) {
+             console.log(error);
+         });
+        return func;
+    }
 
     return User;
 
