@@ -100,10 +100,11 @@
     };
 })
 
-.controller("LocationDetailCtrl", function ($scope, $sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope,$filter, $sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
     $scope.to_trusted = function (html_code) {
+        //return $sce.trustAsHtml($filter("strLimit")(html_code, 500));
         return $sce.trustAsHtml(html_code);
     }
     Location.GetLocationById(locationId).then(function (data) {
