@@ -3,6 +3,7 @@ var Settings = {
     //apiHostUrl: "http://localhost:8054",
     apiHostUrl: "http://localhost:8090",
 
+
     logingEnabled:false
 
 }

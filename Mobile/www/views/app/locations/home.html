@@ -37,10 +37,10 @@
                     </p>
                 </div>
                 <div class="post-content item item-text-wrap" post-content>
-                    <p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info|strLimit:200 | rawHtml"></p>
-                    <div class="col col-center col-offset-50">
+                    <!--<p class="post-excerpt" dynamic-anchor-fix ng-bind-html="location.Info|strLimit:800 | rawHtml"></p>-->
+                    <div class="col col-center col-offset-30">
                         <a ng-if="location.Info.length>200" ui-sref="app.details({locationId: location.ID   })" class=" button button-small button-block button-assertive">
-                            Devamını Oku
+                            Detaylı Bilgi
                         </a>
                     </div>
                     <img class="alignnone size-medium wp-image-92" ng-src="{{location.Banner}}" ui-sref="app.details({locationId: location.ID   })" alt="fotos-de-paisajes" width="300" height="195">
