@@ -190,6 +190,7 @@
     };
     authService.SocialLoginProvider.$onAuth(function (authData) {
         if (authData && !Session.isAuthenticated()) {
+            
             var _data = {
                 ProviderName: authData.provider,
                 Mail: authData.uid,
@@ -204,6 +205,7 @@
     authService.socialLogin = function (provider) {
 
         authService.SocialLoginProvider.$authWithOAuthPopup(provider).then(function (authData) {
+            
         }).catch(function (error) {
             $rootScope.$broadcast(AUTH_EVENTS.loginFailed, error);
 
@@ -224,7 +226,7 @@
         templateden istek gelmediği için cache süresi dolmuş olsa dahi yeni veriler yüklenmez.
      */
 })
-.factory('CurrentLocation', function () {
+.factory('CurrentLocation', function ($http) {
     var CurrentLocation = {};
 
     CurrentLocation.get = function (successCB, errorCB) {
@@ -241,12 +243,14 @@
                             break;
                         case err.PERMISSION_DENIED:
                             if (err.message.indexOf("Only secure origins are allowed") == 0) {
-                                jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
-                                    successCB({ Latitude: data.location.lat, Longtitude: data.location.lng })
-                                })
-                              .fail(function (err) {
-                                  errorCB(err);
-                              });
+                                var func = $http.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc")
+                                            .then(function (data) {												
+                                                if (data && data.data)
+                                                    successCB({ Latitude: data.data.location.lat, Longtitude: data.data.location.lng })
+                                                else
+                                                    console.log("33");
+                                            });
+                             
                             }
                             break;
                         case err.POSITION_UNAVAILABLE:

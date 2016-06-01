@@ -35,15 +35,23 @@
         var data = $httpParamSerializerJQLike(data);
         var func = $http.post("{apihost}/api/AddSocialUser", data, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                 .then(function (data) {
-                    if (data)
-                        Session.Create("social", data.data[0]);
-                    else
-                        Session.Create("social", null);
+                    if (data && data.status == 200) {
+                        if (data.data.length > 0) {
+                            var user = data.data[0];
+                            Session.Create("social", user);
+                            swal({ title: "Başarılı", text: "Giriş Başarılı", type: "success", confirmButtonText: "Tamam" });
 
+                            if (user.type_id == 2)
+                                $state.go("admin", {}, { reload: true });
+                            else
+                                $state.go("home.locations", {}, { reload: true });
+                        }
+                    }
+                    else
+                        swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
 
                 }, function (error) {
-                    Session.Create("social", null);
-
+                    swal({ title: "Başarısız", text: "Giriş Başarısız", type: "error", confirmButtonText: "Tamam" });
                 });
     };
     User.Register = function (user) {

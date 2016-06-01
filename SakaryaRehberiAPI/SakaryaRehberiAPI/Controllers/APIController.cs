@@ -139,11 +139,12 @@ namespace SakaryaRehberiAPI.Controllers
         //}
         public int GetDistance(double lat1, double long1, double lat2, double long2)
         {
+            var key = "AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc";
             if (lat1 > 0 && long1 > 0 && lat2 > 0 && long2 > 0)
             {
                 try
                 {
-                    var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=AIzaSyAmC5YZKQkTD7BZqz3ptRXCsJ2v1bypjk4";
+                    var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key="+key;
                     WebClient c = new WebClient();
                     var json = c.DownloadString(url);
                     RootObject a = JsonConvert.DeserializeObject<RootObject>(json);

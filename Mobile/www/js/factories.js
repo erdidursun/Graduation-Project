@@ -339,6 +339,7 @@
         authService.SocialLoginProvider.$unauth();
     };
     authService.SocialLoginProvider.$onAuth(function (authData) {
+        console.log(authData);
         if (authData && !Session.isAuthenticated()) {
             var _data = {
                 ProviderName: authData.provider,
@@ -428,7 +429,6 @@
     };
     CurrentLocation.get = function (successCB, errorCB) {
         function success(location, isStoraged) {
-            console.log(location);
             Coord.Latitude = location.coords.latitude;
             Coord.Longtitude = location.coords.longitude;
             if (!isStoraged)
@@ -453,7 +453,10 @@
             getCoord();
 
         function getCoord() {
+            console.log(currentPlatform);
+
             if (currentPlatform == "android" || currentPlatform == "ios") {
+
                 var posOptions = { timeout: 20000, enableHighAccuracy: false };
                 $cordovaGeolocation.getCurrentPosition(posOptions).then(function (location) {
                     success(location, false);
