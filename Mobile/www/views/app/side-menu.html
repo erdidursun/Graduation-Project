@@ -24,7 +24,7 @@
                     <i class="icon ion-home"></i>
                     <h2 class="menu-text">Anasayfa</h2>
                 </ion-item>
-             
+
                 <ion-item ng-if="isLogged" class="item-icon-left" nav-clear menu-close ui-sref="app.userComments" ui-sref-opts="{reload: true}">
                     <i class="icon ion-chatbox"></i>
                     <h2 class="menu-text">Yorumlar({{commentCount}})</h2>
@@ -37,7 +37,7 @@
                     <i class="icon ion-log-out"></i>
                     <h2 class="menu-text" ng-click="logout()">Çıkış Yap</h2>
                 </ion-item>
-                <ion-item ng-if="!isLogged" class="item-icon-left" nav-clear menu-close ui-sref="auth.login" >
+                <ion-item ng-if="!isLogged" class="item-icon-left" nav-clear menu-close ui-sref="auth.login">
                     <i class="icon ion-log-in"></i>
                     <h2 class="menu-text">Giriş Yap</h2>
                 </ion-item>
@@ -45,3 +45,23 @@
         </ion-content>
     </ion-side-menu>
 </ion-side-menus>
+<style>
+    ion-side-menu ion-item.item .item-content {
+        background-color: #33779B !important;
+    }
+
+    ion-side-menu ion-content {
+        background-color: #33779B !important;
+    }
+
+    ion-side-menu ion-item.item .item-content .icon:before {
+        background-color: #28a54c !important;
+    }
+
+    ion-side-menu ion-item.item {
+        border-color: #28a54c !important;
+    }
+        ion-side-menu ion-item.item .menu-text {
+            color: #f8f8f8;
+        }
+</style>

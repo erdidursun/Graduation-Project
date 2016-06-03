@@ -120,7 +120,7 @@
     $scope.user = {};
 })
 
-.controller('HomeCtrl', function (Session, $rootScope, AUTH_EVENTS, $ionicModal, User, $ionicSlideBoxDelegate, $scope, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
+.controller('HomeCtrl', function (Session, $rootScope, AUTH_EVENTS, $ionicModal, User, $ionicSlideBoxDelegate, $scope, CurrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
 
     $scope.isLogged = Session.isAuthenticated();
@@ -255,7 +255,8 @@
         });
         $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Konumunuz Aranıyor.' });
 
-        CurrrentLocation.get(function (Coord) {
+        CurrentLocation.get(function (Coord) {
+            console.log(Coord);
             $ionicLoading.hide();
             $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' });
 
@@ -309,7 +310,7 @@
     $scope.refresh();
 
 })
-.controller('DetailCtrl', function (Session, User, AUTH_EVENTS, $ionicModal, $scope, $ionicModal, $ionicSlideBoxDelegate, CurrrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
+.controller('DetailCtrl', function (Session, User, AUTH_EVENTS, $ionicModal, $scope, $ionicModal, $ionicSlideBoxDelegate, CurrentLocation, $location, $sce, $state, Location, $ionicLoading, $ls, $rootScope, $stateParams, $ls, $timeout) {
 
     $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Yükleniyor!' })
     var locationId = $stateParams.locationId;
@@ -405,7 +406,7 @@
     $scope.isVisible = Session.isAuthenticated();
 
 })
-.controller('DirectionCtrl', function ($scope, $ionicLoading, $ionicModal, CurrrentLocation, $timeout) {
+.controller('DirectionCtrl', function ($scope, $ionicLoading, $ionicModal, CurrentLocation, $timeout) {
 
     $scope.latitude = $scope.location.Latitude,
     $scope.longitude = $scope.location.Longtitude
@@ -419,7 +420,7 @@
     });
 
     $scope.getDirections = function (type) {
-        CurrrentLocation.get(function (Coord) {
+        CurrentLocation.get(function (Coord) {
             var directionsDisplay = new google.maps.DirectionsRenderer();
             var directionsService = new google.maps.DirectionsService();
             $scope.showList = false;
@@ -444,7 +445,6 @@
 
             }
             $timeout(function () {
-                console.log(request);
                 directionsService.route(request, function (response, status) {
                     if (status === google.maps.DirectionsStatus.OK) {
                         $scope.marker = {};
