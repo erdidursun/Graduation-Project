@@ -497,40 +497,57 @@
 //    return CurrentLocation;
 //}])
 
-.factory('CurrentLocation', function ($http) {
+.factory('CurrentLocation', function ($http, $ls) {
     var CurrentLocation = {};
 
+    CurrentLocation.data = $ls.getObject("CurrentLocation");
+    function storeCurrentLocation(location) {
+        location.time = moment().add(1, 'h').toDate();
+        $ls.setObject("CurrentLocation", CurrentLocation.data);
+    }
     CurrentLocation.get = function (successCB, errorCB) {
 
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                function (location) {
-                    successCB({ Latitude: location.coords.latitude, Longtitude: location.coords.longitude });
-                },
-                function (err) {
-                    switch (err.code) {
-                        case err.TIMEOUT:
-                            errorCB(err);
-                            break;
-                        case err.PERMISSION_DENIED:
-                            if (err.message.indexOf("Only secure origins are allowed") == 0) {
-                                var func = $http.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc")
-                                            .then(function (data) {
-                                                if (data && data.data)
-                                                    successCB({ Latitude: data.data.location.lat, Longtitude: data.data.location.lng })
-                                                else
-                                                    console.log("33");
-                                            });
-
-                            }
-                            break;
-                        case err.POSITION_UNAVAILABLE:
-                            errorCB(err);
-                            break;
-                    }
-                },
-              { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
+        if (CurrentLocation.data && moment(CurrentLocation.data.time).toDate() > moment().toDate()) {
+            console.log("stored")
+            successCB(CurrentLocation.data);
         }
+        else {
+            console.log("new")
+
+            navigator.geolocation.getCurrentPosition(
+          function (location) {
+              CurrentLocation.data = { Latitude: location.coords.latitude, Longtitude: location.coords.longitude };
+              storeCurrentLocation(CurrentLocation.data)
+              successCB(CurrentLocation.data);
+          },
+          function (err) {
+              switch (err.code) {
+                  case err.TIMEOUT:
+                      errorCB(err);
+                      break;
+                  case err.PERMISSION_DENIED:
+                      if (err.message.indexOf("Only secure origins are allowed") == 0) {
+                          var func = $http.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc")
+                                      .then(function (data) {
+                                          if (data && data.data) {
+                                              CurrentLocation.data = { Latitude: data.data.location.lat, Longtitude: data.data.location.lng };
+                                              storeCurrentLocation(CurrentLocation.data)
+                                              successCB(CurrentLocation.data);
+                                          }
+                                      });
+
+                      }
+                      break;
+                  case err.POSITION_UNAVAILABLE:
+                      errorCB(err);
+                      break;
+              }
+          },
+        { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
+        }
+
+
+
     };
 
     return CurrentLocation;

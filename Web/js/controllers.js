@@ -109,7 +109,6 @@
     }
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data[0];
-        console.log($scope.location)
         angular.forEach($scope.location.Images, function (value) {
             $scope.slides.push({ image: value.Path, text: value.Info });
         });
@@ -231,7 +230,6 @@
             });
 
         }, function (error) {
-            console.log(error);
         });
     }, function (error) {
         Location.GetLocations().then(function (data) {
@@ -244,7 +242,6 @@
             });
 
         }, function (error) {
-            console.log(error);
         });
     });
 
@@ -252,7 +249,6 @@
         $scope.locationTypes = data.data;
 
     }, function (error) {
-        console.log(error);
     });
     var Coord = {
         Latitude: -1,
@@ -450,7 +446,6 @@
         $scope.locationTypes = data.data;
 
     }, function (error) {
-        console.log(error);
     });
     $scope.totalStep = 3;
     $scope.step = 1;
@@ -486,8 +481,6 @@
     });
     $scope.addNewLocation = function () {
         $scope.location.Info = $('#summernote_1').code();
-        console.log($scope.location.Info);
-        console.log($scope.location);
         Location.Add($scope.location).then(function (data) {
             $scope.location = data.data[0];
             $ls.setObject("Location", $scope.location);
@@ -562,7 +555,6 @@
     User.GetUserTypes().then(function (data) {
         $scope.userTypes = data.data;
     }, function (error) {
-        console.log(error);
     });
 
     function GetLocations() {
@@ -665,7 +657,6 @@
 
     $scope.OpenYetki = function (id) {
         $scope.selectedUser = $scope.users[id];
-        console.log($scope.selectedUser)
         var modalInstance = $uibModal.open(
         {
             templateUrl: 'views/admin-partials/useryetki.html',
@@ -720,11 +711,9 @@
         $scope.locationTypes = data.data;
 
     }, function (error) {
-        console.log(error);
     });
     Location.GetLocationById(locationId).then(function (data) {
         $scope.location = data.data[0];
-        console.log($scope.location);
         $(document).ready(function () {
             $('#summernote_1').summernote({ lang: "tr-TR", height: 300 })
             $('#summernote_1').code($scope.location.Info);
@@ -796,7 +785,6 @@
     //}
 
     $scope.changePassword = function () {
-        //console.log(data);
 
         User.ChangePassword(userId, $scope.user.pass, $scope.user.nPass1, $scope.user.nPass2).then(function (data) {
             if (data.status == 200) {
@@ -851,7 +839,6 @@
 .controller("NewLocationTypeCtrl", function ($scope, Location) {
     $scope.name = "";
     $scope.addLocationType = function () {
-        console.log($scope.name);
         Location.AddLocationType($scope.name);
     }
 
