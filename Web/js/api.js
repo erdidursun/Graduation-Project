@@ -193,7 +193,7 @@
             Longtitude: -1
         };
         if (page==null  )
-            page = 1;
+            page = -1;
         var userId = -1;
         var url = "{apihost}/API/GetLocations?page=" + page;
         if (Session.isAuthenticated())

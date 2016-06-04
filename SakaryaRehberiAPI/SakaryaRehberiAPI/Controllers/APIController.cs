@@ -111,7 +111,10 @@ namespace SakaryaRehberiAPI.Controllers
                                         LikeCount = l.UserLikes.Count,
                                         DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0,
                                         IsLiked = userId != -1 ? l.UserLikes.FirstOrDefault(u => u.User_ID == userId && u.Location_ID == l.Location_ID) != null ? true : false : false
-                                    }).OrderBy(u => u.DistanceToUser).Skip(page*6).Take(6);
+                                    });
+            if(page>=0)
+                Locations = Locations.OrderBy(u => u.DistanceToUser).Skip(page * 6).Take(6);
+
             return Locations;
         }
 
@@ -444,8 +447,8 @@ namespace SakaryaRehberiAPI.Controllers
         {
             var location = _db.Locations.FirstOrDefault(l => l.Location_ID == locationId);
             var user = _db.Users.FirstOrDefault(l => l.User_ID == userId);
-
-            if (location == null || user == null)
+            var isLiked = _db.UserLikes.FirstOrDefault(l => l.User_ID == userId && l.Location_ID == locationId)!=null;
+            if (location == null || user == null && !isLiked)
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "");
             var UserLike = new UserLike()
             {

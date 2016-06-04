@@ -200,7 +200,7 @@
 
     $scope.locations = [];
     $scope.locationTypes = [];
-
+ 
     $scope.myPagingFunction = function () {
 
     }
@@ -435,8 +435,8 @@
 })
 .controller("LoginCtrl", function ($scope, AuthService, md5, User, Session, $location) {
 
-    $scope.mail = "erdidursun09@hotmail.com";
-    $scope.pass = "12345";
+    //$scope.mail = "erdidursun09@hotmail.com";
+    //$scope.pass = "12345";
     if (Session.isAuthenticated())
         $location.path("anasayfa")
     $scope.login = function () {
