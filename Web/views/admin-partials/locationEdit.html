@@ -10,9 +10,10 @@
         </div>
     </div>
     <div class="form-group">
-        <select class="form-control" name="select" ng-model="location.TypeId">
-            <option value="">Mekan Tipi...</option>
-            <option ng-repeat="type in locationTypes" ng-selected="type.LocationType_ID==location.TypeId" value="{{type.LocationType_ID}}">{{type.LocationType_Name}}</option>
+        <select class="form-control" name="select" id="editype">
+            <option ng-repeat="type in locationTypes" ng-selected="type.LocationType_ID==location.TypeId"  value="{{type.LocationType_ID}}">
+                {{type.LocationType_Name}}
+              </option>
 
         </select>
     </div>

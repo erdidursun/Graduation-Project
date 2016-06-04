@@ -423,7 +423,7 @@
 //    var currentPlatform = ionic.Platform.platform();
 
 //    var Coord = {
-//        Latitude: -1,
+//        Latitude: -1,t
 //        Longtitude: -1
 //    };
 //    CurrentLocation.get = function (successCB, errorCB) {
@@ -527,6 +527,7 @@
                       break;
                   case err.PERMISSION_DENIED:
                       if (err.message.indexOf("Only secure origins are allowed") == 0) {
+                          console.log("35");
                           var func = $http.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc")
                                       .then(function (data) {
                                           if (data && data.data) {

@@ -70,7 +70,7 @@
                 </button>
             </div>
             <div class="col-offset-50 col-center">
-                <a class="button button-calm" ng-click="open()">Yol Tarifi Al</a>
+                <a class="button button-calm" ng-click="open()" ng-disabled="location.DistanceToUser<=0">Yol Tarifi Al</a>
             </div>
         </div>
     </ion-footer-bar>

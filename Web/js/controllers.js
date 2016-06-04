@@ -689,11 +689,7 @@
         }, function (e) {
 
         });
-
-
-
-
-    };
+   };
 
 
 
@@ -721,6 +717,8 @@
     });
     $scope.send = function () {
         $scope.location.Info = $('#summernote_1').code();
+        $scope.location.TypeId= $("#editype").val();
+
         Location.UpdateLocation(locationId, $scope.location).then(function (data) {
             if (data.status == 200) {
                 swal({ title: "Başarılı", text: "Mekan Başarıyla Güncellendi.", type: "success", confirmButtonText: "Tamam" });
@@ -733,6 +731,18 @@
         })
     }
 })
+
+    
+//$scope.UpdateYetki = function (userId) {
+//    //seçili olanın id=yetki /useryetki.html
+//    var newYetki = $("#yetki").val();
+//    User.Yetkilendir(newYetki, userId).then(function (data) {
+//        $state.go("admin.users", {}, { reload: true });
+//    }, function (e) {
+
+//    });
+//};
+
 
 .controller("AccountCtrl", function ($scope, $state, $stateParams, $timeout, $ls, Session, User, FileUploader) {
     var userId = $stateParams.userId;

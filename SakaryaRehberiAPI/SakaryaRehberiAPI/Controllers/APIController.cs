@@ -365,7 +365,7 @@ namespace SakaryaRehberiAPI.Controllers
                                  Date = u.Date.AddHours(addTime),
                                  LocationId = u.LocationId
 
-                             }).OrderBy(p=> p.Date);
+                             }).OrderByDescending(p=> p.Date);
 
 
             return Request.CreateResponse(HttpStatusCode.OK, locations);
