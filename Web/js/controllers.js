@@ -216,9 +216,9 @@
     $scope.empty = false;
 
     $scope.getLocations = function () {
+        $scope.loading = true;
 
         CurrentLocation.get(function (location) {
-            $scope.loading = true;
             Location.GetLocations(location, page).then(function (data) {
                 if (data.data.length == 0) {
                     $scope.empty = true;
@@ -242,6 +242,8 @@
                     files: ['assets/pages/scripts/portfolio-1.min.js'],
                     cache: false
                 });
+
+
 
                 page++;
                 $scope.loading = false;
@@ -721,7 +723,7 @@
         }, function (e) {
 
         });
-   };
+    };
 
 
 
@@ -749,7 +751,7 @@
     });
     $scope.send = function () {
         $scope.location.Info = $('#summernote_1').code();
-        $scope.location.TypeId= $("#editype").val();
+        $scope.location.TypeId = $("#editype").val();
 
         Location.UpdateLocation(locationId, $scope.location).then(function (data) {
             if (data.status == 200) {
@@ -764,7 +766,7 @@
     }
 })
 
-    
+
 //$scope.UpdateYetki = function (userId) {
 //    //seçili olanın id=yetki /useryetki.html
 //    var newYetki = $("#yetki").val();

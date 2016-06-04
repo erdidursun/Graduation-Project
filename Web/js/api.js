@@ -192,7 +192,6 @@
             Latitude: -1,
             Longtitude: -1
         };
-        console.log(page);
         if (page==null  )
             page = 1;
         var userId = -1;

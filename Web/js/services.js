@@ -234,11 +234,10 @@
     CurrentLocation.get = function (successCB, errorCB) {
 
         if (CurrentLocation.data && moment(CurrentLocation.data.time).toDate() > moment().toDate()) {
-            console.log("stored")
             successCB(CurrentLocation.data);
         }
         else {
-            console.log("new")
+
 
             navigator.geolocation.getCurrentPosition(
           function (location) {
