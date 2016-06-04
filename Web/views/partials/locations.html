@@ -92,7 +92,7 @@
                                             </i> &nbsp;{{location.CommentCount}}
                                         </button>
 
-                                        <button type="button" class="btn btn-sm purple" ng-click="openMap(location)" style="width:25%">
+                                        <button type="button" class="btn btn-sm purple" ng-click="openMap(location)" ng-if="location.DistanceToUser>0" style="width:25%">
                                             <i class=" fa fa-map-marker">
                                             </i> Rota
                                         </button>

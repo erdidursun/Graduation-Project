@@ -144,7 +144,7 @@ namespace SakaryaRehberiAPI.Controllers
             {
                 try
                 {
-                    var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key="+key;
+                    var url = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + lat1.ToString().Replace(',', '.') + "," + long1.ToString().Replace(',', '.') + "&destinations=" + lat2.ToString().Replace(',', '.') + "," + long2.ToString().Replace(',', '.') + "&key=" + key;
                     WebClient c = new WebClient();
                     var json = c.DownloadString(url);
                     RootObject a = JsonConvert.DeserializeObject<RootObject>(json);
@@ -155,7 +155,7 @@ namespace SakaryaRehberiAPI.Controllers
 
                     return 0;
                 }
-               
+
             }
             else return 0;
 
@@ -280,7 +280,7 @@ namespace SakaryaRehberiAPI.Controllers
         public async Task<HttpResponseMessage> Login(LoginModel model)
         {
             var user = _db.Users.Where(u => u.User_Email == model.Username && u.User_Password == model.Password).ToList();
-            if (user != null && user.Count>0)
+            if (user != null && user.Count > 0)
                 return Request.CreateResponse(HttpStatusCode.OK, getUsers(user));
             else
                 return Request.CreateResponse(HttpStatusCode.BadRequest, "credential error");
@@ -343,10 +343,10 @@ namespace SakaryaRehberiAPI.Controllers
         [HttpGet]
         public HttpResponseMessage GetUserLikes(int userId)
         {
-            //var hostName = GetHostName();
-            //a
-            //if (hostName == "http://tommycarter-001-site1.itempurl.com" || hostName == "http://tommycarter-001-site1.itempurl.com/web")
-            //    addTime = 10;
+            var hostName = GetHostName();
+            int addTime = 0;
+            if (hostName == "http://tommycarter-001-site1.itempurl.com" || hostName == "http://tommycarter-001-site1.itempurl.com/web")
+                addTime = 10;
             var locations = (from like in _db.UserLikes
                              join u in _db.Users on like.User_ID equals u.User_ID
                              join l in _db.Locations on like.Location_ID equals l.Location_ID
@@ -357,7 +357,16 @@ namespace SakaryaRehberiAPI.Controllers
                                  LocationName = l.Location_Name,
                                  LocationId = l.Location_ID,
                                  Date = like.UserLike_Date
-                             }).OrderByDescending(d => d.Date).ToList();
+                             }).ToList().AsQueryable().Select(u => new
+                             {
+                                 UserName = u.UserName,
+
+                                 LocationName = u.LocationName,
+                                 Date = u.Date.AddHours(addTime),
+                                 LocationId = u.LocationId
+
+                             }).OrderBy(p=> p.Date);
+
 
             return Request.CreateResponse(HttpStatusCode.OK, locations);
 
@@ -493,7 +502,7 @@ namespace SakaryaRehberiAPI.Controllers
             _loc.Location_Info = loc.Info;
             _loc.Location_Name = loc.Name;
             _loc.Location_Latitude = loc.Latitude;
-           
+
             _loc.Location_Longtitude = loc.Longtitude;
             _loc.LocationType_ID = loc.TypeId;
             _db.Locations.Add(_loc);

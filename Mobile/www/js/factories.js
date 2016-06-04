@@ -339,7 +339,6 @@
         authService.SocialLoginProvider.$unauth();
     };
     authService.SocialLoginProvider.$onAuth(function (authData) {
-        console.log(authData);
         if (authData && !Session.isAuthenticated()) {
             var _data = {
                 ProviderName: authData.provider,
@@ -417,87 +416,143 @@
         templateden istek gelmedi�i i�in cache s�resi dolmu� olsa dahi yeni veriler y�klenmez.
      */
 })
-.factory('CurrrentLocation', ["$cordovaGeolocation", "$ls", function ($cordovaGeolocation, $ls) {
+//.factory('CurrentLocation', ["$cordovaGeolocation", "$ls", function ($cordovaGeolocation, $ls) {
+//    var CurrentLocation = {};
+//    var storagedLocation = {};
+
+//    var currentPlatform = ionic.Platform.platform();
+
+//    var Coord = {
+//        Latitude: -1,
+//        Longtitude: -1
+//    };
+//    CurrentLocation.get = function (successCB, errorCB) {
+//        function success(location, isStoraged) {
+//            Coord.Latitude = location.coords.latitude;
+//            Coord.Longtitude = location.coords.longitude;
+//            if (!isStoraged)
+//                $ls.setObject("CurrentLocation", { "location": Coord, "time": moment().add(5, 'm').toDate() });
+//            successCB(Coord);
+//        }
+//        function error(err) {
+//            console.log(err);
+//            errorCB(err);
+
+//        }
+//        storagedLocation = $ls.getObject("CurrentLocation");
+//        if (storagedLocation) {
+//            var storedTime = moment(storagedLocation.time).toDate();
+//            var now = moment().toDate();     
+//            if (storedTime > now)
+//                successCB(storagedLocation.location);
+//            else
+//                getCoord();
+//        }
+//        else
+//            getCoord();
+
+//        function getCoord() {
+//            console.log(currentPlatform);
+
+//            if (currentPlatform == "android" || currentPlatform == "ios") {
+
+//                var posOptions = { timeout: 20000, enableHighAccuracy: false };
+//                $cordovaGeolocation.getCurrentPosition(posOptions).then(function (location) {
+//                    success(location, false);
+
+//                }, error);
+//            }
+//            else {
+//                navigator.geolocation.getCurrentPosition(function (loc) {
+//                    success(loc, false);
+//                },
+//                    function (err) {
+//                        switch (err.code) {
+//                            case err.TIMEOUT:
+//                                errorCB(err);
+//                                break;
+//                            case err.PERMISSION_DENIED:
+//                                if (err.message.indexOf("Only secure origins are allowed") == 0) {
+//                                    jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
+//                                        var location = {}
+//                                        location.coords.latitude = data.location.lat;
+//                                        location.coords.longitude = data.location.lng
+//                                        success(location, false)
+//                                    })
+//                                  .fail(function (err) {
+//                                      errorCB(err);
+//                                  });
+//                                }
+//                                break;
+//                            case err.POSITION_UNAVAILABLE:
+//                                errorCB(err);
+//                                break;
+//                        }
+//                    },
+//                  { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
+//            }
+//        }
+
+//    }
+//    return CurrentLocation;
+//}])
+
+.factory('CurrentLocation', function ($http, $ls) {
     var CurrentLocation = {};
-    var storagedLocation = {};
 
-    var currentPlatform = ionic.Platform.platform();
-
-    var Coord = {
-        Latitude: -1,
-        Longtitude: -1
-    };
-    CurrentLocation.get = function (successCB, errorCB) {
-        function success(location, isStoraged) {
-            Coord.Latitude = location.coords.latitude;
-            Coord.Longtitude = location.coords.longitude;
-            if (!isStoraged)
-                $ls.setObject("CurrentLocation", { "location": Coord, "time": moment().add(5, 'm').toDate() });
-            successCB(Coord);
-        }
-        function error(err) {
-            console.log(err);
-            errorCB(err);
-
-        }
-        storagedLocation = $ls.getObject("CurrentLocation");
-        if (storagedLocation) {
-            var storedTime = moment(storagedLocation.time).toDate();
-            var now = moment().toDate();     
-            if (storedTime > now)
-                successCB(storagedLocation.location);
-            else
-                getCoord();
-        }
-        else
-            getCoord();
-
-        function getCoord() {
-            console.log(currentPlatform);
-
-            if (currentPlatform == "android" || currentPlatform == "ios") {
-
-                var posOptions = { timeout: 20000, enableHighAccuracy: false };
-                $cordovaGeolocation.getCurrentPosition(posOptions).then(function (location) {
-                    success(location, false);
-
-                }, error);
-            }
-            else {
-                navigator.geolocation.getCurrentPosition(function (loc) {
-                    success(loc, false);
-                },
-                    function (err) {
-                        switch (err.code) {
-                            case err.TIMEOUT:
-                                errorCB(err);
-                                break;
-                            case err.PERMISSION_DENIED:
-                                if (err.message.indexOf("Only secure origins are allowed") == 0) {
-                                    jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
-                                        var location = {}
-                                        location.coords.latitude = data.location.lat;
-                                        location.coords.longitude = data.location.lng
-                                        success(location, false)
-                                    })
-                                  .fail(function (err) {
-                                      errorCB(err);
-                                  });
-                                }
-                                break;
-                            case err.POSITION_UNAVAILABLE:
-                                errorCB(err);
-                                break;
-                        }
-                    },
-                  { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
-            }
-        }
-
+    CurrentLocation.data = $ls.getObject("CurrentLocation");
+    function storeCurrentLocation(location) {
+        location.time = moment().add(1, 'h').toDate();
+        $ls.setObject("CurrentLocation", CurrentLocation.data);
     }
+    CurrentLocation.get = function (successCB, errorCB) {
+
+        if (CurrentLocation.data && moment(CurrentLocation.data.time).toDate() > moment().toDate()) {
+            console.log("stored")
+            successCB(CurrentLocation.data);
+        }
+        else {
+            console.log("new")
+
+            navigator.geolocation.getCurrentPosition(
+          function (location) {
+              CurrentLocation.data = { Latitude: location.coords.latitude, Longtitude: location.coords.longitude };
+              storeCurrentLocation(CurrentLocation.data)
+              successCB(CurrentLocation.data);
+          },
+          function (err) {
+              switch (err.code) {
+                  case err.TIMEOUT:
+                      errorCB(err);
+                      break;
+                  case err.PERMISSION_DENIED:
+                      if (err.message.indexOf("Only secure origins are allowed") == 0) {
+                          var func = $http.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc")
+                                      .then(function (data) {
+                                          if (data && data.data) {
+                                              CurrentLocation.data = { Latitude: data.data.location.lat, Longtitude: data.data.location.lng };
+                                              storeCurrentLocation(CurrentLocation.data)
+                                              successCB(CurrentLocation.data);
+                                          }
+                                      });
+
+                      }
+                      break;
+                  case err.POSITION_UNAVAILABLE:
+                      errorCB(err);
+                      break;
+              }
+          },
+        { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
+        }
+
+
+
+    };
+
     return CurrentLocation;
-}])
-.factory('Resource', function ($cordovaCamera, $cordovaCapture, Session,$cordovaFileTransfer, $sce) {
+})
+.factory('Resource', function ($cordovaCamera, $cordovaCapture, Session, $cordovaFileTransfer, $sce) {
     return {
 
         GetImage: function (fromCamera) {

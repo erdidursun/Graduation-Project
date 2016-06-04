@@ -32,7 +32,6 @@ angular.module('sakaryarehberi', [
         if (window.StatusBar) {
             StatusBar.styleDefault();
         }
-        console.log(Settings.apiHostUrl);
         //PushNotificationsService.register();
     });
 
