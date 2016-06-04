@@ -340,7 +340,7 @@
     }
     $scope.like = function (locationId) {
         if (!Session.isAuthenticated()) {
-            swal({ title: "Giriş Yapmalısınız", text: "Beğenmek için giriş yapın.!", type: "error", confirmButtonText: "Cool" });
+            swal({ title: "Giriş Yapmalısınız", text: "Beğenmek için giriş yapın.!", type: "error", confirmButtonText: "Tamam" });
 
         }
         else {

@@ -59,7 +59,7 @@
 
         var func = $http.post("{apihost}/API/Register", $httpParamSerializerJQLike(user), { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } })
                       .then(function (data) {
-                          swal({ title: "Başarılı", text: "Başarıyla Kayıt Oldunuz. Giriş Yapılıyor.", type: "success", confirmButtonText: "Tamam" }
+                          swal({ title: "Başarılı", text: "Kayıt İşlemi Başarı İle Tamamlandı", type: "success", confirmButtonText: "Tamam" }
                               , function () {
                                   if (!Session.isAuthenticated())
                                       User.Login(data.data.Email, data.data.Password);
@@ -67,7 +67,7 @@
 
 
                       }, function (error) {
-                          swal({ title: "Başarısız", text: "Kayıt Olma Esnasında Bir hata oluştu", type: "error", confirmButtonText: "Tamam" });
+                          swal({ title: "Başarısız", text: "Kayıt İşlemi Esnasında Bir Hata İle Karşılaşıldı", type: "error", confirmButtonText: "Tamam" });
 
                       });
     }
