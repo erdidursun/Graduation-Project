@@ -59,7 +59,7 @@
                     </div>
                     <div class="portlet-body">
                         <div class="scroller" data-rail-visible="1" data-rail-color="yellow" data-handle-color="#a1b2bd">
-                            <div id="js-grid-juicy-projects" class="cbp" infinite-scroll="myPagingFunction()" infinite-scroll-distance="3">
+                            <div id="js-grid-juicy-projects" class="cbp" >
                                 <div class="cbp-item {{location.TypeId}}" ng-repeat="location in locations">
                                     <div class="cbp-caption">
                                         <div class="cbp-caption-defaultWrap">
@@ -113,6 +113,13 @@
 
                             </div>
 
+                        </div>
+                        <div class="cbp-l-loadMore-button">
+                            <a ng-click="getLocations()" ng-disabled="empty" class="cbp-l-loadMore-link btn grey-mint btn-outline" rel="nofollow">
+                                <span class="cbp-l-loadMore-defaultText" ng-if="!loading && !empty">Daha Fazla Yükle</span>
+                                <span class="cbp-l-loadMore-defaultText" ng-if="loading && !empty">Yükleniyor...</span>
+                                <span class="cbp-l-loadMore-defaultText" ng-if="empty">Başka Yok</span>
+                            </a>
                         </div>
                     </div>
                 </div>

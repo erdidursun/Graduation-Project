@@ -89,7 +89,7 @@ namespace SakaryaRehberiAPI.Controllers
             return Images;
         }
 
-        private object getLocations(Coordinat coord, ICollection<Location> locations, int userId = -1, int count = 1)
+        private object getLocations(Coordinat coord, ICollection<Location> locations, int userId = -1, int page = 0)
         {
             var hostName = GetHostName();
 
@@ -111,32 +111,10 @@ namespace SakaryaRehberiAPI.Controllers
                                         LikeCount = l.UserLikes.Count,
                                         DistanceToUser = coord.Longtitude > 0 ? GetDistance(l.Location_Latitude, l.Location_Longtitude, coord.Latitude, coord.Longtitude) : 0,
                                         IsLiked = userId != -1 ? l.UserLikes.FirstOrDefault(u => u.User_ID == userId && u.Location_ID == l.Location_ID) != null ? true : false : false
-                                    }).OrderBy(u => u.DistanceToUser).Take(count);
+                                    }).OrderBy(u => u.DistanceToUser).Skip(page*6).Take(6);
             return Locations;
         }
 
-
-        //public object getLocations(Coordinat coord, int id, int userId, int count = 1)
-        //{
-        //    var hostName = GetHostName();
-        //    var list = (from location in _db.Locations
-        //                where location.Location_ID == id || id == -1
-        //                select location).ToList();
-        //    try
-        //    {
-        //        var result = getLocation(coord,list, userId, count);
-        //        return result;
-
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        throw ex;
-        //    }
-
-
-
-        //}
         public int GetDistance(double lat1, double long1, double lat2, double long2)
         {
             var key = "AIzaSyCeHrsgRhVTLVIpx_HwGNTsl6nO0HyXXoc";
@@ -513,14 +491,14 @@ namespace SakaryaRehberiAPI.Controllers
         }
 
         [HttpPost]
-        public HttpResponseMessage GetLocations(Coordinat coordinat, int userId = -1, int page = 1)
+        public HttpResponseMessage GetLocations(Coordinat coordinat, int userId = -1, int page = 0)
         {
             var hostName = GetHostName();
             var list = (from location in _db.Locations
                         select location).ToList();
             try
             {
-                var result = getLocations(coordinat, list, userId, page * 60);
+                var result = getLocations(coordinat, list, userId, page);
                 return Request.CreateResponse(HttpStatusCode.OK, result); ;
 
             }

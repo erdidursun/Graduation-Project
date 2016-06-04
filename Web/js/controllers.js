@@ -100,7 +100,7 @@
     };
 })
 
-.controller("LocationDetailCtrl", function ($scope,$filter, $sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
+.controller("LocationDetailCtrl", function ($scope, $filter, $sce, Session, $ocLazyLoad, User, $state, Location, $uibModal, $rootScope, $stateParams, uiGmapIsReady, $ls, uiGmapGoogleMapApi, $timeout) {
 
     var locationId = $stateParams.locationId;
     $scope.to_trusted = function (html_code) {
@@ -211,45 +211,77 @@
         });
 
     });
-    CurrentLocation.get(function (location) {
-        Location.GetLocations(location).then(function (data) {
-            angular.forEach(data.data, function (value, key) {
+    var page = 0;
+    $scope.loading = false;
+    $scope.empty = false;
 
+    $scope.getLocations = function () {
 
-                if (value.DistanceToUser > 0) {
-                    var t = (value.DistanceToUser / 1000);
-                    value.DistanceToUser = t;
+        CurrentLocation.get(function (location) {
+            $scope.loading = true;
+            Location.GetLocations(location, page).then(function (data) {
+                if (data.data.length == 0) {
+                    $scope.empty = true;
 
+                    return;
                 }
-                $scope.locations.push(value);
 
-            });
-            $ocLazyLoad.load({
-                files: ['assets/pages/scripts/portfolio-1.min.js'],
-                cache: false
-            });
+                angular.forEach(data.data, function (value, key) {
+                    if (value.DistanceToUser > 0) {
+                        var t = (value.DistanceToUser / 1000);
+                        value.DistanceToUser = t;
 
+                    }
+                    $scope.locations.push(value);
+
+                });
+                if (page > 0)
+                    jQuery("#js-grid-juicy-projects").cubeportfolio('destroy');
+
+                $ocLazyLoad.load({
+                    files: ['assets/pages/scripts/portfolio-1.min.js'],
+                    cache: false
+                });
+
+                page++;
+                $scope.loading = false;
+            }, function (error) {
+            });
         }, function (error) {
-        });
-    }, function (error) {
-        Location.GetLocations().then(function (data) {
-            angular.forEach(data.data, function (value, key) {
-                $scope.locations.push(value);
-            });
-            $ocLazyLoad.load({
-                files: ['assets/pages/scripts/portfolio-1.min.js'],
-                cache: false
-            });
+            $scope.loading = true;
 
-        }, function (error) {
+            Location.GetLocations(page).then(function (data) {
+                if (data.data.length == 0) {
+                    $scope.empty = true;
+
+                    return;
+                }
+
+                angular.forEach(data.data, function (value, key) {
+                    $scope.locations.push(value);
+                });
+                if (page == 0) {
+                    $ocLazyLoad.load({
+                        files: ['assets/pages/scripts/portfolio-1.min.js'],
+                        cache: false
+                    });
+                }
+                page++;
+                $scope.loading = false;
+            }, function (error) {
+            });
         });
-    });
+    }
+
 
     Location.GetLocationTypes().then(function (data) {
         $scope.locationTypes = data.data;
 
     }, function (error) {
     });
+
+
+    $scope.getLocations();
     var Coord = {
         Latitude: -1,
         Longtitude: -1
@@ -794,7 +826,7 @@
             else {
                 swal({ title: "Hata", text: "Şifre Değiştirilemedi.Eski Şifreniz yanlış", type: "success", confirmButtonText: "Tamam" });
             }
-        
+
         });
     }
 

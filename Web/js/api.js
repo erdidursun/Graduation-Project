@@ -192,7 +192,8 @@
             Latitude: -1,
             Longtitude: -1
         };
-        if (!page)
+        console.log(page);
+        if (page==null  )
             page = 1;
         var userId = -1;
         var url = "{apihost}/API/GetLocations?page=" + page;
