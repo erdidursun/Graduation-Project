@@ -21,6 +21,7 @@
 Mobile/node_modules/
 Mobile/platforms/
 Mobile/plugins/
+Mobile/resources/android*/
 SakaryaRehberiAPI/.nuget/
 SakaryaRehberiAPI/packages/
 SakaryaRehberiAPI/SakaryaRehberiAPI/obj*/

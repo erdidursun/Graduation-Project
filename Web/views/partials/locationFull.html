@@ -28,7 +28,7 @@
                             </div>
                         </div>
                         <div class="row">
-                            <span ng-click="open(location)" ng-if="location.DistanceToUser>0" role="button" data-toggle="tab" class="btn blue btn-outline btn-file pull-right margin-bottom-40" style="margin-left:20px  ;  margin-right: 20px;"> Yol Tarifi Al </span>
+                            <span ng-click="open(location)" ng-disabled="location.DistanceToUser>0" role="button" data-toggle="tab" class="btn blue btn-outline btn-file pull-right margin-bottom-40" style="margin-left:20px  ;  margin-right: 20px;"> Yol Tarifi Al </span>
 
                             <span ng-if="location.IsLiked" class="btn  blue-steel pull-right"  ng-click="unlike(location.ID)">
                                 <i class="fa fa-star"></i> &nbsp;{{location.LikeCount}}

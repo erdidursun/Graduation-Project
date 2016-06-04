@@ -148,13 +148,13 @@
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-success btn-s" ng-click="uploader2.uploadAll()" ng-disabled="!uploader2.getNotUploadedItems().length">
-                                        <span class="glyphicon glyphicon-upload"></span> Hepsini Yükle
+                                        <span class="glyphicon glyphicon-upload"></span>   Yükle
                                     </button>
                                     <button type="button" class="btn btn-warning btn-s" ng-click="uploader2.cancelAll()" ng-disabled="!uploader2.isUploading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Hepsini İptal Et
+                                        <span class="glyphicon glyphicon-ban-circle"></span>   İptal Et
                                     </button>
                                     <button type="button" class="btn btn-danger btn-s" ng-click="uploader2.clearQueue()" ng-disabled="!uploader2.queue.length">
-                                        <span class="glyphicon glyphicon-trash"></span> Hepsini Sil
+                                        <span class="glyphicon glyphicon-trash"></span>   Sil
                                     </button>
                                 </div>
 
@@ -163,13 +163,13 @@
 
                         </div>
                         <div ng-class="step==3?'tab-pane active':'tab-pane'" id="tab3">
-                            <h3 class="block">{{location.Name|uppercase}} Mekanına resim ekle</h3>
+                            <h3 class="block">{{location.Name|uppercase}} Mekanına Fotoğraf Ekle</h3>
                             <div class="form-group">
                                 <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
 
                             </div>
                             <div class="form-group">
-                                <p>Toplam: {{ uploader.queue.length }} Resim Seçildi</p>
+                                <p>Toplam: {{ uploader.queue.length }} Fotoğraf Seçildi</p>
 
                                 <table class="table">
                                     <thead>
@@ -225,13 +225,13 @@
                                         </div>
                                     </div>
                                     <button type="button" class="btn btn-success btn-s" ng-click="uploader.uploadAll()" ng-disabled="!uploader.getNotUploadedItems().length">
-                                        <span class="glyphicon glyphicon-upload"></span> Hepsini Yükle
+                                        <span class="glyphicon glyphicon-upload"></span>   Yükle
                                     </button>
                                     <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
-                                        <span class="glyphicon glyphicon-ban-circle"></span> Hepsini İptal Et
+                                        <span class="glyphicon glyphicon-ban-circle"></span>   İptal Et
                                     </button>
                                     <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
-                                        <span class="glyphicon glyphicon-trash"></span> Hepsini Sil
+                                        <span class="glyphicon glyphicon-trash"></span>   Sil
                                     </button>
                                 </div>
 
