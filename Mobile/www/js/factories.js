@@ -127,8 +127,8 @@
             Latitude: -1,
             Longtitude: -1
         };
-        if (!page)
-            page = 1;
+        if (page == null)
+            page = -1;
         var userId = -1;
         var url = "{apihost}/API/GetLocations?page=" + page;
         if (Session.isAuthenticated())
@@ -416,86 +416,6 @@
         templateden istek gelmedi�i i�in cache s�resi dolmu� olsa dahi yeni veriler y�klenmez.
      */
 })
-//.factory('CurrentLocation', ["$cordovaGeolocation", "$ls", function ($cordovaGeolocation, $ls) {
-//    var CurrentLocation = {};
-//    var storagedLocation = {};
-
-//    var currentPlatform = ionic.Platform.platform();
-
-//    var Coord = {
-//        Latitude: -1,t
-//        Longtitude: -1
-//    };
-//    CurrentLocation.get = function (successCB, errorCB) {
-//        function success(location, isStoraged) {
-//            Coord.Latitude = location.coords.latitude;
-//            Coord.Longtitude = location.coords.longitude;
-//            if (!isStoraged)
-//                $ls.setObject("CurrentLocation", { "location": Coord, "time": moment().add(5, 'm').toDate() });
-//            successCB(Coord);
-//        }
-//        function error(err) {
-//            console.log(err);
-//            errorCB(err);
-
-//        }
-//        storagedLocation = $ls.getObject("CurrentLocation");
-//        if (storagedLocation) {
-//            var storedTime = moment(storagedLocation.time).toDate();
-//            var now = moment().toDate();     
-//            if (storedTime > now)
-//                successCB(storagedLocation.location);
-//            else
-//                getCoord();
-//        }
-//        else
-//            getCoord();
-
-//        function getCoord() {
-//            console.log(currentPlatform);
-
-//            if (currentPlatform == "android" || currentPlatform == "ios") {
-
-//                var posOptions = { timeout: 20000, enableHighAccuracy: false };
-//                $cordovaGeolocation.getCurrentPosition(posOptions).then(function (location) {
-//                    success(location, false);
-
-//                }, error);
-//            }
-//            else {
-//                navigator.geolocation.getCurrentPosition(function (loc) {
-//                    success(loc, false);
-//                },
-//                    function (err) {
-//                        switch (err.code) {
-//                            case err.TIMEOUT:
-//                                errorCB(err);
-//                                break;
-//                            case err.PERMISSION_DENIED:
-//                                if (err.message.indexOf("Only secure origins are allowed") == 0) {
-//                                    jQuery.post("https://www.googleapis.com/geolocation/v1/geolocate?key=AIzaSyDCa1LUe1vOczX1hO_iGYgyo8p_jYuGOPU", function (data) {
-//                                        var location = {}
-//                                        location.coords.latitude = data.location.lat;
-//                                        location.coords.longitude = data.location.lng
-//                                        success(location, false)
-//                                    })
-//                                  .fail(function (err) {
-//                                      errorCB(err);
-//                                  });
-//                                }
-//                                break;
-//                            case err.POSITION_UNAVAILABLE:
-//                                errorCB(err);
-//                                break;
-//                        }
-//                    },
-//                  { maximumAge: 50000, timeout: 20000, enableHighAccuracy: false });
-//            }
-//        }
-
-//    }
-//    return CurrentLocation;
-//}])
 
 .factory('CurrentLocation', function ($http, $ls) {
     var CurrentLocation = {};

@@ -69,7 +69,7 @@
          Resource.GetImage(0).then(function (res) {
              $scope.profileImg = res.Url;
              Resource.Upload(res).then(function (data) {
-      
+
 
              }, function (err) {
                  console.log(err);
@@ -232,36 +232,42 @@
     $scope.close = function () {
         $scope.modal.remove();
     }
+    $scope.locations = [];
+    $scope.locationTypes = [];
+    $scope.comment = {};
+    $scope.model = [];
+    Location.GetSearchLocation().then(function (data) {
+        angular.forEach(data.data, function (value, key) {
+            var loc = { name: value.Name, type: value.TypeName, id: value.ID };
+            $scope.model.push(loc);
+        });
 
+    });
+    Location.GetLocationTypes().then(function (data) {
+        $scope.locationTypes = data.data;
+
+    }, function (error) {
+        console.log(error);
+    });
+
+    var page = 0;
+    $scope.loading = false;
+    $scope.empty = false;
     $scope.refresh = function () {
-
-        $scope.locations = [];
-        $scope.locationTypes = [];
-        $scope.comment = {};
-        $scope.model = [];
-
-        Location.GetSearchLocation().then(function (data) {
-            angular.forEach(data.data, function (value, key) {
-                var loc = { name: value.Name, type: value.TypeName, id: value.ID };
-                $scope.model.push(loc);
-            });
-
-        });
-        Location.GetLocationTypes().then(function (data) {
-            $scope.locationTypes = data.data;
-
-        }, function (error) {
-            console.log(error);
-        });
         $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Konumunuz Aranıyor.' });
 
         CurrentLocation.get(function (Coord) {
-            console.log(Coord);
             $ionicLoading.hide();
+            $scope.loading = true;
             $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' });
-
-            Location.GetLocations(Coord).then(function (data) {
-                $ionicLoading.hide();
+            Location.GetLocations(Coord, page).then(function (data) {
+                if (data.data.length == 0) {
+                    $scope.empty = true;
+                    $scope.loading = false;
+                    $ionicLoading.hide();
+                    $scope.$broadcast('scroll.refreshComplete');
+                    return;
+                }
                 angular.forEach(data.data, function (value, key) {
                     var loc = { name: value.Name, type: value.TypeName, id: value.ID };
 
@@ -274,28 +280,33 @@
                 });
                 $ionicLoading.hide();
                 $scope.$broadcast('scroll.refreshComplete');
-
+                $scope.loading = false;
+                page++;
 
             }, function (error) {
                 console.log(error);
+                $scope.loading = false;
+
                 $scope.$broadcast('scroll.refreshComplete');
 
             });
         }, function error(err) {
             $ionicLoading.hide();
-            $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' })
-
-            Location.GetLocations().then(function (data) {
+            $ionicLoading.show({ template: '<ion-spinner icon="crescent"></ion-spinner><br/>Mekanlar Yükleniyor.' });
+            Location.GetLocations(page).then(function (data) {
                 angular.forEach(data.data, function (value, key) {
                     $scope.locations.push(value);
-                    $ionicLoading.hide();
-                    $scope.$broadcast("scroll.refreshComplete")
                 });
-
+                $ionicLoading.hide();
+                $scope.$broadcast('scroll.refreshComplete');
+                $scope.loading = false;
+                page++;
             }, function (error) {
                 $ionicLoading.hide();
-                console.log(error);
                 $scope.$broadcast('scroll.refreshComplete');
+                $scope.loading = false;
+                console.log(error);
+                page++;
 
             });
 
